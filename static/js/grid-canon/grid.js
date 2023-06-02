@@ -6,9 +6,10 @@ export default class Grid {
   }
 
   constructor(deck) {
-    this.deck = deck
-    this.grid = Array(25).fill(null)
-    this.startPositions = [[1,1], [1,2], [1,3], [2,1], [2,3], [3,1], [3,2], [3,3]]
+    this._deck = deck
+    this._grid = Array(25).fill(null)
+    this._spotPositions = [[1,1], [1,2], [1,3], [2,1], [2,3], [3,1], [3,2], [3,3]]
+    this._facePositions = [[0,1], [0,2], [0,3], [1,0], [1,4], [2,0], [2,4], [3,0], [3,4], [4,1], [4,2],[4,3]]
   }
 
   setup(difficulty) {
@@ -22,8 +23,8 @@ export default class Grid {
   _clearScreen() {
     const htmlGrid = this.htmlGrid
 
-    for (let i = 0; i < this.grid.length; i++) {
-      const card = this.grid[i]
+    for (let i = 0; i < this._grid.length; i++) {
+      const card = this._grid[i]
       const cardDiv = htmlGrid[i]
       if (cardDiv.classList.contains('hidden')) {
         continue
@@ -50,11 +51,11 @@ export default class Grid {
       faces = []
       spots = []
 
-      this.deck.reset()
-      this.deck.shuffle()
+      this._deck.newOrderedDeck()
+      this._deck.shuffle()
 
       while (spots.length <= 7) {
-        const card = this.deck.deal()
+        const card = this._deck.pop()
         if (card.value > 10) {
           faces.push(card)
         } else {
@@ -70,7 +71,7 @@ export default class Grid {
   }
 
   _placeSpotCardsInGrid(spots) {
-    for (const [x,y] of this.startPositions) {
+    for (const [x,y] of this._spotPositions) {
       const card = spots.shift()
       card.position = [x, y]
 
@@ -113,7 +114,7 @@ export default class Grid {
       return [...resultA, ...resultB]
     }
 
-    const playedCards = this.startPositions.map(([x, y]) => this.query(x,y))
+    const playedCards = this._spotPositions.map(([x, y]) => this.query(x,y))
     const orderBySuitAndValue = [...playedCards].filter(isSameSuit).sort(byValueDiff)
     const orderByColorAndValue = [...playedCards].filter(isSameColor).sort(byValueDiff)
     const orderByValue = [...playedCards].sort(byValueDiff)
@@ -149,27 +150,27 @@ export default class Grid {
 
   query(x, y) {
     const stride = (5 * x) + y
-    return this.grid[stride]
+    return this._grid[stride]
   }
 
   remove(x, y) {
     const stride = (5 * x) + y
-    const card = this.grid[stride]
-    this.grid[stride] = null
+    const card = this._grid[stride]
+    this._grid[stride] = null
 
     return card
   }
 
   insert(x, y, card) {
     const stride = (5 * x) + y
-    this.grid[stride] = card
+    this._grid[stride] = card
   }
 
   render() {
     const htmlGrid = this.htmlGrid
 
-    for (let i = 0; i < this.grid.length; i++) {
-      const card = this.grid[i]
+    for (let i = 0; i < this._grid.length; i++) {
+      const card = this._grid[i]
       const cardDiv = htmlGrid[i]
 
       if (cardDiv.classList.contains('hidden')) {
@@ -180,6 +181,7 @@ export default class Grid {
         continue
       } else {
         cardDiv.classList.remove('empty')
+        cardDiv.classList.add('face')
       }
 
       cardDiv.textContent = card.faceText
@@ -188,7 +190,7 @@ export default class Grid {
   }
 
   printAsTable() {
-    const cardAbbreviations = this.grid.map(card => !card ? 'XX' : card.toString())
+    const cardAbbreviations = this._grid.map(card => !card ? 'XX' : card.toString())
     for (let i = 0; i < 5; i++) {
       console.log([
         cardAbbreviations.shift(),

@@ -2,41 +2,41 @@ import Card from './card.js'
 
 export default class Deck {
   get length() {
-    return this.card.length
+    return this._cards.length
   }
 
   constructor() {
-    this.cards = []
-    this.create()
+    this._cards = []
+    this._used = []
+    this.newOrderedDeck()
   }
 
-  create() {
-    this.cards = []
-    for (const suit of Object.keys(Card.SUITS)) {
-      for (const face of Object.keys(Card.NAMES)) {
-        if (face === Card.NAMES.JOKER) {
+  newOrderedDeck() {
+    this._cards = []
+    for (const suit of Object.keys(Card.Suits)) {
+      for (const face of Object.keys(Card.Names)) {
+        if (face === Card.Names.JOKER) {
           continue
         }
 
-        this.cards.push(new Card(face, suit, null, null))
+        this._cards.push(new Card(face, suit, null, null))
       }
     }
 
-    this.cards.push(new Card(Card.NAMES.JOKER, null, null, null))
-    this.cards.push(new Card(Card.NAMES.JOKER, null, null, null))
+    this._cards.push(new Card(Card.Names.JOKER, null, null, null))
+    this._cards.push(new Card(Card.Names.JOKER, null, null, null))
   }
 
   reset() {
-    this.create()
-  }
-
-  deal() {
-    return this.cards.shift()
+    for (let i = 0; i < this._used.length; i++) {
+      const discard = this._used.pop()
+      this._cards.push(discard)
+    }
   }
 
   cut() {
     // the cut range is + or - 6 indicies away from the middle of the deck
-    const half = (this.cards.length / 2) - 1
+    const half = (this._cards.length / 2) - 1
     const delta = 6
 
     // randomly select a card within is this range
@@ -45,16 +45,17 @@ export default class Deck {
     const cutIndex = Math.floor(Math.random() * (max - min) + min)
 
     // a cut is the same as rotating an array. split the deck into 2 halvse and rotate
-    const cutPile = this.cards.splice(cutIndex)
-    this.cards.unshift(...cutPile)
+    const cutPile = this._cards.splice(cutIndex)
+    this._cards.unshift(...cutPile)
   }
 
+  // TODO: Make sure riffle works with odd numbered deck
   riffle() {
-    const half = (this.cards.length / 2)
-    const cutPile = this.cards.splice(half)
+    const half = (this._cards.length / 2)
+    const cutPile = this._cards.splice(half)
 
     for (let i = 0; i < half; i++) {
-      this.cards.splice(i*2, 0, cutPile.shift())
+      this._cards.splice(i*2, 0, cutPile.shift())
     }
   }
 
@@ -65,8 +66,41 @@ export default class Deck {
     }
   }
 
+  pop() {
+    if (this._cards.length === 0) {
+      return null
+    }
+
+    return this._cards.shift()
+  }
+
+  deal() {
+    if (this._cards.length === 0) {
+      this.reset()
+      this.shuffle()
+    }
+
+    return this._cards.shift()
+  }
+
+  discard(card) {
+    if (!card) {
+      return
+    }
+
+    this._used.push(card)
+  }
+
+  peekDiscardPile() {
+    if (this._used.length === 0) {
+      return null
+    }
+
+    return this._used.at(-1)
+  }
+
   toString() {
-    return this.cards
+    return this._cards
       .map(card => card.abbreviation)
       .join('\n')
   }

@@ -9,15 +9,15 @@ export default class Card {
 
   get faceName() {
     switch (this._name) {
-      case Card.NAMES.JACK:
+      case Card.Names.JACK:
         return 'J'
-      case Card.NAMES.QUEEN:
+      case Card.Names.QUEEN:
         return 'Q'
-      case Card.NAMES.KING:
+      case Card.Names.KING:
         return 'K'
-      case Card.NAMES.ACE:
+      case Card.Names.ACE:
         return 'A'
-      case Card.NAMES.JOKER:
+      case Card.Names.JOKER:
         return 'JOKER'
       default:
         return this.value
@@ -26,20 +26,20 @@ export default class Card {
 
   get suitSymbol() {
     switch (this._suit) {
-      case Card.SUITS.SPADE:
+      case Card.Suits.SPADE:
         return '\u2660'
-      case Card.SUITS.CLUB:
+      case Card.Suits.CLUB:
         return '\u2663'
-      case Card.SUITS.HEART:
+      case Card.Suits.HEART:
         return '\u2665'
-      case Card.SUITS.DIAMOND:
+      case Card.Suits.DIAMOND:
         return '\u2666'
       default:
         return ''
     }
   }
 
-  get faceText () {
+  get faceText() {
     return `${this.faceName} ${this.suitSymbol}`
   }
 
@@ -57,21 +57,21 @@ export default class Card {
 
   get value() {
     const nameToValue = {
-      [Card.NAMES['JOKER']]: -1,
-      [Card.NAMES['ACE']]:    0,
-      [Card.NAMES['ONE']]:    1,
-      [Card.NAMES['TWO']]:    2,
-      [Card.NAMES['THREE']]:  3,
-      [Card.NAMES['FOUR']]:   4,
-      [Card.NAMES['FIVE']]:   5,
-      [Card.NAMES['SIX']]:    6,
-      [Card.NAMES['SEVEN']]:  7,
-      [Card.NAMES['EIGHT']]:  8,
-      [Card.NAMES['NINE']]:   9,
-      [Card.NAMES['TEN']]:    10,
-      [Card.NAMES['JACK']]:   11,
-      [Card.NAMES['QUEEN']]:  12,
-      [Card.NAMES['KING']]:   13,
+      [Card.Names['JOKER']]: -1,
+      [Card.Names['ACE']]:    0,
+      [Card.Names['ONE']]:    1,
+      [Card.Names['TWO']]:    2,
+      [Card.Names['THREE']]:  3,
+      [Card.Names['FOUR']]:   4,
+      [Card.Names['FIVE']]:   5,
+      [Card.Names['SIX']]:    6,
+      [Card.Names['SEVEN']]:  7,
+      [Card.Names['EIGHT']]:  8,
+      [Card.Names['NINE']]:   9,
+      [Card.Names['TEN']]:    10,
+      [Card.Names['JACK']]:   11,
+      [Card.Names['QUEEN']]:  12,
+      [Card.Names['KING']]:   13,
     }
 
     return nameToValue[this._name]
@@ -79,18 +79,18 @@ export default class Card {
 
   get color() {
     switch(this.suit) {
-      case Card.SUITS.SPADE:
-      case Card.SUITS.CLUB:
+      case Card.Suits.SPADE:
+      case Card.Suits.CLUB:
         return 'BLACK'
-      case Card.SUITS.DIAMOND:
-      case Card.SUITS.HEART:
+      case Card.Suits.DIAMOND:
+      case Card.Suits.HEART:
         return 'RED'
       default:
         return 'PURPLE'
     }
   }
 
-  static get NAMES() {
+  static get Names() {
     return {
       JOKER: 'JOKER',
       ACE: 'ACE',
@@ -110,7 +110,7 @@ export default class Card {
     }
   }
 
-  static get SUITS() {
+  static get Suits() {
     return {
       SPADE: 'SPADE',
       CLUB: 'CLUB',
@@ -128,9 +128,9 @@ export default class Card {
 
   toString() {
     let name
-    if (this._name === Card.NAMES.JOKER) {
+    if (this._name === Card.Names.JOKER) {
       name = 'JR'
-    } else if (this._name === Card.NAMES.TEN) {
+    } else if (this._name === Card.Names.TEN) {
       name = 'T'
     } else {
       name = this.value

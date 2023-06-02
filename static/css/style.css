@@ -3,6 +3,10 @@ html, body {
   margin: 0;
 }
 
+h1, h2, h3, h4, h5, h6 {
+  margin: 0 0 0.25rem 0;
+}
+
 body {
   display: flex;
   flex-direction: column;
@@ -11,7 +15,7 @@ body {
   gap: 1rem;
 }
 
-.card-grid {
+.game-grid {
   padding: 1.25rem;
   border: 1px solid black;
   border-radius: 1rem;
@@ -30,14 +34,21 @@ body {
   flex-direction: row;
   justify-content: center;
   align-items: center;
-
-  background-color: white;
-  aspect-ratio: .5/.75;
-  border: 2px solid black;
-  border-radius: 1rem;
-  font-size: 2rem;
   cursor: pointer;
   transition: border .1s;
+  border: 2px solid black;
+  border-radius: 1rem;
+  aspect-ratio: .5/.75;
+  min-height: 150px;
+}
+
+.face {
+  background-color: white;
+  font-size: 2rem;
+}
+
+.back {
+  background: radial-gradient(circle closest-side, blue, purple);
 }
 
 .hidden {
@@ -52,4 +63,30 @@ body {
 
 .card:not(.hidden):hover {
   border: 2px solid yellow;
+}
+
+.controls {
+  border: 1px solid black;
+  border-radius: 1rem;
+  background-color: green;
+  padding: 1rem;
+  width: 100%;
+  max-width: 600px;
+  min-height: 100px;
+
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 1rem;
+}
+
+#deck {
+  grid-column: 1;
+}
+
+#hand {
+  grid-column: 2;
+}
+
+#discard {
+  grid-column: 5;
 }

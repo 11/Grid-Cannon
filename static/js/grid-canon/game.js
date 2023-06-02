@@ -1,8 +1,21 @@
 import Deck from './deck.js'
 import Card from './card.js'
 import Grid from './grid.js'
+import Controls from './controls.js'
 
 export default class Game {
+  get controls() {
+    return this._controls
+  }
+
+  get grid() {
+    return this._grid
+  }
+
+  get controls() {
+    return this._controls
+  }
+
   static get Difficulties() {
     return {
       EASY: 0,
@@ -12,10 +25,9 @@ export default class Game {
   }
 
   constructor() {
-    this.deck = null
-    this.grid = null
-
-    this.newGame = false
+    this._deck = null
+    this._grid = null
+    this._controls = null
   }
 
   startEasy() {
@@ -31,23 +43,24 @@ export default class Game {
   }
 
   _start(difficulty) {
-    this.deck = new Deck()
-    this.grid = new Grid(this.deck)
-    this.grid.setup(difficulty)
+    this._deck = new Deck()
 
-    this._loop()
-  }
+    this._grid = new Grid(this._deck)
+    this._grid.setup(difficulty)
 
-  _update() {
+    this._controls = new Controls(this._deck)
+    this._controls.setup()
 
+    this._render()
   }
 
   _render() {
-    this.grid.render()
+    this._grid.render()
+    this._controls.render()
   }
 
-  _loop() {
-    this._update()
+  nextHandEvent() {
+    this.controls.nextHand()
     this._render()
   }
 }

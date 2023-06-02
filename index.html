@@ -15,7 +15,7 @@
 
   <body>
     <h1>Grid Canon</h1>
-    <div class='card-grid'>
+    <div class='game-grid'>
       <div class='card hidden'></div>
       <div class='card empty'></div>
       <div class='card empty'></div>
@@ -42,6 +42,13 @@
       <div class='card empty'></div>
       <div class='card hidden'></div>
     </div>
+
+    <div class='controls'>
+      <div id='deck' class='card empty' onclick='window.game.nextHandEvent()'></div>
+      <div id='hand' class='card empty'></div>
+      <div id='discard' class='card empty'></div>
+    </div>
+
     <div class='menu'>
       <h2>New Game</h2>
       <button type='button' onclick='window.game.startEasy()'>Easy</button>
@@ -50,5 +57,3 @@
     </div>
   </body>
 </html>
-
-
