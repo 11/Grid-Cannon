@@ -1,3 +1,5 @@
+import Game from './game.js'
+
 export default class Grid {
   get htmlGrid() {
     return Array.from(document.querySelectorAll('.card'))
@@ -11,38 +13,55 @@ export default class Grid {
     this.setup()
   }
 
-  setup() {
-    let isValidSetup = false
-    while (!isValidSetup) {
+  setup(difficulty = Game.Difficulties.EASY) {
+    const { faces, spots } = this._generateNewGridByDifficulty(difficulty)
+    this._placeSpotCardsInGrid(spots)
+    this._placeFaceCardsInGrid(faces)
+  }
+
+  _generateNewGridByDifficulty(difficulty) {
+    const difficultyToAmountFaceCardsMap = {
+      [Game.Difficulties.EASY]: new Set([3,4]),
+      [Game.Difficulties.INTERMEDIATE]: new Set([5,6]),
+      [Game.Difficulties.HARD]: new Set([7, 12]),
+    }
+    const gameDifficulty = difficultyToAmountFaceCardsMap[difficulty]
+
+    let faces
+    let spots
+    do {
+      faces = []
+      spots = []
+
       this.deck.reset()
       this.deck.shuffle()
 
-      // draw cards and divide into 2 piles - faces and playable cards
-      let faces = []
-      let playable = []
-      while (playable.length <= 7) {
+      while (spots.length <= 7) {
         const card = this.deck.top()
         if (card.value > 10) {
           faces.push(card)
         } else {
-          playable.push(card)
+          spots.push(card)
         }
       }
+    } while(!gameDifficulty.has(faces.length))
 
-      if (faces.length < 3) {
-        continue
-      }
+    return {
+      faces,
+      spots,
+    }
+  }
 
+  _placeSpotCardsInGrid(spots) {
+    for (const [x,y] of this.startPositions) {
+      const card = spots.shift()
+      card.position = [x, y]
 
-      // insert playable cards into grid
-      for (const [x,y] of this.startPositions) {
-        const card = playable.shift()
-        card.position = [x, y]
+      this.insert(x, y, card)
+    }
+  }
 
-        this.insert(x, y, card)
-      }
-
-      // pick the proper position for each face card
+  _placeFaceCardsInGrid(faces) {
       for (const faceCard of faces) {
         const mostSimilarCards = this._orderByMostSimilarCard(faceCard)
         let isFaceCardInserted = false
@@ -62,9 +81,6 @@ export default class Grid {
           }
         }
       }
-
-      isValidSetup = true
-    }
   }
 
   _orderByMostSimilarCard(faceCard) {
@@ -132,6 +148,10 @@ export default class Grid {
     this.grid[stride] = card
   }
 
+  clear() {
+
+  }
+
   render() {
     const htmlGrid = this.htmlGrid
 
@@ -153,13 +173,8 @@ export default class Grid {
     }
   }
 
-  log() {
-    const cardAbbreviations = this.grid.map(card => {
-      return (card === null)
-        ? 'XX'
-        : card.toString()
-    })
-
+  printAsTable() {
+    const cardAbbreviations = this.grid.map(card => !card ? 'XX' : card.toString())
     for (let i = 0; i < 5; i++) {
       console.log([
         cardAbbreviations.shift(),

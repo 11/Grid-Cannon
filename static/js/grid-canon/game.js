@@ -3,7 +3,15 @@ import Card from './card.js'
 import Grid from './grid.js'
 
 export default class Game {
-  constructor() {
+  static get Difficulties() {
+    return {
+      EASY: 0,
+      INTERMEDIATE: 1,
+      HARD: 2,
+    }
+  }
+
+  constructor(difficulty = 1) {
     this.deck = null
     this.grid = null
 
@@ -29,6 +37,7 @@ export default class Game {
   }
 
   render() {
+    this.grid.clear()
     this.grid.render()
   }
 }
