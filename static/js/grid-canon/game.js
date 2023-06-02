@@ -11,33 +11,43 @@ export default class Game {
     }
   }
 
-  constructor(difficulty = 1) {
+  constructor() {
     this.deck = null
     this.grid = null
 
     this.newGame = false
   }
 
-  start() {
-    this.deck = new Deck()
-    this.grid = new Grid(this.deck)
-
-    this.render()
-
-    // draw a card
-    // place card if there is a spot avaiable
-    //   it's on a corner
-    // otherwise card becomes armor on smallest face card
-    //
-
-
-    // this.newGame = true
-    // while (this.newGame) {
-    // }
+  startEasy() {
+    this._start(Game.Difficulties.EASY)
   }
 
-  render() {
-    this.grid.clear()
+  startIntermediate() {
+    this._start(Game.Difficulties.INTERMEDIATE)
+  }
+
+  startHard() {
+    this._start(Game.Difficulties.HARD)
+  }
+
+  _start(difficulty) {
+    this.deck = new Deck()
+    this.grid = new Grid(this.deck)
+    this.grid.setup(difficulty)
+
+    this._loop()
+  }
+
+  _update() {
+
+  }
+
+  _render() {
     this.grid.render()
+  }
+
+  _loop() {
+    this._update()
+    this._render()
   }
 }

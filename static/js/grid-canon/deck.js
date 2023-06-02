@@ -30,7 +30,7 @@ export default class Deck {
     this.create()
   }
 
-  top() {
+  deal() {
     return this.cards.shift()
   }
 

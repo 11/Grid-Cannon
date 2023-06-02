@@ -9,14 +9,31 @@ export default class Grid {
     this.deck = deck
     this.grid = Array(25).fill(null)
     this.startPositions = [[1,1], [1,2], [1,3], [2,1], [2,3], [3,1], [3,2], [3,3]]
-
-    this.setup()
   }
 
-  setup(difficulty = Game.Difficulties.EASY) {
+  setup(difficulty) {
+    this._clearScreen()
+
     const { faces, spots } = this._generateNewGridByDifficulty(difficulty)
     this._placeSpotCardsInGrid(spots)
     this._placeFaceCardsInGrid(faces)
+  }
+
+  _clearScreen() {
+    const htmlGrid = this.htmlGrid
+
+    for (let i = 0; i < this.grid.length; i++) {
+      const card = this.grid[i]
+      const cardDiv = htmlGrid[i]
+      if (cardDiv.classList.contains('hidden')) {
+        continue
+      } else if (!card) {
+        cardDiv.classList.add('empty')
+      }
+
+      cardDiv.textContent = ''
+      cardDiv.style.color = ''
+    }
   }
 
   _generateNewGridByDifficulty(difficulty) {
@@ -37,7 +54,7 @@ export default class Grid {
       this.deck.shuffle()
 
       while (spots.length <= 7) {
-        const card = this.deck.top()
+        const card = this.deck.deal()
         if (card.value > 10) {
           faces.push(card)
         } else {
@@ -148,10 +165,6 @@ export default class Grid {
     this.grid[stride] = card
   }
 
-  clear() {
-
-  }
-
   render() {
     const htmlGrid = this.htmlGrid
 
@@ -163,6 +176,7 @@ export default class Grid {
         continue
       } else if (!card) {
         cardDiv.classList.add('empty')
+
         continue
       } else {
         cardDiv.classList.remove('empty')
