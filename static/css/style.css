@@ -1,0 +1,55 @@
+html, body {
+  min-height: 100%;
+  margin: 0;
+}
+
+body {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 1rem;
+}
+
+.card-grid {
+  padding: 1.25rem;
+  border: 1px solid black;
+  border-radius: 1rem;
+  background-color: green;
+  height: 100%;
+  width: 100%;
+  max-width: 600px;
+
+  display: grid;
+  grid-gap: 1rem;
+  grid-template-columns: repeat(5, 1fr);
+}
+
+.card {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+
+  background-color: white;
+  aspect-ratio: .5/.75;
+  border: 2px solid black;
+  border-radius: 1rem;
+  font-size: 2rem;
+  cursor: pointer;
+  transition: border .1s;
+}
+
+.hidden {
+  background: none;
+  border: none;
+}
+
+.empty {
+  border: 2px dotted white;
+  background-color: green;
+}
+
+.card:not(.hidden):hover {
+  border: 2px solid yellow;
+}
