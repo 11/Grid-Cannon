@@ -2,13 +2,15 @@ import Game from './game.js'
 
 export default class Grid {
   get htmlGrid() {
-    return Array.from(document.querySelectorAll('.card'))
+    return Array.from(document.querySelectorAll('.game-grid > .card'))
   }
 
   constructor(deck) {
     this._deck = deck
     this._grid = Array(25).fill(null)
-    this._spotPositions = [[1,1], [1,2], [1,3], [2,1], [2,3], [3,1], [3,2], [3,3]]
+
+    this._startSpotPositionss = [[1,1], [1,2], [1,3], [2,1], [2,3], [3,1], [3,2], [3,3]]
+    this._spotPosition = [[1,1], [1,2], [1,3], [2,1], [2,2], [2,3], [3,1], [3,2], [3,3]]
     this._facePositions = [[0,1], [0,2], [0,3], [1,0], [1,4], [2,0], [2,4], [3,0], [3,4], [4,1], [4,2],[4,3]]
   }
 
@@ -71,7 +73,7 @@ export default class Grid {
   }
 
   _placeSpotCardsInGrid(spots) {
-    for (const [x,y] of this._spotPositions) {
+    for (const [x,y] of this._startSpotPositionss) {
       const card = spots.shift()
       card.position = [x, y]
 
@@ -80,25 +82,25 @@ export default class Grid {
   }
 
   _placeFaceCardsInGrid(faces) {
-      for (const faceCard of faces) {
-        const mostSimilarCards = this._orderByMostSimilarCard(faceCard)
-        let isFaceCardInserted = false
+    for (const faceCard of faces) {
+      const mostSimilarCards = this._orderByMostSimilarCard(faceCard)
+      let isFaceCardInserted = false
 
-        for (let i = 0; i < mostSimilarCards.length && !isFaceCardInserted; i++) {
-          const card = mostSimilarCards[i]
-          const [x, y] = card.position
+      for (let i = 0; i < mostSimilarCards.length && !isFaceCardInserted; i++) {
+        const card = mostSimilarCards[i]
+        const [x, y] = card.position
 
-          const adjacentTiles = this._getAdjacentFaceTiles(x, y)
+        const adjacentTiles = this._getAdjacentFaceTiles(x, y)
 
-          for (const [x, y] of adjacentTiles) {
-            if (!this.query(x, y)) {
-              this.insert(x, y, faceCard)
-              isFaceCardInserted = true
-              break
-            }
+        for (const [x, y] of adjacentTiles) {
+          if (!this.query(x, y)) {
+            this.insert(x, y, faceCard)
+            isFaceCardInserted = true
+            break
           }
         }
       }
+    }
   }
 
   _orderByMostSimilarCard(faceCard) {
@@ -114,7 +116,7 @@ export default class Grid {
       return [...resultA, ...resultB]
     }
 
-    const playedCards = this._spotPositions.map(([x, y]) => this.query(x,y))
+    const playedCards = this._startSpotPositionss.map(([x, y]) => this.query(x,y))
     const orderBySuitAndValue = [...playedCards].filter(isSameSuit).sort(byValueDiff)
     const orderByColorAndValue = [...playedCards].filter(isSameColor).sort(byValueDiff)
     const orderByValue = [...playedCards].sort(byValueDiff)
@@ -148,9 +150,25 @@ export default class Grid {
     }
   }
 
+  findValidTilePlacements(card) {
+    if (card.isFaceCard) {
+      return [...this._facePositions].filter(([x, y]) => !this.query(x, y))
+    } else {
+      return [...this._spotPosition].filter(([x, y]) => {
+        return !this.query(x, y) || this.query(x, y).value < card.value
+      })
+    }
+  }
+
   query(x, y) {
     const stride = (5 * x) + y
     return this._grid[stride]
+  }
+
+  queryHtmlGrid(x, y) {
+    const htmlGrid = this.htmlGrid
+    const stride = (5 * x) + y
+    return htmlGrid[stride]
   }
 
   remove(x, y) {
@@ -163,6 +181,11 @@ export default class Grid {
 
   insert(x, y, card) {
     const stride = (5 * x) + y
+    if (this.query(x, y)) {
+      const oldCard = this.remove(x, y)
+      this._deck.discard(oldCard)
+    }
+
     this._grid[stride] = card
   }
 

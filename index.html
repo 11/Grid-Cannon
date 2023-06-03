@@ -16,36 +16,36 @@
   <body>
     <h1>Grid Canon</h1>
     <div class='game-grid'>
-      <div class='card hidden'></div>
-      <div class='card empty'></div>
-      <div class='card empty'></div>
-      <div class='card empty'></div>
-      <div class='card hidden'></div>
-      <div class='card empty'></div>
-      <div class='card empty'></div>
-      <div class='card empty'></div>
-      <div class='card empty'></div>
-      <div class='card empty'></div>
-      <div class='card empty'></div>
-      <div class='card empty'></div>
-      <div class='card empty'></div>
-      <div class='card empty'></div>
-      <div class='card empty'></div>
-      <div class='card empty'></div>
-      <div class='card empty'></div>
-      <div class='card empty'></div>
-      <div class='card empty'></div>
-      <div class='card empty'></div>
-      <div class='card hidden'></div>
-      <div class='card empty'></div>
-      <div class='card empty'></div>
-      <div class='card empty'></div>
-      <div class='card hidden'></div>
+      <div data-grid-x='0' data-grid-y='0' class='card hidden'></div>
+      <div data-grid-x='0' data-grid-y='1' class='card empty'></div>
+      <div data-grid-x='0' data-grid-y='2' class='card empty'></div>
+      <div data-grid-x='0' data-grid-y='3' class='card empty'></div>
+      <div data-grid-x='0' data-grid-y='4' class='card hidden'></div>
+      <div data-grid-x='1' data-grid-y='0' class='card empty'></div>
+      <div data-grid-x='1' data-grid-y='1' class='card empty'></div>
+      <div data-grid-x='1' data-grid-y='2' class='card empty'></div>
+      <div data-grid-x='1' data-grid-y='3' class='card empty'></div>
+      <div data-grid-x='1' data-grid-y='4' class='card empty'></div>
+      <div data-grid-x='2' data-grid-y='0' class='card empty'></div>
+      <div data-grid-x='2' data-grid-y='1' class='card empty'></div>
+      <div data-grid-x='2' data-grid-y='2' class='card empty'></div>
+      <div data-grid-x='2' data-grid-y='3' class='card empty'></div>
+      <div data-grid-x='2' data-grid-y='4' class='card empty'></div>
+      <div data-grid-x='3' data-grid-y='0' class='card empty'></div>
+      <div data-grid-x='3' data-grid-y='1' class='card empty'></div>
+      <div data-grid-x='3' data-grid-y='2' class='card empty'></div>
+      <div data-grid-x='3' data-grid-y='3' class='card empty'></div>
+      <div data-grid-x='3' data-grid-y='4' class='card empty'></div>
+      <div data-grid-x='4' data-grid-y='0' class='card hidden'></div>
+      <div data-grid-x='4' data-grid-y='1' class='card empty'></div>
+      <div data-grid-x='4' data-grid-y='2' class='card empty'></div>
+      <div data-grid-x='4' data-grid-y='3' class='card empty'></div>
+      <div data-grid-x='4' data-grid-y='4' class='card hidden'></div>
     </div>
 
     <div class='controls'>
-      <div id='deck' class='card empty' onclick='window.game.nextHandEvent()'></div>
-      <div id='hand' class='card empty'></div>
+      <div id='deck' class='card empty' onclick='window.game.drawHandEvent()'></div>
+      <div id='hand' class='card empty' onclick='window.game.showValidTilesEvent()'></div>
       <div id='discard' class='card empty'></div>
     </div>
 

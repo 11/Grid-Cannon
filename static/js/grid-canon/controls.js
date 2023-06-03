@@ -11,8 +11,18 @@ export default class Controls {
     return document.querySelector('#discard')
   }
 
-  constructor(deck) {
+  get cardInHand() {
+    return this._cardInHand
+  }
+
+  set cardInHand(card) {
+    this._cardInHand = card
+  }
+
+  constructor(deck, grid) {
     this._deck = deck
+    this._grid = grid
+
     this._cardInHand = null
   }
 
@@ -40,11 +50,6 @@ export default class Controls {
     discardHtml.style.color = ''
   }
 
-  nextHand() {
-    this._deck.discard(this._cardInHand)
-    this._cardInHand = this._deck.deal()
-  }
-
   _renderDeck() {
     const deckHtml = this.deckHtml
     if (this._deck.length === 0) {
@@ -59,12 +64,11 @@ export default class Controls {
   _renderHand() {
     const handHtml = this.handHtml
     if (!this._cardInHand) {
-      handHtml.classList.add('empty')
       handHtml.classList.remove('face')
+      handHtml.textContent = ''
+      handHtml.style.color = ''
     } else {
       handHtml.classList.add('face')
-      handHtml.classList.remove('empty')
-
       handHtml.textContent = this._cardInHand.faceText
       handHtml.style.color = this._cardInHand.color
     }
@@ -85,9 +89,17 @@ export default class Controls {
     }
   }
 
+  pullCardFromHand() {
+    const card = this._cardInHand
+    this._cardInHand = null
+
+    return card
+  }
+
   render() {
     this._renderDeck()
     this._renderHand()
     this._renderDiscard()
   }
 }
+

@@ -55,6 +55,7 @@ export default class Card {
     this._gridY = y
   }
 
+
   get value() {
     const nameToValue = {
       [Card.Names['JOKER']]: -1,
@@ -75,6 +76,14 @@ export default class Card {
     }
 
     return nameToValue[this._name]
+  }
+
+  get isSpotCard() {
+    return this.value <= 10
+  }
+
+  get isFaceCard() {
+    return this.value > 10
   }
 
   get color() {

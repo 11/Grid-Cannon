@@ -17,7 +17,7 @@ body {
 
 .game-grid {
   padding: 1.25rem;
-  border: 1px solid black;
+  border: 3px solid black;
   border-radius: 1rem;
   background-color: green;
   height: 100%;
@@ -36,10 +36,11 @@ body {
   align-items: center;
   cursor: pointer;
   transition: border .1s;
-  border: 2px solid black;
+  border: 3px solid black;
   border-radius: 1rem;
   aspect-ratio: .5/.75;
   min-height: 150px;
+  user-select: none;
 }
 
 .face {
@@ -57,16 +58,15 @@ body {
 }
 
 .empty {
-  border: 2px dotted white;
-  background-color: green;
+  border: 3px dotted white;
 }
 
-.card:not(.hidden):hover {
-  border: 2px solid yellow;
+.selected {
+  border: 3px solid yellow;
 }
 
 .controls {
-  border: 1px solid black;
+  border: 3px solid black;
   border-radius: 1rem;
   background-color: green;
   padding: 1rem;
