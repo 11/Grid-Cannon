@@ -85,6 +85,10 @@ export default class Card {
     return this.value > 10
   }
 
+  get isJoker() {
+    return this.value === 0
+  }
+
   get color() {
     switch(this.suit) {
       case Card.Suits.SPADE:

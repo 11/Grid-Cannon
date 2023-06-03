@@ -1,4 +1,5 @@
 import Game from './game.js'
+import Card from './card.js'
 
 export default class Grid {
   get htmlGrid() {
@@ -7,9 +8,9 @@ export default class Grid {
 
   constructor(deck) {
     this._deck = deck
-    this._grid = Array(25).fill(null)
+    this._grid = Array.from(Array(25), () => [])
 
-    this._startSpotPositionss = [[1,1], [1,2], [1,3], [2,1], [2,3], [3,1], [3,2], [3,3]]
+    this._startSpotPositions = [[1,1], [1,2], [1,3], [2,1], [2,3], [3,1], [3,2], [3,3]]
     this._spotPositions = [[1,1], [1,2], [1,3], [2,1], [2,2], [2,3], [3,1], [3,2], [3,3]]
     this._facePositions = [[0,1], [0,2], [0,3], [1,0], [1,4], [2,0], [2,4], [3,0], [3,4], [4,1], [4,2],[4,3]]
   }
@@ -73,7 +74,7 @@ export default class Grid {
   }
 
   _placeSpotCardsInGrid(spots) {
-    for (const [x,y] of this._startSpotPositionss) {
+    for (const [x,y] of this._startSpotPositions) {
       const card = spots.shift()
       card.gridPosition = [x, y]
 
@@ -116,7 +117,7 @@ export default class Grid {
       return [...resultA, ...resultB]
     }
 
-    const playedCards = this._startSpotPositionss.map(([x, y]) => this.query(x,y))
+    const playedCards = this._startSpotPositions.map(([x, y]) => this.query(x,y))
     const orderBySuitAndValue = [...playedCards].filter(isSameSuit).sort(byValueDiff)
     const orderByColorAndValue = [...playedCards].filter(isSameColor).sort(byValueDiff)
     const orderByValue = [...playedCards].sort(byValueDiff)
@@ -153,47 +154,50 @@ export default class Grid {
   findValidTilePlacements(card) {
     if (card.isFaceCard) {
       return [...this._facePositions].filter(([x, y]) => !this.query(x, y))
-    } else {
+    } else if (card.isJoker) {
+      return [...this._spotPositions]
+    }
+    else {
       return [...this._spotPositions].filter(([x, y]) => {
         return !this.query(x, y) || this.query(x, y).value < card.value
       })
     }
   }
 
-  query(x, y) {
-    const stride = (5 * x) + y
-    return this._grid[stride]
-  }
-
-  queryHtmlGrid(x, y) {
+  getCardFromHtmlGrid(x, y) {
     const htmlGrid = this.htmlGrid
     const stride = (5 * x) + y
     return htmlGrid[stride]
   }
 
-  remove(x, y) {
+  query(x, y) {
     const stride = (5 * x) + y
-    const card = this._grid[stride]
-    this._grid[stride] = null
+    return this._grid[stride].at(0)
+  }
 
-    return card
+  discardCardStack(x, y) {
+    const stride = (5 * x) + y
+
+    let card
+    while (card = this._grid[stride].pop()) {
+      this._deck.discard(card)
+    }
   }
 
   insert(x, y, card) {
     const stride = (5 * x) + y
-    if (this.query(x, y)) {
-      const oldCard = this.remove(x, y)
-      this._deck.discard(oldCard)
+    if (card.isJoker) {
+      this.discardCardStack(x, y)
     }
 
-    this._grid[stride] = card
+    this._grid[stride].unshift(card)
   }
 
   render() {
     const htmlGrid = this.htmlGrid
 
     for (let i = 0; i < this._grid.length; i++) {
-      const card = this._grid[i]
+      const card = this._grid[i]?.at(0)
       const cardDiv = htmlGrid[i]
 
       if (cardDiv.classList.contains('hidden')) {

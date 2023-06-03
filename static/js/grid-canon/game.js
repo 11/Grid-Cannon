@@ -109,7 +109,7 @@ export default class Game {
       case Game.GameEvents.SHOW_VALID_TILES: {
         const validGridTiles = this.grid.findValidTilePlacements(this.controls.cardInHand)
         validGridTiles
-          .map(([x, y]) => this.grid.queryHtmlGrid(x, y))
+          .map(([x, y]) => this.grid.getCardFromHtmlGrid(x, y))
           .forEach(cardDiv => {
             cardDiv.classList.add('selected')
             cardDiv.onclick = this.chooseTileEvent.bind(this)
