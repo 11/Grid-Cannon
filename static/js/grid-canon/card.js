@@ -43,14 +43,14 @@ export default class Card {
     return `${this.faceName} ${this.suitSymbol}`
   }
 
-  get position() {
+  get gridPosition() {
     return [
       this._gridX,
       this._gridY,
     ]
   }
 
-  set position([x, y]) {
+  set gridPosition([x, y]) {
     this._gridX = x
     this._gridY = y
   }
@@ -58,9 +58,8 @@ export default class Card {
 
   get value() {
     const nameToValue = {
-      [Card.Names['JOKER']]: -1,
-      [Card.Names['ACE']]:    0,
-      [Card.Names['ONE']]:    1,
+      [Card.Names['JOKER']]:  0,
+      [Card.Names['ACE']]:    1,
       [Card.Names['TWO']]:    2,
       [Card.Names['THREE']]:  3,
       [Card.Names['FOUR']]:   4,
@@ -103,7 +102,6 @@ export default class Card {
     return {
       JOKER: 'JOKER',
       ACE: 'ACE',
-      ONE: 'ONE',
       TWO: 'TWO',
       THREE: 'THREE',
       FOUR: 'FOUR',

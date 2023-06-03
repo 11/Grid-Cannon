@@ -10,7 +10,7 @@ export default class Grid {
     this._grid = Array(25).fill(null)
 
     this._startSpotPositionss = [[1,1], [1,2], [1,3], [2,1], [2,3], [3,1], [3,2], [3,3]]
-    this._spotPosition = [[1,1], [1,2], [1,3], [2,1], [2,2], [2,3], [3,1], [3,2], [3,3]]
+    this._spotPositions = [[1,1], [1,2], [1,3], [2,1], [2,2], [2,3], [3,1], [3,2], [3,3]]
     this._facePositions = [[0,1], [0,2], [0,3], [1,0], [1,4], [2,0], [2,4], [3,0], [3,4], [4,1], [4,2],[4,3]]
   }
 
@@ -75,7 +75,7 @@ export default class Grid {
   _placeSpotCardsInGrid(spots) {
     for (const [x,y] of this._startSpotPositionss) {
       const card = spots.shift()
-      card.position = [x, y]
+      card.gridPosition = [x, y]
 
       this.insert(x, y, card)
     }
@@ -88,7 +88,7 @@ export default class Grid {
 
       for (let i = 0; i < mostSimilarCards.length && !isFaceCardInserted; i++) {
         const card = mostSimilarCards[i]
-        const [x, y] = card.position
+        const [x, y] = card.gridPosition
 
         const adjacentTiles = this._getAdjacentFaceTiles(x, y)
 
@@ -154,7 +154,7 @@ export default class Grid {
     if (card.isFaceCard) {
       return [...this._facePositions].filter(([x, y]) => !this.query(x, y))
     } else {
-      return [...this._spotPosition].filter(([x, y]) => {
+      return [...this._spotPositions].filter(([x, y]) => {
         return !this.query(x, y) || this.query(x, y).value < card.value
       })
     }

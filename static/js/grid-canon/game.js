@@ -81,19 +81,26 @@ export default class Game {
 
   drawHandEvent(e) {
     switch (window.game.currentGameEvent) {
-      case Game.GameEvents.DRAW_HAND: {
+      case Game.GameEvents.DRAW_HAND:
+      case Game.GameEvents.SHOW_VALID_TILES:
+      case Game.GameEvents.CHOOSE_TILE: {
+        if (this.controls.cardInHand?.isFaceCard) {
+          break
+        }
+
         this._deck.discard(this._controls.cardInHand)
         this._controls.cardInHand = this._deck.deal()
-        window.game.currentGameEvent = Game.GameEvents.SHOW_VALID_TILES
-        break
-      }
 
-      case Game.GameEvents.SHOW_VALID_TILES: {
-        // TODO
+        this.grid.htmlGrid.forEach(cardDiv =>  {
+          cardDiv.classList.remove('selected')
+          cardDiv.onclick = null
+        })
+
         break
       }
     }
 
+    window.game.currentGameEvent = Game.GameEvents.SHOW_VALID_TILES
     this._render()
   }
 
