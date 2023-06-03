@@ -3,7 +3,7 @@ import Card from './card.js'
 
 export default class Grid {
   get htmlGrid() {
-    return Array.from(document.querySelectorAll('.game-grid > .card'))
+    return Array.from(document.querySelectorAll('[data-game-card="true"]'))
   }
 
   constructor(deck) {
