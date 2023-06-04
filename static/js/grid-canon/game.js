@@ -64,11 +64,10 @@ export default class Game {
 
   _start(difficulty) {
     this._deck = new Deck()
+    this._grid = new Grid()
+    this._controls = new Controls()
 
-    this._grid = new Grid(this._deck)
     this._grid.setup(difficulty)
-
-    this._controls = new Controls(this._deck, this._grid)
     this._controls.setup()
 
     this._render()
@@ -76,6 +75,7 @@ export default class Game {
 
   _render() {
     this._grid.render()
+    this._deck.render()
     this._controls.render()
   }
 
@@ -84,12 +84,20 @@ export default class Game {
       case Game.GameEvents.DRAW_HAND:
       case Game.GameEvents.SHOW_VALID_TILES:
       case Game.GameEvents.CHOOSE_TILE: {
-        if (this.controls.cardInHand?.isFaceCard) {
+        if (this._controls.cardInHand?.isFaceCard) {
           break
         }
 
-        this._deck.discard(this._controls.cardInHand)
-        this._controls.cardInHand = this._deck.deal()
+        this._controls.putInDiscards(this._controls.cardInHand)
+
+        const dealtCard = this._deck.deal()
+        if (dealtCard.isJoker) {
+          this._controls.putInJokers(dealtCard)
+        } else if (dealtCard.isAce) {
+          this._controls.putInAces(dealtCard)
+        } else {
+          this._controls.putInHand(dealtCard)
+        }
 
         this.grid.htmlGrid.forEach(cardDiv =>  {
           cardDiv.classList.remove('selected')
@@ -126,7 +134,7 @@ export default class Game {
   chooseTileEvent(e) {
     switch (window.game.currentGameEvent) {
       case Game.GameEvents.CHOOSE_TILE: {
-        const card = this.controls.pullCardFromHand()
+        const card = this.controls.pullFromHand()
         const x = parseInt(e.target.getAttribute('data-grid-x'))
         const y = parseInt(e.target.getAttribute('data-grid-y'))
         this.grid.insert(x, y, card)

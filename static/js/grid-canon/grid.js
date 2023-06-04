@@ -1,13 +1,13 @@
 import Game from './game.js'
 import Card from './card.js'
+import Controls from './controls.js'
 
 export default class Grid {
   get htmlGrid() {
     return Array.from(document.querySelectorAll('.game-grid > [data-game-card="true"]'))
   }
 
-  constructor(deck) {
-    this._deck = deck
+  constructor() {
     this._grid = Array.from(Array(25), () => [])
 
     this._startSpotPositions = [[1,1], [1,2], [1,3], [2,1], [2,3], [3,1], [3,2], [3,3]]
@@ -54,11 +54,11 @@ export default class Grid {
       faces = []
       spots = []
 
-      this._deck.newOrderedDeck()
-      this._deck.shuffle()
+      window.game.deck.newOrderedDeck()
+      window.game.deck.shuffle()
 
       while (spots.length <= 7) {
-        const card = this._deck.pop()
+        const card = window.game.deck.pop()
         if (card.value > 10) {
           faces.push(card)
         } else {
@@ -158,7 +158,7 @@ export default class Grid {
       return [...this._spotPositions]
     } else {
       return [...this._spotPositions].filter(([x, y]) => {
-        return !this.query(x, y) || this.query(x, y).value < card.value
+        return !this.query(x, y) || this.query(x, y).value <= card.value
       })
     }
   }
@@ -174,19 +174,10 @@ export default class Grid {
     return this._grid[stride].at(0)
   }
 
-  discardCardStack(x, y) {
-    const stride = (5 * x) + y
-
-    let card
-    while (card = this._grid[stride].pop()) {
-      this._deck.discard(card)
-    }
-  }
-
   insert(x, y, card) {
     const stride = (5 * x) + y
-    if (card.isJoker) {
-      this.discardCardStack(x, y)
+    if (card.isAce) {
+      // TODO: create function to put card stack at bottom of deck
     }
 
     this._grid[stride].unshift(card)

@@ -78,7 +78,7 @@ export default class Card {
   }
 
   get isSpotCard() {
-    return this.value <= 10
+    return this.value >= 2 && this.value <= 10
   }
 
   get isFaceCard() {
@@ -87,6 +87,10 @@ export default class Card {
 
   get isJoker() {
     return this.value === 0
+  }
+
+  get isAce() {
+    return this.value === 1
   }
 
   get color() {

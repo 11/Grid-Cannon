@@ -28,7 +28,7 @@ h1, h2, h3, h4, h5, h6 {
   border-radius: 1rem;
   background-color: green;
 
-  aspect-ratio: .5/.7;
+  aspect-ratio: .5/.75;
   height: 100%;
 
   display: grid;
@@ -89,6 +89,24 @@ h1, h2, h3, h4, h5, h6 {
 
 #hand {
   grid-column: 2;
+}
+
+#aces {
+  color: white;
+  grid-column: 3;
+}
+
+#aces .empty {
+  color: white;
+}
+
+#jokers {
+  color: white;
+  grid-column: 4;
+}
+
+#jokers .empty {
+  color: white;
 }
 
 #discard {

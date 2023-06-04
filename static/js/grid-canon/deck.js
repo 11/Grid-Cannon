@@ -1,6 +1,10 @@
 import Card from './card.js'
 
 export default class Deck {
+  get deckHtml() {
+    return document.querySelector('#deck')
+  }
+
   get length() {
     return this._cards.length
   }
@@ -25,13 +29,6 @@ export default class Deck {
 
     this._cards.push(new Card(Card.Names.JOKER, null, null, null))
     this._cards.push(new Card(Card.Names.JOKER, null, null, null))
-  }
-
-  reset() {
-    for (let i = 0; i < this._used.length; i++) {
-      const discard = this._used.pop()
-      this._cards.push(discard)
-    }
   }
 
   cut() {
@@ -83,20 +80,15 @@ export default class Deck {
     return this._cards.shift()
   }
 
-  discard(card) {
-    if (!card) {
-      return
+  render() {
+    const deckHtml = this.deckHtml
+    if (this.length === 0) {
+      deckHtml.classList.add('empty')
+      deckHtml.classList.remove('back')
+    } else {
+      deckHtml.classList.add('back')
+      deckHtml.classList.remove('empty')
     }
-
-    this._used.push(card)
-  }
-
-  peekDiscardPile() {
-    if (this._used.length === 0) {
-      return null
-    }
-
-    return this._used.at(-1)
   }
 
   toString() {
