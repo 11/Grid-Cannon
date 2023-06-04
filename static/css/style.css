@@ -49,13 +49,14 @@ h1, h2, h3, h4, h5, h6 {
   cursor: pointer;
   user-select: none;
 
+  font-size: 1.5rem;
+
   min-width: 50px;
 }
 
 .face {
   padding: .25rem;
   background-color: white;
-  font-size: 1.5rem;
 }
 
 .empty {
@@ -79,6 +80,11 @@ h1, h2, h3, h4, h5, h6 {
 
 #deck {
   grid-column: 1;
+  color: rgba(0,0,0,0);
+}
+
+#deck:not(.empty) {
+  color: yellow;
 }
 
 #hand {

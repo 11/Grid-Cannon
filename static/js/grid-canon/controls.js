@@ -34,7 +34,6 @@ export default class Controls {
     const deckHtml = this.deckHtml
     deckHtml.classList.remove('back')
     deckHtml.classList.add('empty')
-    deckHtml.textContent = ''
     deckHtml.style.color = ''
 
     const handHtml = this.handHtml

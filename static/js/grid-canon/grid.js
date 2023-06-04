@@ -3,7 +3,7 @@ import Card from './card.js'
 
 export default class Grid {
   get htmlGrid() {
-    return Array.from(document.querySelectorAll('[data-game-card="true"]'))
+    return Array.from(document.querySelectorAll('.game-grid > [data-game-card="true"]'))
   }
 
   constructor(deck) {
@@ -156,8 +156,7 @@ export default class Grid {
       return [...this._facePositions].filter(([x, y]) => !this.query(x, y))
     } else if (card.isJoker) {
       return [...this._spotPositions]
-    }
-    else {
+    } else {
       return [...this._spotPositions].filter(([x, y]) => {
         return !this.query(x, y) || this.query(x, y).value < card.value
       })
@@ -202,17 +201,17 @@ export default class Grid {
 
       if (cardDiv.classList.contains('hidden')) {
         continue
-      } else if (!card) {
+      } if (!card) {
         cardDiv.classList.add('empty')
 
-        continue
+        cardDiv.innerHTML = '&nbsp;'
       } else {
         cardDiv.classList.remove('empty')
         cardDiv.classList.add('face')
-      }
 
-      cardDiv.textContent = card.faceText
-      cardDiv.style.color = card.color
+        cardDiv.textContent = card.faceText
+        cardDiv.style.color = card.color
+      }
     }
   }
 
