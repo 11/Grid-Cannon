@@ -1,6 +1,5 @@
 import Game from './game.js'
-import Card from './card.js'
-import Controls from './controls.js'
+import CardStack from './card-stack.js'
 
 export default class Grid {
   get htmlGrid() {
@@ -8,19 +7,38 @@ export default class Grid {
   }
 
   constructor() {
-    this._grid = Array.from(Array(25), () => [])
+    this._grid = Array.from(Array(25), () => new CardStack())
 
     this._startSpotPositions = [[1,1], [1,2], [1,3], [2,1], [2,3], [3,1], [3,2], [3,3]]
     this._spotPositions = [[1,1], [1,2], [1,3], [2,1], [2,2], [2,3], [3,1], [3,2], [3,3]]
     this._facePositions = [[0,1], [0,2], [0,3], [1,0], [1,4], [2,0], [2,4], [3,0], [3,4], [4,1], [4,2],[4,3]]
   }
 
+  bindGameEvents(chooseGridPositionEvent) {
+    this.htmlGrid.forEach(position => position.onclick = chooseGridPositionEvent.bind(window.game))
+  }
+
   setup(difficulty) {
     this._clearScreen()
 
-    const { faces, spots } = this._generateNewGridByDifficulty(difficulty)
+    const {
+      faces,
+      spots,
+      jokers,
+      aces,
+    } = this._generateNewGridByDifficulty(difficulty)
     this._placeSpotCardsInGrid(spots)
     this._placeFaceCardsInGrid(faces)
+
+    let joker
+    while(joker = jokers.pop()) {
+      window.game.controls.putJokers(joker)
+    }
+
+    let ace
+    while (ace = aces.pop()) {
+      window.game.controls.putAces(ace)
+    }
   }
 
   _clearScreen() {
@@ -50,17 +68,25 @@ export default class Grid {
 
     let faces
     let spots
+    let jokers
+    let aces
     do {
       faces = []
       spots = []
+      jokers = []
+      aces = []
 
       window.game.deck.newOrderedDeck()
       window.game.deck.shuffle()
 
       while (spots.length <= 7) {
         const card = window.game.deck.pop()
-        if (card.value > 10) {
+        if (card.isFace) {
           faces.push(card)
+        } else if (card.isJoker) {
+          jokers.push(card)
+        } else if (card.isAce) {
+          aces.push(card)
         } else {
           spots.push(card)
         }
@@ -70,6 +96,8 @@ export default class Grid {
     return {
       faces,
       spots,
+      jokers,
+      aces,
     }
   }
 
@@ -78,7 +106,7 @@ export default class Grid {
       const card = spots.shift()
       card.gridPosition = [x, y]
 
-      this.insert(x, y, card)
+      this.push(x, y, card)
     }
   }
 
@@ -94,8 +122,8 @@ export default class Grid {
         const adjacentTiles = this._getAdjacentFaceTiles(x, y)
 
         for (const [x, y] of adjacentTiles) {
-          if (!this.query(x, y)) {
-            this.insert(x, y, faceCard)
+          if (!this.peek(x, y)) {
+            this.push(x, y, faceCard)
             isFaceCardInserted = true
             break
           }
@@ -117,7 +145,7 @@ export default class Grid {
       return [...resultA, ...resultB]
     }
 
-    const playedCards = this._startSpotPositions.map(([x, y]) => this.query(x,y))
+    const playedCards = this._startSpotPositions.map(([x, y]) => this.peek(x,y))
     const orderBySuitAndValue = [...playedCards].filter(isSameSuit).sort(byValueDiff)
     const orderByColorAndValue = [...playedCards].filter(isSameColor).sort(byValueDiff)
     const orderByValue = [...playedCards].sort(byValueDiff)
@@ -152,62 +180,99 @@ export default class Grid {
   }
 
   findValidTilePlacements(card) {
-    if (card.isFaceCard) {
-      return [...this._facePositions].filter(([x, y]) => !this.query(x, y))
-    } else if (card.isJoker) {
+  }
+
+  getCardHtmlFromGridPosition(x, y) {
+    const stride = (5 * x) + y
+    return this.htmlGrid.at(stride)
+  }
+
+  peek(x, y) {
+    const stride = (5 * x) + y
+    return this._grid.at(stride)?.peek()
+  }
+
+  pop(x, y) {
+    const stride = (5 * x) + y
+    const card = this._grid.at(stride)?.pop()
+    card.gridPosition = [null, null]
+    return card
+  }
+
+  clear(x, y) {
+    const stride = (5 * x) + y
+    return this._grid.at(stride)?.clear()
+  }
+
+  push(x, y, card) {
+    const stride = (5 * x) + y
+    card.gridPosition = [x, y]
+    return this._grid.at(stride)?.push(card)
+  }
+
+  pushFace(x, y, face) {
+
+  }
+
+  pushJoker(x, y, joker) {
+
+  }
+
+  pushAce(x, y, ace) {
+
+  }
+
+  pushSpotAndAttack(x, y, card) {
+    const stride = (5 * x) + y
+    this._grid.at(stride)?.push(card)
+
+    // TODO
+  }
+
+  findValidGridPlacements() {
+    const card = window.game.turn.selectedCard
+    if (card.isFace) {
+      return [...this._facePositions]
+        .filter(([x, y]) => !this.peek(x, y))
+        .map(coordinates => coordinates.join(''))
+    } else if (card.isJoker || card.isAce) {
       return [...this._spotPositions]
+        .map(coordinates => coordinates.join(''))
     } else {
-      return [...this._spotPositions].filter(([x, y]) => {
-        return !this.query(x, y) || this.query(x, y).value <= card.value
-      })
+      return [...this._spotPositions]
+        .filter(([x, y]) => !this.peek(x, y) || this.peek(x, y).value <= card.value)
+        .map(coordinates => coordinates.join(''))
     }
-  }
-
-  getCardFromHtmlGrid(x, y) {
-    const htmlGrid = this.htmlGrid
-    const stride = (5 * x) + y
-    return htmlGrid[stride]
-  }
-
-  query(x, y) {
-    const stride = (5 * x) + y
-    return this._grid[stride].at(0)
-  }
-
-  insert(x, y, card) {
-    const stride = (5 * x) + y
-    if (card.isAce) {
-      // TODO: create function to put card stack at bottom of deck
-    }
-
-    this._grid[stride].unshift(card)
   }
 
   render() {
     const htmlGrid = this.htmlGrid
 
     for (let i = 0; i < this._grid.length; i++) {
-      const card = this._grid[i]?.at(0)
+      const card = this._grid[i].peek()
       const cardDiv = htmlGrid[i]
+      const x = parseInt(cardDiv.getAttribute('data-grid-x'))
+      const y = parseInt(cardDiv.getAttribute('data-grid-y'))
 
-      if (cardDiv.classList.contains('hidden')) {
-        continue
-      } if (!card) {
-        cardDiv.classList.add('empty')
-
-        cardDiv.innerHTML = '&nbsp;'
+      debugger
+      if (window.game.turn.selectedCardValidPlacementPositions?.has(`${x}${y}`)) {
+        cardDiv.classList.add('selected')
       } else {
-        cardDiv.classList.remove('empty')
-        cardDiv.classList.add('face')
-
-        cardDiv.textContent = card.faceText
-        cardDiv.style.color = card.color
+        cardDiv.classList.remove('selected')
       }
+
+      if (!card) {
+        cardDiv.classList.add('empty')
+        cardDiv.innerHTML = '&nbsp;'
+        continue
+      }
+
+      card.render(cardDiv)
     }
   }
 
   printAsTable() {
-    const cardAbbreviations = this._grid.map(card => !card ? 'XX' : card.toString())
+    const cardAbbreviations = this._grid.map(stack => !stack.peek () ? 'XX' : stack.peek().toString())
     for (let i = 0; i < 5; i++) {
       console.log([
         cardAbbreviations.shift(),

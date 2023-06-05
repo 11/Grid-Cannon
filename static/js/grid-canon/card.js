@@ -1,3 +1,5 @@
+import Game from './game.js'
+
 export default class Card {
   get name() {
     return this._name
@@ -77,11 +79,11 @@ export default class Card {
     return nameToValue[this._name]
   }
 
-  get isSpotCard() {
+  get isSpot() {
     return this.value >= 2 && this.value <= 10
   }
 
-  get isFaceCard() {
+  get isFace() {
     return this.value > 10
   }
 
@@ -139,6 +141,19 @@ export default class Card {
     this._suit = suit
     this._gridX = gridX
     this._gridY = gridY
+  }
+
+  render(cardElement) {
+    if (cardElement.classList.contains('hidden')) {
+      return
+    }
+
+    cardElement.classList.remove('empty')
+    cardElement.classList.add('face')
+
+    cardElement.textContent = this.faceText
+    cardElement.style.color = this.color
+
   }
 
   toString() {

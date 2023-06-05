@@ -1,14 +1,16 @@
+import CardStack from './card-stack.js'
+
 export default class Controls {
   get handHtml() {
     return document.querySelector('#hand')
   }
 
-  get jokersHtml() {
-    return document.querySelector('#jokers')
-  }
-
   get acesHtml() {
     return document.querySelector('#aces')
+  }
+
+  get jokersHtml() {
+    return document.querySelector('#jokers')
   }
 
   get discardHtml() {
@@ -23,85 +25,33 @@ export default class Controls {
     return this._hand !== null
   }
 
-  get hasJokers() {
-    return this._jokers.length > 0
+  get hasAces() {
+    return this._aces.size > 0
   }
 
-  get hasAces() {
-    return this._aces.length > 0
+  get hasJokers() {
+    return this._jokers.size > 0
   }
 
   get hasDiscards() {
-    return this._discards.length > 0
+    return this._discards.size > 0
   }
 
   constructor() {
     this._hand = null
-    this._jokers = []
-    this._aces = []
-    this._discards = []
+    this._jokers = new CardStack()
+    this._aces = new CardStack()
+    this._discards = new CardStack()
   }
 
   setup() {
     this._clearScreen()
   }
 
-  putInHand(card) {
-    if (!card) {
-      return
-    }
-
-    this._hand = card
-  }
-
-  putInJokers(card) {
-    if (!card) {
-      return card
-    }
-
-    this._jokers.push(card)
-  }
-
-  putInAces(card) {
-    if (!card) {
-      return card
-    }
-
-    this._aces.push(card)
-  }
-
-  putInDiscards(card) {
-    if (!card) {
-      return
-    }
-
-    this._discards.push(card)
-  }
-
-  pullFromHand() {
-    if (!this.hasCardInHand) {
-      return null
-    }
-    const card = this._hand
-    this._hand = null
-
-    return card
-  }
-
-  pullFromJokers() {
-    if (!this.hasJokers) {
-      return null
-    }
-
-    return this._jokers.shift()
-  }
-
-  pullFromAces() {
-    if (!this.hasAces) {
-      return null
-    }
-
-    return this._aces.shift()
+  bindGameEvents(selectHandEvent, selectAceEvent, selectJokerEvent) {
+    this.handHtml.onclick = selectHandEvent.bind(window.game)
+    this.acesHtml.onclick = selectAceEvent.bind(window.game)
+    this.jokersHtml.onclick = selectJokerEvent.bind(window.game)
   }
 
   _clearScreen() {
@@ -116,6 +66,69 @@ export default class Controls {
     discardHtml.classList.add('empty')
     discardHtml.textContent = ''
     discardHtml.style.color = ''
+  }
+
+  putInHand(card) {
+    if (!card) {
+      return
+    }
+
+    this._hand = card
+  }
+
+  putJokers(card) {
+    if (!card) {
+      return card
+    }
+
+    this._jokers.push(card)
+  }
+
+  putAces(card) {
+    if (!card) {
+      return card
+    }
+
+    this._aces.push(card)
+  }
+
+  putDiscards(card) {
+    if (!card) {
+      return
+    }
+
+    this._discards.push(card)
+  }
+
+  peekHand() {
+    return this._hand
+  }
+
+  peekAces() {
+    return this._aces.peek()
+  }
+
+  peekJokers() {
+    return this._jokers.peek()
+  }
+
+  popHand() {
+    if (!this.hasCardInHand) {
+      return null
+    }
+
+    const card = this._hand
+    this._hand = null
+
+    return card
+  }
+
+  popAces() {
+    return this._aces.pop()
+  }
+
+  popJokers() {
+    return this._jokers.pop()
   }
 
   _renderHand() {

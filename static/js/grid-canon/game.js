@@ -16,12 +16,8 @@ export default class Game {
     return this._controls
   }
 
-  get currentGameEvent() {
-    return this._currentGameEvent
-  }
-
-  set currentGameEvent(gameEvent) {
-    this._currentGameEvent = gameEvent
+  get turn() {
+    return this._turn
   }
 
   static get Difficulties() {
@@ -32,13 +28,23 @@ export default class Game {
     }
   }
 
+  static get GameState() {
+    return {
+      CHOOSE_CARD_FORM_HAND: 0,
+      CHOOSE_GRID_POSITION: 1,
+      WIN: 2,
+      LOSE: 3,
+    }
+  }
+
   static get GameEvents() {
     return {
-      DRAW_HAND: 1,
-      SHOW_VALID_TILES: 2,
-      CHOOSE_TILE: 3,
-      WIN: 4,
-      LOSE: 5,
+      NIL: -1,
+      SELECT_HAND_EVENT: 0,
+      SELECT_ACE_EVENT: 1,
+      SELECT_JOKER_EVENT: 2,
+      SELECT_DRAW_CARD: 3,
+      CHOOSE_GRID_POSITION_EVENT: 4,
     }
   }
 
@@ -46,8 +52,12 @@ export default class Game {
     this._deck = null
     this._grid = null
     this._controls = null
-
-    this._currentGameEvent = Game.GameEvents.DRAW_HAND
+    this._turn = {
+      lastGameState: Game.GameState.CHOOSE_CARD_FROM_HAND,
+      lastGameEvent: Game.GameEvents.NIL,
+      selectedCard: null,
+      selectedCardValidPlacementPositions: null,
+    }
   }
 
   startEasy() {
@@ -67,6 +77,10 @@ export default class Game {
     this._grid = new Grid()
     this._controls = new Controls()
 
+    this._deck.bindGameEvents(this.drawHandEvent)
+    this._controls.bindGameEvents(this.selectHandEvent, this.selectAceEvent, this.selectJokerEvent)
+    this._grid.bindGameEvents(this.chooseGridPositionEvent)
+
     this._grid.setup(difficulty)
     this._controls.setup()
 
@@ -79,76 +93,100 @@ export default class Game {
     this._controls.render()
   }
 
-  drawHandEvent(e) {
-    switch (window.game.currentGameEvent) {
-      case Game.GameEvents.DRAW_HAND:
-      case Game.GameEvents.SHOW_VALID_TILES:
-      case Game.GameEvents.CHOOSE_TILE: {
-        if (this._controls.cardInHand?.isFaceCard) {
-          break
-        }
-
-        this._controls.putInDiscards(this._controls.cardInHand)
-
-        const dealtCard = this._deck.deal()
-        if (dealtCard.isJoker) {
-          this._controls.putInJokers(dealtCard)
-        } else if (dealtCard.isAce) {
-          this._controls.putInAces(dealtCard)
-        } else {
-          this._controls.putInHand(dealtCard)
-        }
-
-        this.grid.htmlGrid.forEach(cardDiv =>  {
-          cardDiv.classList.remove('selected')
-          cardDiv.onclick = null
-        })
-
-        break
-      }
+  selectHandEvent(e) {
+    if (this._turn.lastGameState !== Game.GameState.CHOOSE_CARD_FROM_HAND) {
+      return
     }
 
-    window.game.currentGameEvent = Game.GameEvents.SHOW_VALID_TILES
-    this._render()
-  }
-
-  showValidTilesEvent(e) {
-    switch (window.game.currentGameEvent) {
-      case Game.GameEvents.SHOW_VALID_TILES: {
-        const validGridTiles = this.grid.findValidTilePlacements(this.controls.cardInHand)
-        validGridTiles
-          .map(([x, y]) => this.grid.getCardFromHtmlGrid(x, y))
-          .forEach(cardDiv => {
-            cardDiv.classList.add('selected')
-            cardDiv.onclick = this.chooseTileEvent.bind(this)
-          })
-
-        window.game.currentGameEvent = Game.GameEvents.CHOOSE_TILE
-        break
-      }
+    if (!this._controls.hasCardInHand) {
+      this.drawHandEvent()
     }
+
+    this._turn.selectedCard = this._controls.peekHand()
+    this._turn.selectedCardValidPlacementPositions = new Set(this._grid.findValidGridPlacements(this._turn.selectedCard))
+    this._turn.lastGameEvent = Game.GameEvents.SELECT_HAND_EVENT
 
     this._render()
   }
 
-  chooseTileEvent(e) {
-    switch (window.game.currentGameEvent) {
-      case Game.GameEvents.CHOOSE_TILE: {
-        const card = this.controls.pullFromHand()
-        const x = parseInt(e.target.getAttribute('data-grid-x'))
-        const y = parseInt(e.target.getAttribute('data-grid-y'))
-        this.grid.insert(x, y, card)
-
-        this.grid.htmlGrid.forEach(cardDiv =>  {
-          cardDiv.classList.remove('selected')
-          cardDiv.onclick = null
-        })
-
-        window.game.currentGameEvent = Game.GameEvents.DRAW_HAND
-        break
-      }
+  selectAceEvent(e) {
+    if (this._turn.lastGameState !== Game.GameState.CHOOSE_CARD_FROM_HAND) {
+      return
     }
 
+    if (!this._controls.hasAce) {
+      return
+    }
+
+    this._turn.selectedCard = this._controls.peekAces()
+    this._turn.selectedCardValidPlacementPositions = new Set(this._grid.findValidGridPlacements(this._turn.selectedCard))
+    this._turn.lastGameEvent = Game.GameEvents.SELECT_ACE_EVENT
+
     this._render()
+  }
+
+  selectJokerEvent(e) {
+    if (this._turn.lastGameState !== Game.GameState.CHOOSE_CARD_FROM_HAND) {
+      return
+    }
+
+    if (!this._controls.hasJokers) {
+      return
+    }
+
+    this._turn.selectedCard = this._controls.peekJokers()
+    this._turn.selectedCardValidPlacementPositions = new Set(this._grid.findValidGridPlacements(this._turn.selectedCard))
+    this._turn.lastGameEvent = Game.GameEvents.SELECT_JOKER_EVENT
+
+    this._render()
+  }
+
+  drawHandEvent() {
+    if (this._turn.lastGameState !== Game.GameState.CHOOSE_CARD_FROM_HAND) {
+      return
+    }
+
+    if (this._controls.cardInHand?.isFace) {
+      return
+    }
+
+    this._controls.putDiscards(this._controls.cardInHand)
+
+    const dealtCard = this._deck.deal()
+    if (dealtCard.isJoker) {
+      this._controls.putJokers(dealtCard)
+    } else if (dealtCard.isAce) {
+      this._controls.putAces(dealtCard)
+    } else {
+      this._controls.putInHand(dealtCard)
+    }
+
+    this._turn.lastGameEvent = Game.GameEvents.SELECT_DRAW_CARD
+
+    this._render()
+  }
+
+  chooseGridPositionEvent(e) {
+    if (this._turn.lastGameState !== Game.GameState.CHOOSE_CARD_FROM_HAND) {
+      return
+    } else {
+      this._turn.lastGameState = Game.GameState.CHOOSE_GRID_POSITION
+    }
+
+    const x = parseInt(e.target.getAttribute('data-grid-x'))
+    const y = parseInt(e.target.getAttribute('data-grid-y'))
+    const card = this._controls.popHand()
+    if (card.isFace) {
+      this._grid.pushFace(x, y, card)
+    } else if (card.isJoker) {
+      this._grid.pushJoker(x, y, card)
+    } else if (card.isAce) {
+      this._grid.pushAce(x, y, card)
+    } else {
+      this._grid.pushSpotAndAttack(x, y, card)
+    }
+
+    this._turn.selectedCard = null
+    this._turn.selectedCardValidPlacementPositions = null
   }
 }

@@ -1,22 +1,27 @@
 import Card from './card.js'
+import CardStack from './card-stack.js'
 
 export default class Deck {
   get deckHtml() {
     return document.querySelector('#deck')
   }
 
-  get length() {
-    return this._cards.length
+  get size() {
+    return this._cards.size
   }
 
   constructor() {
-    this._cards = []
-    this._used = []
+    this._cards = new CardStack()
+    this._used = new CardStack()
     this.newOrderedDeck()
   }
 
+  bindGameEvents(drawHandEvent) {
+    this.deckHtml.onclick = drawHandEvent.bind(window.game)
+  }
+
   newOrderedDeck() {
-    this._cards = []
+    this._cards = new CardStack()
     for (const suit of Object.keys(Card.Suits)) {
       for (const face of Object.keys(Card.Names)) {
         if (face === Card.Names.JOKER) {
@@ -31,53 +36,21 @@ export default class Deck {
     this._cards.push(new Card(Card.Names.JOKER, null, null, null))
   }
 
-  cut() {
-    // the cut range is + or - 6 indicies away from the middle of the deck
-    const half = (this._cards.length / 2) - 1
-    const delta = 6
-
-    // randomly select a card within is this range
-    const min = Math.ceil(half - delta)
-    const max = Math.ceil(half + delta)
-    const cutIndex = Math.floor(Math.random() * (max - min) + min)
-
-    // a cut is the same as rotating an array. split the deck into 2 halvse and rotate
-    const cutPile = this._cards.splice(cutIndex)
-    this._cards.unshift(...cutPile)
-  }
-
-  // TODO: Make sure riffle works with odd numbered deck
-  riffle() {
-    const half = (this._cards.length / 2)
-    const cutPile = this._cards.splice(half)
-
-    for (let i = 0; i < half; i++) {
-      this._cards.splice(i*2, 0, cutPile.shift())
-    }
-  }
-
   shuffle() {
-    for (let i = 0; i < 100; i++) {
-      this.cut()
-      this.riffle()
-    }
+    this._cards.shuffle()
   }
 
   pop() {
-    if (this._cards.length === 0) {
-      return null
-    }
-
-    return this._cards.shift()
+    return this._cards.pop()
   }
 
   deal() {
-    if (this._cards.length === 0) {
+    if (this.size === 0) {
       this.reset()
       this.shuffle()
     }
 
-    return this._cards.shift()
+    return this._cards.pop()
   }
 
   render() {
