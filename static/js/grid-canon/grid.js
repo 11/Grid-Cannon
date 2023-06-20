@@ -254,8 +254,7 @@ export default class Grid {
       const x = parseInt(cardDiv.getAttribute('data-grid-x'))
       const y = parseInt(cardDiv.getAttribute('data-grid-y'))
 
-      debugger
-      if (window.game.turn.selectedCardValidPlacementPositions?.has(`${x}${y}`)) {
+      if (window.game.gameState.selectedCardValidPlacementPositions?.has(`${x}${y}`)) {
         cardDiv.classList.add('selected')
       } else {
         cardDiv.classList.remove('selected')
