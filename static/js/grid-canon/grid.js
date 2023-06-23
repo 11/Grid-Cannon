@@ -211,26 +211,29 @@ export default class Grid {
   }
 
   pushFace(x, y, face) {
-
+    // TODO: check if placing card on top of face card
+    this._grid.push(x, y, face)
   }
 
   pushJoker(x, y, joker) {
-
+    // TODO: take the top card off the stack and re-position it
+    this._grid.push(x, y, face)
   }
 
   pushAce(x, y, ace) {
-
+    // TODO: aces pick up stack and place all cards back in the deck
+    this._grid.push(x, y, face)
   }
 
   pushSpotAndAttack(x, y, card) {
     const stride = (5 * x) + y
-    this._grid.at(stride)?.push(card)
+    this._grid.push(x, y, card)
 
-    // TODO
+    // TODO: implement attack
   }
 
   findValidGridPlacements() {
-    const card = window.game.turn.selectedCard
+    const card = window.game.gameState.selectedCard
     if (card.isFace) {
       return [...this._facePositions]
         .filter(([x, y]) => !this.peek(x, y))

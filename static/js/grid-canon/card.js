@@ -153,7 +153,6 @@ export default class Card {
 
     cardElement.textContent = this.faceText
     cardElement.style.color = this.color
-
   }
 
   toString() {
