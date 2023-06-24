@@ -25,15 +25,15 @@ export default class Controls {
     return this._hand !== null
   }
 
-  get hasAces() {
+  get hasAce() {
     return this._aces.size > 0
   }
 
-  get hasJokers() {
+  get hasJoker() {
     return this._jokers.size > 0
   }
 
-  get hasDiscards() {
+  get hasDiscard() {
     return this._discards.size > 0
   }
 
@@ -135,9 +135,11 @@ export default class Controls {
     const handHtml = this.handHtml
     if (!this._hand) {
       handHtml.classList.remove('face')
-      handHtml.textContent = ''
+      handHtml.classList.add('empty')
+      handHtml.innerHTML = ''
       handHtml.style.color = ''
     } else {
+      handHtml.classList.remove('empty')
       handHtml.classList.add('face')
       handHtml.textContent = this._hand.faceText
       handHtml.style.color = this._hand.color
@@ -146,37 +148,44 @@ export default class Controls {
 
   _renderJokers() {
     const jokersHtml = this.jokersHtml
-    if (!this.hasJokers) {
+    if (!this.hasJoker) {
       jokersHtml.classList.remove('face')
+      jokersHtml.classList.add('empty')
+      jokersHtml.textContent = 'Jokers'
+      jokersHtml.style.color = 'white'
     } else {
+      jokersHtml.classList.remove('empty')
       jokersHtml.classList.add('face')
-      jokersHtml.textContent = this._jokers.at(-1).faceText
-      jokersHtml.style.color = this._jokers.at(-1).color
+      jokersHtml.textContent = this._jokers.peek()?.faceText
+      jokersHtml.style.color = this._jokers.peek()?.color
     }
   }
 
   _renderAces() {
     const acesHtml = this.acesHtml
-    if (!this.hasAces) {
+    if (!this.hasAce) {
       acesHtml.classList.remove('face')
+      acesHtml.classList.add('empty')
+      acesHtml.textContent = 'Aces'
+      acesHtml.style.color = 'white'
     } else {
       acesHtml.classList.add('face')
-      acesHtml.textContent = this._aces.at(-1).faceText
-      acesHtml.style.color = this._aces.at(-1).color
+      acesHtml.textContent = this._aces.peek()?.faceText
+      acesHtml.style.color = this._aces.peek()?.color
     }
   }
 
   _renderDiscard() {
     const discardHtml = this.discardHtml
-    if (!this.hasDiscards) {
+    if (!this.hasDiscard) {
       discardHtml.classList.add('empty')
       discardHtml.classList.remove('face')
     } else {
       discardHtml.classList.add('face')
       discardHtml.classList.remove('empty')
 
-      discardHtml.textContent = this._discards.at(-1).faceText
-      discardHtml.style.color = this._discards.at(-1).color
+      discardHtml.textContent = this._discards.peek()?.faceText
+      discardHtml.style.color = this._discards.peek()?.color
     }
   }
 

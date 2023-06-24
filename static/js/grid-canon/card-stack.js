@@ -1,13 +1,10 @@
 export default class CardStack {
   get size() {
-    this._stack.length
+    return this._stack.length
   }
 
-  constructor(arr = null) {
+  constructor() {
     this._stack = []
-    if (typeof arr === Array) {
-      this._stack = [...arr]
-    }
   }
 
   peek() {

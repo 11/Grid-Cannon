@@ -15,7 +15,11 @@ export default class Grid {
   }
 
   bindGameEvents(chooseGridPositionEvent) {
-    this.htmlGrid.forEach(position => position.onclick = chooseGridPositionEvent.bind(window.game))
+    this.htmlGrid.forEach(cardElement => {
+      if (!cardElement.classList.contains('hidden')) {
+        cardElement.onclick = chooseGridPositionEvent.bind(window.game)
+      }
+    })
   }
 
   setup(difficulty) {
@@ -212,22 +216,22 @@ export default class Grid {
 
   pushFace(x, y, face) {
     // TODO: check if placing card on top of face card
-    this._grid.push(x, y, face)
+    this.push(x, y, face)
   }
 
   pushJoker(x, y, joker) {
     // TODO: take the top card off the stack and re-position it
-    this._grid.push(x, y, face)
+    this.push(x, y, joker)
   }
 
   pushAce(x, y, ace) {
     // TODO: aces pick up stack and place all cards back in the deck
-    this._grid.push(x, y, face)
+    this.push(x, y, ace)
   }
 
   pushSpotAndAttack(x, y, card) {
     const stride = (5 * x) + y
-    this._grid.push(x, y, card)
+    this.push(x, y, card)
 
     // TODO: implement attack
   }

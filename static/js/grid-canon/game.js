@@ -28,27 +28,6 @@ export default class Game {
     }
   }
 
-  static get TurnStates() {
-    return {
-      NIL: -1,
-      CHOOSE_CARD_FROM_HAND: 0,
-      CHOOSE_GRID_POSITION: 1,
-      WIN: 2,
-      LOSE: 3,
-    }
-  }
-
-  static get GameEvents() {
-    return {
-      NIL: -1,
-      SELECT_HAND_EVENT: 0,
-      SELECT_ACE_EVENT: 1,
-      SELECT_JOKER_EVENT: 2,
-      SELECT_DRAW_CARD: 3,
-      CHOOSE_GRID_POSITION_EVENT: 4,
-    }
-  }
-
   constructor() {
     this._deck = null
     this._grid = null
@@ -57,10 +36,6 @@ export default class Game {
       selectedCard: null,
       selectedCardValidPlacementPositions: null,
       turnCount: 0,
-      turnState: {
-        current: Game.TurnStates.NIL,
-        previous: Game.TurnStates.NIL,
-      },
     }
 
     this._debug = true
@@ -94,18 +69,9 @@ export default class Game {
   }
 
   _render() {
-    this._grid.render()
     this._deck.render()
     this._controls.render()
-  }
-
-  _updateTurnState(newTurnState) {
-    if (newTurnState < -1 && newTurnState > 3) {
-      return
-    }
-
-    this._gameState.turnState.previous = this._gameState.turnState.current
-    this._gameState.turnState.current = newTurnState
+    this._grid.render()
   }
 
   drawHandEvent() {
@@ -114,20 +80,7 @@ export default class Game {
       console.log('Game#drawHandEvent', this._gameState)
     }
 
-
-    // UPDATE TURN STATE
-    if (
-      this._gameState.turnState.current !== Game.TurnStates.NIL
-      && this._gameState.turnState.current !== Game.TurnStates.CHOOSE_GRID_POSITION
-    ) {
-      return
-    }
-
-    this._updateTurnState(Game.TurnStates.CHOOSE_CARD_FROM_HAND)
-
-
-    // GAME LOGIC
-    if (this._controls.cardInHand?.isFace) {
+    if (this._controls.cardInHand) {
       return
     }
 
@@ -162,11 +115,7 @@ export default class Game {
 
   selectAceEvent(e) {
     if (this._debug) {
-      console.log('Game#selectHandEvent', this._gameState)
-    }
-
-    if (this._gameState.turnState !== Game.TurnStates.CHOOSE_CARD_FROM_HAND) {
-      return
+      console.log('Game#selectAceEvent', this._gameState)
     }
 
     if (!this._controls.hasAce) {
@@ -184,11 +133,7 @@ export default class Game {
       console.log('Game#selectJokerEvent', this._gameState)
     }
 
-    if (this._gameState.turnState !== Game.TurnStates.CHOOSE_CARD_FROM_HAND) {
-      return
-    }
-
-    if (!this._controls.hasJokers) {
+    if (!this._controls.hasJoker) {
       return
     }
 
@@ -204,32 +149,30 @@ export default class Game {
       console.log('Game#chooseGridPositionEvent', this._gameState)
     }
 
-
-    debugger
-    // UPDATE TURN STATE
-    if (this._gameState.turnState.current !== Game.TurnStates.CHOOSE_CARD_FROM_HAND) {
+    if (!this._gameState.selectedCard) {
       return
     }
-
-    this._updateTurnState(Game.TurnStates.CHOOSE_GRID_POSITION)
-
 
     // GAME LOGIC
     const x = parseInt(e.target.getAttribute('data-grid-x'))
     const y = parseInt(e.target.getAttribute('data-grid-y'))
-    const card = this._controls.popHand()
-    if (card.isFace) {
+    if (this._gameState.selectedCard.isFace) {
+      const card = this._controls.popHand()
       this._grid.pushFace(x, y, card)
-    } else if (card.isJoker) {
+    } else if (this._gameState.selectedCard.isJoker) {
+      const card = this._controls.popJokers()
       this._grid.pushJoker(x, y, card)
-    } else if (card.isAce) {
+    } else if (this._gameState.selectedCard.isAce) {
+      const card = this._controls.popAces()
       this._grid.pushAce(x, y, card)
     } else {
+      const card = this._controls.popHand()
       this._grid.pushSpotAndAttack(x, y, card)
     }
 
     this._gameState.selectedCard = null
     this._gameState.selectedCardValidPlacementPositions = null
+    this._gameState.turnCount += 1
 
     this._render()
   }
