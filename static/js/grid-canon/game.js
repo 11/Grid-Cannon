@@ -144,7 +144,6 @@ export default class Game {
   }
 
   chooseGridPositionEvent(e) {
-    // DEBUG
     if (this._debug) {
       console.log('Game#chooseGridPositionEvent', this._gameState)
     }
@@ -153,21 +152,32 @@ export default class Game {
       return
     }
 
-    // GAME LOGIC
     const x = parseInt(e.target.getAttribute('data-grid-x'))
     const y = parseInt(e.target.getAttribute('data-grid-y'))
     if (this._gameState.selectedCard.isFace) {
-      const card = this._controls.popHand()
-      this._grid.pushFace(x, y, card)
+      const card = this._controls.peekHand()
+      if (this._grid.push(x, y, card)) {
+        this._controls.popHand()
+      }
     } else if (this._gameState.selectedCard.isJoker) {
-      const card = this._controls.popJokers()
-      this._grid.pushJoker(x, y, card)
+      const card = this._controls.peekJokers()
+      if (this._grid.push(x, y, card)) {
+        this._controls.popJokers()
+      }
     } else if (this._gameState.selectedCard.isAce) {
-      const card = this._controls.popAces()
-      this._grid.pushAce(x, y, card)
-    } else {
-      const card = this._controls.popHand()
-      this._grid.pushSpotAndAttack(x, y, card)
+      const card = this._controls.peekAces()
+      if (this._grid.push(x, y, card)) {
+        this._controls.popAces()
+      }
+    } else if (this._gameState.selectedCard.isSpot) {
+      const card = this._controls.peekHand()
+      if (card.value < this._grid.peek(x, y)?.value) {
+        return
+      }
+
+      this._controls.popHand()
+      this._grid.push(x, y, card)
+      this._grid.attack(x, y)
     }
 
     this._gameState.selectedCard = null

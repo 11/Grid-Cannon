@@ -57,7 +57,6 @@ export default class Card {
     this._gridY = y
   }
 
-
   get value() {
     const nameToValue = {
       [Card.Names['JOKER']]:  0,
@@ -141,10 +140,28 @@ export default class Card {
     this._suit = suit
     this._gridX = gridX
     this._gridY = gridY
+    this._killed = null
+  }
+
+  kill() {
+    if (this.isFace) {
+      this._killed = true
+    }
   }
 
   render(cardElement) {
     if (cardElement.classList.contains('hidden')) {
+      return
+    }
+
+    if (this._killed) {
+      cardElement.classList.add('back')
+      cardElement.classList.remove('empty')
+      cardElement.classList.remove('face')
+
+      cardElement.innerHTML = '&nbsp;'
+      cardElement.textContent = ''
+      cardElement.style.color = ''
       return
     }
 

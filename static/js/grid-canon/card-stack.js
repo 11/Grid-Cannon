@@ -26,6 +26,7 @@ export default class CardStack {
 
   push(item) {
     this._stack.push(item)
+    return true
   }
 
   clear() {
@@ -54,6 +55,8 @@ export default class CardStack {
     // a cut is the same as rotating an array. split the deck into 2 halvse and rotate
     const bottom = this._stack.splice(idx)
     this._stack.unshift(...bottom)
+
+    return true
   }
 
   /**
@@ -61,7 +64,7 @@ export default class CardStack {
    */
   cut() {
     if (this.size < 2) {
-      return
+      return false
     }
 
     // the cut range is + or - 6 indicies away from the middle of the deck if there are more that 6 cards in the deck
@@ -78,6 +81,8 @@ export default class CardStack {
 
     // // a cut is the same as rotating an array. split the deck into 2 halvse and rotate
     this.rotate(cutIndex)
+
+    return true
   }
 
   // TODO: Make sure riffle works with odd numbered deck
@@ -87,6 +92,8 @@ export default class CardStack {
     for (let i = 0; i < half; i++) {
       this._stack.splice(i*2, 0, cutPile.shift())
     }
+
+    return true
   }
 
   shuffle() {
@@ -94,6 +101,8 @@ export default class CardStack {
       this.cut()
       this._riffle()
     }
+
+    return true
   }
 
   toArray() {

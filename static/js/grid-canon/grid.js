@@ -183,9 +183,6 @@ export default class Grid {
     }
   }
 
-  findValidTilePlacements(card) {
-  }
-
   getCardHtmlFromGridPosition(x, y) {
     const stride = (5 * x) + y
     return this.htmlGrid.at(stride)
@@ -205,35 +202,78 @@ export default class Grid {
 
   clear(x, y) {
     const stride = (5 * x) + y
-    return this._grid.at(stride)?.clear()
+    return !!this._grid.at(stride)?.clear()
   }
 
   push(x, y, card) {
     const stride = (5 * x) + y
     card.gridPosition = [x, y]
-    return this._grid.at(stride)?.push(card)
+    return !!this._grid.at(stride)?.push(card)
   }
 
-  pushFace(x, y, face) {
-    // TODO: check if placing card on top of face card
-    this.push(x, y, face)
+  attack(x, y) {
+    // the (x,y ) value is the coordinate of the spot card the player is placing
+    const attackInfo = this._getTriggerAndAttackersAndFaceCard(x, y)
+
+    for (const { trigger, attackers, face } of attackInfo) {
+      if (!trigger || !attackers || !face) {
+        continue
+      }
+
+      const isFaceKing = face.value === 13
+      const isFaceQueen = face.value === 12
+      const isFaceJack = face.value === 11
+
+      const attacker1 = attackers.at(0)
+      const attacker2 = attackers.at(1)
+      const hitValue = attacker1.value + attacker2.value
+
+      const isKingDead = isFaceKing && hitValue >= face.value && attacker1.suit === face.suit && attacker2.suit === face.suit
+      const isQueenDead = isFaceQueen && hitValue >= face.value && attacker1.color === face.color && attacer2.color === face.color
+      const isJackDead = isFaceJack && hitValue >= face.value
+      if (isKingDead || isQueenDead || isJackDead) {
+        const [x, y] = face.gridPosition
+        this.peek(x, y).kill()
+      }
+    }
   }
 
-  pushJoker(x, y, joker) {
-    // TODO: take the top card off the stack and re-position it
-    this.push(x, y, joker)
-  }
-
-  pushAce(x, y, ace) {
-    // TODO: aces pick up stack and place all cards back in the deck
-    this.push(x, y, ace)
-  }
-
-  pushSpotAndAttack(x, y, card) {
-    const stride = (5 * x) + y
-    this.push(x, y, card)
-
-    // TODO: implement attack
+  _getTriggerAndAttackersAndFaceCard(x, y) {
+    const placementCoordinates = `${x}${y}`
+    switch (placementCoordinates) {
+      case '11':
+        return [
+          { trigger: this.peek(x, y), attackers: [this.peek(x+1, y), this.peek(x+2, y)], face: this.peek(4, 1) },
+          { trigger: this.peek(x, y), attackers: [this.peek(x, y+1), this.peek(x, y+2)], face: this.peek(1, 4) },
+        ]
+      case '12':
+        return [{ trigger: this.peek(x, y), attackers: [this.peek(x+1, y), this.peek(x+2, y)], face: this.peek(2, 4) }]
+      case '13':
+        return [
+          { trigger: this.peek(x, y), attackers: [this.peek(x, y-1), this.peek(x, y-2)], face: this.peek(1, 0) },
+          { trigger: this.peek(x, y), attackers: [this.peek(x+1, y), this.peek(x+2, y)], face: this.peek(4, 3) },
+        ]
+      case '21':
+        return [{ trigger: this.peek(x, y), attackers: [this.peek(x, y+1), this.peek(x, y+2)], face: this.peek(2, 4) }]
+      case '22':
+        return [{ trigger: null, attackers: null, face: null }]
+      case '23':
+        return [{ trigger: this.peek(x, y), attackers: [this.peek(x, y-1), this.peek(x, y-2)], face: this.peek(2, 0) }]
+      case '31':
+        return [
+          { trigger: this.peek(x, y), attackers: [this.peek(x-1, y), this.peek(x-2, y)], face: this.peek(0, 1) },
+          { trigger: this.peek(x, y), attackers: [this.peek(x, y+1), this.peek(x, y+2)], face: this.peek(3, 4) },
+        ]
+      case '32':
+        return [{ trigger: this.peek(x, y), attackers: [this.peek(x-1, y), this.peek(x-2, y)], face: this.peek(0, 2) }]
+      case '33':
+        return [
+          { trigger: this.peek(x, y), attackers: [this.peek(x-1, y), this.peek(x-2, y)], face: this.peek(0, 3) },
+          { trigger: this.peek(x, y), attackers: [this.peek(x, y-1), this.peek(x, y-2)], face: this.peek(3, 0) },
+        ]
+      default:
+        return [{ trigger: null, attackers: null, face: null }]
+    }
   }
 
   findValidGridPlacements() {
