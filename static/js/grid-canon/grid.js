@@ -229,7 +229,7 @@ export default class Grid {
       const hitValue = attacker1.value + attacker2.value
 
       const isKingDead = isFaceKing && hitValue >= face.value && attacker1.suit === face.suit && attacker2.suit === face.suit
-      const isQueenDead = isFaceQueen && hitValue >= face.value && attacker1.color === face.color && attacer2.color === face.color
+      const isQueenDead = isFaceQueen && hitValue >= face.value && attacker1.color === face.color && attacker2.color === face.color
       const isJackDead = isFaceJack && hitValue >= face.value
       if (isKingDead || isQueenDead || isJackDead) {
         const [x, y] = face.gridPosition
