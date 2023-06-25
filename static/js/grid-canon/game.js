@@ -16,8 +16,8 @@ export default class Game {
     return this._controls
   }
 
-  get turn() {
-    return this._turn
+  get gameState() {
+    return this._gameState
   }
 
   static get Difficulties() {
@@ -28,36 +28,17 @@ export default class Game {
     }
   }
 
-  static get GameState() {
-    return {
-      CHOOSE_CARD_FORM_HAND: 0,
-      CHOOSE_GRID_POSITION: 1,
-      WIN: 2,
-      LOSE: 3,
-    }
-  }
-
-  static get GameEvents() {
-    return {
-      NIL: -1,
-      SELECT_HAND_EVENT: 0,
-      SELECT_ACE_EVENT: 1,
-      SELECT_JOKER_EVENT: 2,
-      SELECT_DRAW_CARD: 3,
-      CHOOSE_GRID_POSITION_EVENT: 4,
-    }
-  }
-
   constructor() {
     this._deck = null
     this._grid = null
     this._controls = null
-    this._turn = {
-      lastGameState: Game.GameState.CHOOSE_CARD_FROM_HAND,
-      lastGameEvent: Game.GameEvents.NIL,
+    this._gameState = {
       selectedCard: null,
       selectedCardValidPlacementPositions: null,
+      turnCount: 0,
     }
+
+    this._debug = true
   }
 
   startEasy() {
@@ -88,65 +69,18 @@ export default class Game {
   }
 
   _render() {
-    this._grid.render()
     this._deck.render()
     this._controls.render()
-  }
-
-  selectHandEvent(e) {
-    if (this._turn.lastGameState !== Game.GameState.CHOOSE_CARD_FROM_HAND) {
-      return
-    }
-
-    if (!this._controls.hasCardInHand) {
-      this.drawHandEvent()
-    }
-
-    this._turn.selectedCard = this._controls.peekHand()
-    this._turn.selectedCardValidPlacementPositions = new Set(this._grid.findValidGridPlacements(this._turn.selectedCard))
-    this._turn.lastGameEvent = Game.GameEvents.SELECT_HAND_EVENT
-
-    this._render()
-  }
-
-  selectAceEvent(e) {
-    if (this._turn.lastGameState !== Game.GameState.CHOOSE_CARD_FROM_HAND) {
-      return
-    }
-
-    if (!this._controls.hasAce) {
-      return
-    }
-
-    this._turn.selectedCard = this._controls.peekAces()
-    this._turn.selectedCardValidPlacementPositions = new Set(this._grid.findValidGridPlacements(this._turn.selectedCard))
-    this._turn.lastGameEvent = Game.GameEvents.SELECT_ACE_EVENT
-
-    this._render()
-  }
-
-  selectJokerEvent(e) {
-    if (this._turn.lastGameState !== Game.GameState.CHOOSE_CARD_FROM_HAND) {
-      return
-    }
-
-    if (!this._controls.hasJokers) {
-      return
-    }
-
-    this._turn.selectedCard = this._controls.peekJokers()
-    this._turn.selectedCardValidPlacementPositions = new Set(this._grid.findValidGridPlacements(this._turn.selectedCard))
-    this._turn.lastGameEvent = Game.GameEvents.SELECT_JOKER_EVENT
-
-    this._render()
+    this._grid.render()
   }
 
   drawHandEvent() {
-    if (this._turn.lastGameState !== Game.GameState.CHOOSE_CARD_FROM_HAND) {
-      return
+    // DEBUG
+    if (this._debug) {
+      console.log('Game#drawHandEvent', this._gameState)
     }
 
-    if (this._controls.cardInHand?.isFace) {
+    if (this._controls.cardInHand) {
       return
     }
 
@@ -161,32 +95,95 @@ export default class Game {
       this._controls.putInHand(dealtCard)
     }
 
-    this._turn.lastGameEvent = Game.GameEvents.SELECT_DRAW_CARD
+    this._render()
+  }
+
+  selectHandEvent(e) {
+    if (this._debug) {
+      console.log('Game#selectHandEvent', this._gameState)
+    }
+
+    if (!this._controls.hasCardInHand) {
+      this.drawHandEvent()
+    }
+
+    this._gameState.selectedCard = this._controls.peekHand()
+    this._gameState.selectedCardValidPlacementPositions = new Set(this._grid.findValidGridPlacements(this._gameState.selectedCard))
+
+    this._render()
+  }
+
+  selectAceEvent(e) {
+    if (this._debug) {
+      console.log('Game#selectAceEvent', this._gameState)
+    }
+
+    if (!this._controls.hasAce) {
+      return
+    }
+
+    this._gameState.selectedCard = this._controls.peekAces()
+    this._gameState.selectedCardValidPlacementPositions = new Set(this._grid.findValidGridPlacements(this._gameState.selectedCard))
+
+    this._render()
+  }
+
+  selectJokerEvent(e) {
+    if (this._debug) {
+      console.log('Game#selectJokerEvent', this._gameState)
+    }
+
+    if (!this._controls.hasJoker) {
+      return
+    }
+
+    this._gameState.selectedCard = this._controls.peekJokers()
+    this._gameState.selectedCardValidPlacementPositions = new Set(this._grid.findValidGridPlacements(this._gameState.selectedCard))
 
     this._render()
   }
 
   chooseGridPositionEvent(e) {
-    if (this._turn.lastGameState !== Game.GameState.CHOOSE_CARD_FROM_HAND) {
+    if (this._debug) {
+      console.log('Game#chooseGridPositionEvent', this._gameState)
+    }
+
+    if (!this._gameState.selectedCard) {
       return
-    } else {
-      this._turn.lastGameState = Game.GameState.CHOOSE_GRID_POSITION
     }
 
     const x = parseInt(e.target.getAttribute('data-grid-x'))
     const y = parseInt(e.target.getAttribute('data-grid-y'))
-    const card = this._controls.popHand()
-    if (card.isFace) {
-      this._grid.pushFace(x, y, card)
-    } else if (card.isJoker) {
-      this._grid.pushJoker(x, y, card)
-    } else if (card.isAce) {
-      this._grid.pushAce(x, y, card)
-    } else {
-      this._grid.pushSpotAndAttack(x, y, card)
+    if (this._gameState.selectedCard.isFace) {
+      const card = this._controls.peekHand()
+      if (this._grid.push(x, y, card)) {
+        this._controls.popHand()
+      }
+    } else if (this._gameState.selectedCard.isJoker) {
+      const card = this._controls.peekJokers()
+      if (this._grid.push(x, y, card)) {
+        this._controls.popJokers()
+      }
+    } else if (this._gameState.selectedCard.isAce) {
+      const card = this._controls.peekAces()
+      if (this._grid.push(x, y, card)) {
+        this._controls.popAces()
+      }
+    } else if (this._gameState.selectedCard.isSpot) {
+      const card = this._controls.peekHand()
+      if (card.value < this._grid.peek(x, y)?.value) {
+        return
+      }
+
+      this._controls.popHand()
+      this._grid.push(x, y, card)
+      this._grid.attack(x, y)
     }
 
-    this._turn.selectedCard = null
-    this._turn.selectedCardValidPlacementPositions = null
+    this._gameState.selectedCard = null
+    this._gameState.selectedCardValidPlacementPositions = null
+    this._gameState.turnCount += 1
+
+    this._render()
   }
 }
