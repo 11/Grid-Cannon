@@ -107,8 +107,13 @@ export default class Game {
       this.drawHandEvent()
     }
 
-    this._gameState.selectedCard = this._controls.peekHand()
-    this._gameState.selectedCardValidPlacementPositions = new Set(this._grid.findValidGridPlacements(this._gameState.selectedCard))
+    if (this._controls.peekHand().isFace) {
+      const faceCard = this._controls.popHand()
+      this._grid.placeFaceCardsInGrid([faceCard])
+    } else {
+      this._gameState.selectedCard = this._controls.peekHand()
+      this._gameState.selectedCardValidPlacementPositions = new Set(this._grid.findValidGridPlacements(this._gameState.selectedCard))
+    }
 
     this._render()
   }
@@ -156,6 +161,7 @@ export default class Game {
     const y = parseInt(e.target.getAttribute('data-grid-y'))
     if (this._gameState.selectedCard.isFace) {
       const card = this._controls.peekHand()
+
       if (this._grid.push(x, y, card)) {
         this._controls.popHand()
       }

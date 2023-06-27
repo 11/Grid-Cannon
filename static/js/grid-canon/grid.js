@@ -32,7 +32,7 @@ export default class Grid {
       aces,
     } = this._generateNewGridByDifficulty(difficulty)
     this._placeSpotCardsInGrid(spots)
-    this._placeFaceCardsInGrid(faces)
+    this.placeFaceCardsInGrid(faces)
 
     let joker
     while(joker = jokers.pop()) {
@@ -70,15 +70,12 @@ export default class Grid {
     }
     const gameDifficulty = difficultyToAmountFaceCardsMap[difficulty]
 
-    let faces
-    let spots
-    let jokers
-    let aces
+    let spots, faces, aces, jokers
     do {
-      faces = []
       spots = []
-      jokers = []
+      faces = []
       aces = []
+      jokers = []
 
       window.game.deck.newOrderedDeck()
       window.game.deck.shuffle()
@@ -114,7 +111,7 @@ export default class Grid {
     }
   }
 
-  _placeFaceCardsInGrid(faces) {
+  placeFaceCardsInGrid(faces) {
     for (const faceCard of faces) {
       const mostSimilarCards = this._orderByMostSimilarCard(faceCard)
       let isFaceCardInserted = false
@@ -220,13 +217,17 @@ export default class Grid {
         continue
       }
 
+      const attacker1 = attackers.at(0)
+      const attacker2 = attackers.at(1)
+      if (!attacker1 || !attacker2) {
+        continue
+      }
+      const hitValue = attacker1.value + attacker2.value
+
       const isFaceKing = face.value === 13
       const isFaceQueen = face.value === 12
       const isFaceJack = face.value === 11
 
-      const attacker1 = attackers.at(0)
-      const attacker2 = attackers.at(1)
-      const hitValue = attacker1.value + attacker2.value
 
       const isKingDead = isFaceKing && hitValue >= face.value && attacker1.suit === face.suit && attacker2.suit === face.suit
       const isQueenDead = isFaceQueen && hitValue >= face.value && attacker1.color === face.color && attacker2.color === face.color
@@ -279,9 +280,7 @@ export default class Grid {
   findValidGridPlacements() {
     const card = window.game.gameState.selectedCard
     if (card.isFace) {
-      return [...this._facePositions]
-        .filter(([x, y]) => !this.peek(x, y))
-        .map(coordinates => coordinates.join(''))
+      this._placeFaceCardsInGrid([card])
     } else if (card.isJoker || card.isAce) {
       return [...this._spotPositions]
         .map(coordinates => coordinates.join(''))
