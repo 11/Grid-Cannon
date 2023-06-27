@@ -37,7 +37,7 @@ To find and kill all royals in the deck before running out of cards.
 
 <b>NOTE:</b> If you cannot place the drawn card in the grid, and you do not have any Aces or Jokers, the drawn card goes facedown in a discard pile and cannot be used the rest of the game.</b>
 
-### Aces and Jokers:
+### Aces and Jokers
 Aces and Jokers are special cards that you can use at any point throughout the game
 1. Using an Ace allows you to pick up a stack of cards in the 3x3 grid and shuffle it back into the deck. After using an Ace, place the card in the discard pile.
 2. Using a Joker allows you to take the top card off any stack and place it on top of any another playable position in the 3x3 grid. After using a Joker, place the card in the discard pile.
@@ -52,10 +52,10 @@ Each royal has different kill conditions:
 
 After attacking and killing a royal, the royal is set face-down.
 
-### Win condition:
+### Win condition
 1. All royals are dead
 
-### Lose condition:
+### Lose condition
 1. There are Royals still alive
 2. Your deck is empty
 3. You have no more Aces
