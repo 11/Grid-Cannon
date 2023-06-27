@@ -10,9 +10,12 @@ export default class Deck {
     return this._cards.size
   }
 
+  get hasCardInDeck() {
+    return this._cards.size > 0
+  }
+
   constructor() {
     this._cards = new CardStack()
-    this._used = new CardStack()
     this.newOrderedDeck()
   }
 
