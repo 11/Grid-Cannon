@@ -1,0 +1,85 @@
+.hidden {
+  display: none;
+}
+
+.start-screen {
+  width: 100%;
+  height: 100%;
+}
+
+.game-menu {
+  width: 100%;
+  height: 100%;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 1.5rem;
+}
+
+.game-headline {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: .75rem;
+}
+
+.title {
+  font-size: 4rem;
+}
+
+.tagline {
+  font-size: 2rem;
+  letter-spacing: .5px;
+}
+
+.menu-options {
+  width: 250px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: center;
+  gap: .75rem;
+}
+
+button {
+  width: 100%;
+  font-family: 'Roboto', sans-serif;
+  font-size: 1rem;
+  font-weight: 300;
+  padding: 1rem 2rem;
+  border: 2px solid black;
+  border-radius: 2rem;
+}
+
+.primary {
+  background-color: black;
+  color: white;
+  text-decoration: underline
+}
+
+.secondary{
+  padding: 1rem;
+  color: black;
+}
+
+h1 {
+  font-size: 3rem;
+  margin: 0;
+}
+
+.credits {
+  font-family: 'Roboto', sans-serif;
+  font-weight: 100;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: flex-start;
+  gap: .75rem;
+}
+
+.menu-options {
+
+}

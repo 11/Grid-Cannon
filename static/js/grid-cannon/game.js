@@ -65,6 +65,12 @@ export default class Game {
     this._grid.setup(difficulty)
     this._controls.setup()
 
+    const gameBoard = document.querySelector('.grid-cannon')
+    gameBoard.classList.remove('hidden')
+
+    const gameMenu = document.querySelector('.start-screen')
+    gameMenu.classList.add('hidden')
+
     this._render()
   }
 
