@@ -1,0 +1,23 @@
+{
+  "name": "grid-cannon",
+  "version": "1.0.0",
+  "description": "Grid cannon solitare game",
+  "main": "src/index.js",
+  "scripts": {
+    "dev": "vite",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Doug Rudolph",
+  "license": "ISC",
+  "dependencies": {
+    "@types/lodash": "^4.17.6",
+    "@vaadin/router": "^1.7.5",
+    "lit": "^3.1.4",
+    "lodash": "^4.17.21"
+  },
+  "devDependencies": {
+    "@types/node": "^20.14.10",
+    "typescript": "^5.5.3",
+    "vite": "^5.3.3"
+  }
+}
