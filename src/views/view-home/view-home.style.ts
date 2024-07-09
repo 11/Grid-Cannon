@@ -1,5 +1,15 @@
 import { css } from 'lit'
 
+export const StartScreen = css`
+  .start-screen {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+`
+
 export const GameMenu = css`
   .game-menu {
     width: 100%;
@@ -9,9 +19,10 @@ export const GameMenu = css`
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    gap: 1.5rem;
+    gap: 3.5rem;
   }
 `
+
 export const GameHeadline = css`
   .game-headline {
     display: flex;
@@ -36,9 +47,8 @@ export const Tagline = css`
 `
 export const MenuOptions = css`
   .menu-options {
-    width: 250px;
     display: flex;
-    flex-direction: column;
+    flex-direction: row;
     align-items: flex-start;
     justify-content: center;
     gap: .75rem;
@@ -78,8 +88,8 @@ export const Credits = css`
     font-weight: 100;
     display: flex;
     flex-direction: column;
-    align-items: flex-start;
-    justify-content: flex-start;
+    align-items: center;
+    justify-content: center;
     gap: .75rem;
   }
 `

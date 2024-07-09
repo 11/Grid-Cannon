@@ -1,6 +1,13 @@
 export const ROUTING_TABLE = [
   {
-    path: '/game',
+    path: '/new-game',
+    component: 'view-game',
+    action: async () => {
+      await import('./views/view-game')
+    },
+  },
+  {
+    path: '/daily-board',
     component: 'view-game',
     action: async () => {
       await import('./views/view-game')

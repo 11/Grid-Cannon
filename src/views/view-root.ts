@@ -7,7 +7,6 @@ export class ViewRoot extends LitElement {
   static get styles() {
     return css`
       :host {
-        padding: 1rem;
         width: 100%;
         height: 100%;
       }
