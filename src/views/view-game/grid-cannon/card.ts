@@ -1,3 +1,5 @@
+import { isNil } from 'lodash'
+
 export enum CardFaces {
   JOKER = 'JOKER',
   ACE = 'ACE',
@@ -23,6 +25,7 @@ export enum CardSuits {
 }
 
 export const CardSuitToSymbolMap = {
+  null: '',
   [CardSuits.SPADE]: '\u2660',
   [CardSuits.CLUB]: '\u2663',
   [CardSuits.HEART]: '\u2665',
@@ -65,6 +68,7 @@ export const CardFaceToAbbreviationMap = {
 
 export type CardColors = 'RED' | 'BLACK'
 export const CardColorMap: Record<string, CardColors> = {
+  null: 'BLACK', // JOKERS have no suit, so they default to black
   [CardSuits.SPADE]: 'BLACK',
   [CardSuits.CLUB]: 'BLACK',
   [CardSuits.HEART]: 'RED',
@@ -79,8 +83,8 @@ export interface CardData {
   rank: number,
   value: number,
   color: CardColors,
-  gridX: number,
-  griY: number,
+  gridX: number | null,
+  gridY: number | null,
   isNumber: boolean,
   isFace: boolean,
   isJoker: boolean,
@@ -120,7 +124,7 @@ export default class Card {
    * CLUB
    * DIAMOND
    */
-  private suit: CardSuits
+  private suit: CardSuits | null
 
   /**
    * Unicode symbols for card suits:
@@ -163,15 +167,15 @@ export default class Card {
   /**
    * Grid position
    */
-  private gridX: number
-  private gridY: number
+  private gridX: number | null
+  private gridY: number | null
 
-  constructor(name: CardFaces, suit: CardSuits, gridX: number, gridY: number) {
+  constructor(name: CardFaces, suit: CardSuits | null) {
     this.name = name
     this.suit = suit
-    this.gridX = gridX
-    this.gridY = gridY
 
+    this.gridX = null
+    this.gridY = null
     this.abbreviation = CardFaceToAbbreviationMap[this.name]
     this.color = CardColorMap[this.suit]
     this.symbol = CardSuitToSymbolMap[this.suit]
@@ -207,9 +211,10 @@ export default class Card {
     }
   }
 
-  public update(card: CardData) {
+  public update(card: Partial<Pick<CardData, 'value' & 'gridX' & 'gridY' & 'killed' & 'upsideDown' & 'value'>>) {
     // these are the only values that will update as the game is played
-    this.value = card.value
+    if (!isNil(card.value)) this.value = card.value
+
     this.gridX = card.gridX
     this.gridY = card.griY
     this.killed = card.killed
