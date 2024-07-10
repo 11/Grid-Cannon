@@ -22,10 +22,11 @@ export enum CardSuits {
   CLUB = 'CLUB',
   HEART = 'HEART',
   DIAMOND = 'DIAMOND',
+  NULL = 'NULL',
 }
 
 export const CardSuitToSymbolMap = {
-  null: '',
+  [CardSuits.NULL]: '',
   [CardSuits.SPADE]: '\u2660',
   [CardSuits.CLUB]: '\u2663',
   [CardSuits.HEART]: '\u2665',
@@ -68,7 +69,7 @@ export const CardFaceToAbbreviationMap = {
 
 export type CardColors = 'RED' | 'BLACK'
 export const CardColorMap: Record<string, CardColors> = {
-  null: 'BLACK', // JOKERS have no suit, so they default to black
+  [CardSuits.NULL]: 'BLACK', // JOKERS have no suit, so they default to black
   [CardSuits.SPADE]: 'BLACK',
   [CardSuits.CLUB]: 'BLACK',
   [CardSuits.HEART]: 'RED',
@@ -78,21 +79,23 @@ export const CardColorMap: Record<string, CardColors> = {
 export interface CardData {
   name: CardFaces
   abbreviation: string
-  suit: CardSuits
-  symbol: string,
-  rank: number,
-  value: number,
-  color: CardColors,
-  gridX: number | null,
-  gridY: number | null,
-  isNumber: boolean,
-  isFace: boolean,
-  isJoker: boolean,
-  isAce: boolean,
-  cardText: string,
-  killed: boolean,
-  upsideDown: boolean,
+  suit: CardSuits | null
+  symbol: string
+  rank: number
+  value: number
+  color: CardColors
+  gridX: number | null
+  gridY: number | null
+  cardText: string
+  isNumber: boolean
+  isFace: boolean
+  isJoker: boolean
+  isAce: boolean
+  isKilled: boolean
+  isUpsideDown: boolean
 }
+
+export type UpdateableCardFields = 'value' | 'gridX' | 'gridY' | 'isKilled' | 'isUpsideDown'
 
 export default class Card {
   /**
@@ -124,7 +127,7 @@ export default class Card {
    * CLUB
    * DIAMOND
    */
-  private suit: CardSuits | null
+  private suit: CardSuits
 
   /**
    * Unicode symbols for card suits:
@@ -155,14 +158,14 @@ export default class Card {
   private color: CardColors
 
   /**
-   * If a face card has been killed
+   * If a face card has been isKilled
    */
-  private killed: boolean
+  private isKilled: boolean
 
   /**
    * Stores if front or back of card should be rendered
    */
-  private upsideDown: boolean
+  private isUpsideDown: boolean
 
   /**
    * Grid position
@@ -170,10 +173,9 @@ export default class Card {
   private gridX: number | null
   private gridY: number | null
 
-  constructor(name: CardFaces, suit: CardSuits | null) {
+  constructor(name: CardFaces, suit: CardSuits) {
     this.name = name
     this.suit = suit
-
     this.gridX = null
     this.gridY = null
     this.abbreviation = CardFaceToAbbreviationMap[this.name]
@@ -181,44 +183,84 @@ export default class Card {
     this.symbol = CardSuitToSymbolMap[this.suit]
     this.rank = CardFaceToRankMap[this.name]
     this.value = this.rank
-    this.killed = false
-    this.upsideDown = true
+    this.isKilled = false
+    this.isUpsideDown = true
   }
 
-  get isNumber(): boolean {
+  public get Value() {
+    return this.value
+  }
+
+  public get Suit() {
+    return this.suit
+  }
+
+  public get isNumber(): boolean {
     return this.rank >= 2 && this.rank <= 10
   }
 
-  get isFace() {
+  public get IsFace() {
     return this.rank > 10
   }
 
-  get isJoker() {
+  public get IsJoker() {
     return this.rank === 0
   }
 
-  get isAce() {
+  public get IsAce() {
     return this.rank === 1
   }
 
-  get cardText() {
+  public get CardText() {
     return `${this.name} ${this.symbol}`
   }
 
+  public get Color() {
+    return this.color
+  }
+
+  public get GridX() {
+    return this.gridX
+  }
+
+  public get GridY() {
+    return this.gridY
+  }
+
+  public get GridPosition() {
+    return [this.gridX, this.gridY]
+  }
+
+  public get Abbreviation() {
+    return this.abbreviation
+  }
+
   public kill() {
-    if (this.isFace) {
-      this.killed = true
+    if (this.IsFace) {
+      this.isKilled = true
     }
   }
 
-  public update(card: Partial<Pick<CardData, 'value' & 'gridX' & 'gridY' & 'killed' & 'upsideDown' & 'value'>>) {
-    // these are the only values that will update as the game is played
-    if (!isNil(card.value)) this.value = card.value
+  public update(card: Partial<Pick<CardData, UpdateableCardFields>>) {
+    if (!isNil(card.value)) {
+      this.value = card.value
+    }
 
-    this.gridX = card.gridX
-    this.gridY = card.griY
-    this.killed = card.killed
-    this.upsideDown = card.upsideDown
+    if (!isNil(card.gridX)) {
+      this.gridX = card.gridX
+    }
+
+    if (!isNil(card.gridY)) {
+      this.gridY = card.gridY
+    }
+
+    if (!isNil(card.isKilled)) {
+      this.isKilled = card.isKilled
+    }
+
+    if (!isNil(card.isUpsideDown)) {
+      this.isUpsideDown = card.isUpsideDown
+    }
   }
 
   public toJSON(): CardData {
@@ -231,14 +273,14 @@ export default class Card {
       value: this.value,
       color: this.color,
       gridX: this.gridX,
-      griY: this.gridY,
+      gridY: this.gridY,
       isNumber: this.isNumber,
-      isFace: this.isFace,
-      isJoker: this.isJoker,
-      isAce: this.isAce,
-      cardText: this.cardText,
-      killed: this.killed,
-      upsideDown: this.upsideDown,
+      isFace: this.IsFace,
+      isJoker: this.IsJoker,
+      isAce: this.IsAce,
+      cardText: this.CardText,
+      isKilled: this.isKilled,
+      isUpsideDown: this.isUpsideDown,
     }
   }
 }

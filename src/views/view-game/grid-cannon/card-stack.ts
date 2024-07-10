@@ -45,12 +45,15 @@ export default class CardStack {
     return card
   }
 
-  public push(card: Card): boolean {
-    if (!card) {
+  public push(...cards: Card[]): boolean {
+    if (cards.length === 0) {
       return false
     }
 
-    this.stack.push(card)
+    for (const card of cards) {
+      this.stack.push(card)
+    }
+
     return true
   }
 
@@ -74,16 +77,16 @@ export default class CardStack {
     return result
   }
 
-  public contains(item) {
-    for (let i = 0; i < this.stack.length; i++) {
-      const current = this.stack[i]
-      if (current === item) {
-        return true
-      }
-    }
+  // public contains(item: ) {
+  //   for (let i = 0; i < this.stack.length; i++) {
+  //     const current = this.stack[i]
+  //     if (current === item) {
+  //       return true
+  //     }
+  //   }
 
-    return false
-  }
+  //   return false
+  // }
 
   public rotate(index: number): boolean {
     // a cut is the same as rotating an array. split the deck into 2 halvse and rotate

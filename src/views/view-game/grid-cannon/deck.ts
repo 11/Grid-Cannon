@@ -29,8 +29,9 @@ export default class Deck {
       }
     }
 
-    this.cards.push(new Card(CardFaces.JOKER, null))
-    this.cards.push(new Card(CardFaces.JOKER, null))
+    const joker1 = new Card(CardFaces.JOKER, CardSuits.NULL)
+    const joker2 = new Card(CardFaces.JOKER, CardSuits.NULL)
+    this.cards.push(joker1, joker2)
   }
 
   public deal(): Card | null {
