@@ -14,7 +14,6 @@ export class ViewRoot extends LitElement {
   }
 
   setRoutes = (): void => {
-    console.log('made it here')
     const slot = this.shadowRoot?.querySelector('slot')
     if (isNil(slot)) {
       throw new Error('Slot not found')
@@ -25,7 +24,6 @@ export class ViewRoot extends LitElement {
   }
 
   firstUpdated(_changedProperties: Map<string | number | symbol, unknown>): void {
-    console.log('made it here')
     super.firstUpdated(_changedProperties)
     this.setRoutes()
   }

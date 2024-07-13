@@ -1,7 +1,11 @@
 // import Game from './game'
 import { isNil } from 'lodash'
-import Card from './card'
+import Card, { CardAttributes } from './card'
 import CardStack from './card-stack'
+import Deck from './deck'
+
+export const GRID_SIZE_X = 5
+export const GRID_SIZE_Y = 5
 
 export default class Grid {
   // get htmlGrid() {
@@ -16,7 +20,8 @@ export default class Grid {
   /**
    * valid grid X and Y position for each type of card
    */
-  private readonly startNumberPositions: number[][] = [[1,1], [1,2], [1,3], [2,1], [2,3], [3,1], [3,2], [3,3]]
+  public static readonly EMPTY_POSITIONS: Set<string> = new Set(['00', '04', '40', '44'])
+  public readonly startNumberPositions: number[][] = [[1,1], [1,2], [1,3], [2,1], [2,3], [3,1], [3,2], [3,3]]
   private readonly numberedPositions: number[][] = [[1,1], [1,2], [1,3], [2,1], [2,2], [2,3], [3,1], [3,2], [3,3]]
   private readonly facePositions: number[][] = [[0,1], [0,2], [0,3], [1,0], [1,4], [2,0], [2,4], [3,0], [3,4], [4,1], [4,2],[4,3]]
 
@@ -55,83 +60,7 @@ export default class Grid {
   //   }
   // }
 
-  public setup() {
-    const generateNewGridByDifficulty = () => {
-      const gameDifficulty = new Set([3, 7])
-
-      let spots, faces, aces, jokers
-      do {
-        spots = []
-        faces = []
-        aces = []
-        jokers = []
-
-        window.game.deck.newOrderedDeck()
-        window.game.deck.shuffle()
-
-        while (spots.length <= 7) {
-          const card = window.game.deck.pop()
-          if (card.isFace) {
-            faces.push(card)
-          } else if (card.isJoker) {
-            jokers.push(card)
-          } else if (card.isAce) {
-            aces.push(card)
-          } else {
-            spots.push(card)
-          }
-        }
-      } while(!gameDifficulty.has(faces.length))
-
-      return {
-        faces,
-        spots,
-        jokers,
-        aces,
-      }
-    }
-
-    const placeNumberedCardsInGrid = (numberedCards: Card[]) => {
-      for (const [gridX, gridY] of this.startNumberPositions) {
-        const card = numberedCards.shift()
-        if (isNil(card)) {
-          throw new Error('No numbered cards when setting up grid')
-        }
-
-        card.update({
-          gridX,
-          gridY,
-        })
-
-        this.push(gridX, gridY, card)
-      }
-    }
-
-    const {
-      faces,
-      spots,
-      jokers,
-      aces,
-    } = generateNewGridByDifficulty()
-    placeNumberedCardsInGrid(spots)
-
-    let faceCard
-    while (faceCard = faces.pop()) {
-      const positionsRankedByCardAttributes = this.findValidGridPlacements(faceCard)
-      const bestPosition = positionsRankedByCardAttributes[0]
-      const [xStr, yStr] = bestPosition
-      this.push(parseInt(xStr), parseInt(yStr), faceCard)
-    }
-
-    let joker
-    while(joker = jokers.pop()) {
-      window.game.controls.putJokers(joker)
-    }
-
-    let ace
-    while (ace = aces.pop()) {
-      window.game.controls.putAces(ace)
-    }
+  public setup(deck: Deck) {
   }
 
   // getCardHtmlFromGridPosition(x, y) {
@@ -284,9 +213,10 @@ export default class Grid {
         return [...resultA, ...resultB]
       }
 
-      const playedCards = this.startNumberPositions
+      const playedCards: Card[] = this.startNumberPositions
         .map(([x, y]) => this.peek(x,y))
-        .filter((card: Card | null) => !isNil(card))
+        .filter((card: Card | null): card is Card => !isNil(card))
+
       const orderBySuitAndValue = [...playedCards].filter(isSameSuit).sort(byValueDiff)
       const orderByColorAndValue = [...playedCards].filter(isSameColor).sort(byValueDiff)
       const orderByValue = [...playedCards].sort(byValueDiff)
@@ -329,14 +259,26 @@ export default class Grid {
     if (selectedCard.IsFace) {
       const mostSimilarCards = orderByMostSimilarCard(selectedCard)
       const faceTiles = mostSimilarCards
-        .flatMap((card: Card) => getAdjacentFaceTiles(card.GridX, card.GridY))
-        .filter((coordinate: number[] | null) => !isNil(coordinate))
+        .flatMap((card: Card | null) => {
+          if (isNil(card)) {
+            return []
+          }
+
+          const adjacentTiles = getAdjacentFaceTiles(card.GridX, card.GridY)
+          if (isNil(adjacentTiles)) {
+            return []
+          }
+
+          return adjacentTiles
+        })
+        .filter((coordinate: number[]) => coordinate.length === 2)
         .filter((coordinate: number[]) => {
           const [x,y] = coordinate
           const isFaceCardPositionEmpty = isNil(this.peek(x, y))
           return isFaceCardPositionEmpty
         })
         .map((coordinates: number[]) => coordinates.join(''))
+
       return faceTiles
     } else if (selectedCard.IsJoker || selectedCard.IsAce) {
       return [...this.numberedPositions].map(coordinates => coordinates.join(''))
@@ -378,8 +320,29 @@ export default class Grid {
   //   }
   // }
 
-  public render(): void {
-    // TODO:
+  public getRenderState(): Array<CardAttributes | null> {
+    const result: Array<CardAttributes | null> = []
+    for (let x = 0; x < GRID_SIZE_X; x++) {
+      for (let y = 0; y < GRID_SIZE_X; y++) {
+        const stride = (5 * x) + y
+        const stack = this.grid[stride]
+        if (isNil(stack)) {
+          result.push(null)
+          continue
+        }
+
+        const card = stack.peek()
+        if (isNil(card)) {
+          result.push(null)
+          continue
+        }
+
+        const cardAttrs = card.toJSON()
+        result.push(cardAttrs)
+      }
+    }
+
+    return result
   }
 
   /**

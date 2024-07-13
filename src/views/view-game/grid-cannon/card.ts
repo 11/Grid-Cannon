@@ -76,7 +76,7 @@ export const CardColorMap: Record<string, CardColors> = {
   [CardSuits.DIAMOND]: 'RED',
 }
 
-export interface CardData {
+export interface CardAttributes {
   name: CardFaces
   abbreviation: string
   suit: CardSuits | null
@@ -93,9 +93,10 @@ export interface CardData {
   isAce: boolean
   isKilled: boolean
   isUpsideDown: boolean
+  isSelected: boolean
 }
 
-export type UpdateableCardFields = 'value' | 'gridX' | 'gridY' | 'isKilled' | 'isUpsideDown'
+export type UpdateableCardFields = 'value' | 'gridX' | 'gridY' | 'isKilled' | 'isUpsideDown' | 'isSelected'
 
 export default class Card {
   /**
@@ -167,6 +168,8 @@ export default class Card {
    */
   private isUpsideDown: boolean
 
+  private isSelected: boolean
+
   /**
    * Grid position
    */
@@ -185,6 +188,7 @@ export default class Card {
     this.value = this.rank
     this.isKilled = false
     this.isUpsideDown = true
+    this.isSelected = false
   }
 
   public get Value() {
@@ -212,7 +216,7 @@ export default class Card {
   }
 
   public get CardText() {
-    return `${this.name} ${this.symbol}`
+    return `${this.abbreviation} ${this.symbol}`
   }
 
   public get Color() {
@@ -231,6 +235,10 @@ export default class Card {
     return [this.gridX, this.gridY]
   }
 
+  public get IsSelected() {
+    return this.isSelected
+  }
+
   public get Abbreviation() {
     return this.abbreviation
   }
@@ -241,7 +249,7 @@ export default class Card {
     }
   }
 
-  public update(card: Partial<Pick<CardData, UpdateableCardFields>>) {
+  public update(card: Partial<Pick<CardAttributes, UpdateableCardFields>>) {
     if (!isNil(card.value)) {
       this.value = card.value
     }
@@ -261,9 +269,13 @@ export default class Card {
     if (!isNil(card.isUpsideDown)) {
       this.isUpsideDown = card.isUpsideDown
     }
+
+    if (!isNil(card.isSelected)) {
+      this.isSelected = card.isSelected
+    }
   }
 
-  public toJSON(): CardData {
+  public toJSON(): CardAttributes {
     return {
       name: this.name,
       abbreviation: this.abbreviation,
@@ -281,6 +293,7 @@ export default class Card {
       cardText: this.CardText,
       isKilled: this.isKilled,
       isUpsideDown: this.isUpsideDown,
+      isSelected: this.isSelected,
     }
   }
 }

@@ -2,8 +2,8 @@ import Card, { CardFaces, CardSuits } from './card.js'
 import CardStack from './card-stack.js'
 
 export default class Deck {
-  get size() {
-    return this.cards.size
+  get Size() {
+    return this.cards.Size
   }
 
   private cards: CardStack
@@ -19,6 +19,10 @@ export default class Deck {
     }
 
     for (const suit of Object.values(CardSuits)) {
+      if (suit === CardSuits.NULL) {
+        continue
+      }
+
       for (const name of Object.values(CardFaces)) {
         if (name === CardFaces.JOKER) {
           continue
@@ -35,7 +39,7 @@ export default class Deck {
   }
 
   public deal(): Card | null {
-    if (this.size === 0) {
+    if (this.Size === 0) {
       // this.reset()
       this.cards.shuffle()
     }

@@ -1,7 +1,13 @@
-import { LitElement, html, css } from 'lit'
+import { LitElement, html, css, PropertyValueMap } from 'lit'
 import * as S from './view-game.style'
 
 import '@/components/game-card/'
+import type { CardAttributes } from './grid-cannon/card'
+import Deck from './grid-cannon/deck'
+import Grid, { GRID_SIZE_X, GRID_SIZE_Y } from './grid-cannon/grid'
+import Hand, { HandRenderState } from './grid-cannon/hand'
+import { dealGame } from './grid-cannon/controls'
+import { isNil } from 'lodash'
 
 export class ViewGame extends LitElement {
   static styles = [
@@ -10,46 +16,139 @@ export class ViewGame extends LitElement {
     S.GameGrid,
   ]
 
+  static properties = {
+    grid: { type: Array },
+    aces: { type: Array },
+    jokers: { type: Array },
+    hand: { type: Object },
+    event: { typep: String },
+  }
+
+  grid: Array<CardAttributes | null>
+  hand: HandRenderState | null
+  event: string | null
+
+  gameDeck: Deck | null
+  gameGrid: Grid | null
+  gameHand: Hand | null
+
+  constructor() {
+    super()
+
+    this.grid = []
+    this.hand = null
+    this.event = null
+
+    this.gameGrid = null
+    this.gameHand = null
+    this.gameDeck = null
+  }
+
+  public connectedCallback(): void {
+    super.connectedCallback()
+
+    const { deck, grid, hand } = dealGame()
+    this.gameDeck = deck
+    this.gameGrid = grid
+    this.gameHand = hand
+
+    this.grid = this.gameGrid.getRenderState()
+    this.hand = this.gameHand.getRenderState()
+    this.event = 'deal'
+  }
+
+  renderGrid() {
+    return html`
+      ${this.grid.map((cardAttr: CardAttributes | null, index: number) => {
+        const gridX = Math.floor(index / GRID_SIZE_X)
+        const gridY = Math.floor(index % GRID_SIZE_Y)
+
+        if (Grid.EMPTY_POSITIONS.has(`${gridX}${gridY}`)) {
+          return html`
+            <game-card
+              .gridX=${gridX}
+              .gridY=${gridY}
+              .isGameCard=${false}
+              .isHidden=${true}
+            >
+            </game-card>
+          `
+        }
+
+        return html`
+          <game-card
+            .gridX=${gridX}
+            .gridY=${gridY}
+            .isGameCard=${true}
+            .isHidden=${false}
+            .isEmpty=${isNil(cardAttr)}
+          >
+            ${cardAttr?.cardText}
+          </game-card>
+        `
+      })}
+    `
+  }
+
+  renderHand() {
+    let ace = null
+    let joker = null
+    let hand = null
+    if (!isNil(this.hand )) {
+      ace = this.hand.ace
+      joker = this.hand.joker
+      hand = this.hand.hand
+    }
+
+    return html`
+      <game-card
+        id='deck'
+        .isEmpty=${(this.gameDeck?.Size === 0)}
+        .isFaceShowing=${false}
+      >
+        Deal
+      </game-card>
+
+      <game-card
+        id='hand'
+        .isEmpty=${isNil(hand)}
+      >
+        ${hand?.cardText}
+      </game-card>
+
+      <game-card
+        id='aces'
+        .isEmpty=${isNil(ace)}
+      >
+        ${!isNil(ace)
+          ? html`${ace.cardText}`
+          : html`Aces`}
+      </game-card>
+
+      <game-card
+        id='jokers'
+        .isEmpty=${true}
+      >
+        ${!isNil(joker)
+          ? html`${joker.cardText}`
+          : html`Jokers`}
+      </game-card>
+
+      <game-card
+        id='discard'
+        .isEmpty=${true}
+      >
+      </game-card>
+    `
+  }
+
   render() {
     return html`
       <section class='grid-cannon hidden'>
         <div class='grid-container'>
           <div class='game-grid'>
-            <game-card .gridX='${0}' .gridY='${0}' .isGameCard='${true}' .isHidden=${true} .isEmpty=${false}>&nbsp;</game-card>
-            <game-card .gridX='${0}' .gridY='${1}' .isGameCard='${true}' .isHidden=${false} .isEmpty=${true}>&nbsp;</game-card>
-            <game-card .gridX='${0}' .gridY='${2}' .isGameCard='${true}' .isHidden=${false} .isEmpty=${true}>&nbsp;</game-card>
-            <game-card .gridX='${0}' .gridY='${3}' .isGameCard='${true}' .isHidden=${false} .isEmpty=${true}>&nbsp;</game-card>
-            <game-card .gridX='${0}' .gridY='${4}' .isGameCard='${true}' .isHidden=${true} .isEmpty=${false}>&nbsp;</game-card>
-
-            <game-card .gridX='${1}' .gridY='${0}' .isGameCard='${true}' .isHidden=${false} .isEmpty=${true}>&nbsp;</game-card>
-            <game-card .gridX='${1}' .gridY='${1}' .isGameCard='${true}' .isHidden=${false} .isEmpty=${true}>&nbsp;</game-card>
-            <game-card .gridX='${1}' .gridY='${2}' .isGameCard='${true}' .isHidden=${false} .isEmpty=${true}>&nbsp;</game-card>
-            <game-card .gridX='${1}' .gridY='${3}' .isGameCard='${true}' .isHidden=${false} .isEmpty=${true}>&nbsp;</game-card>
-            <game-card .gridX='${1}' .gridY='${4}' .isGameCard='${true}' .isHidden=${false} .isEmpty=${true}>&nbsp;</game-card>
-
-            <game-card .gridX='${2}' .gridY='${0}' .isGameCard='${true}' .isHidden=${false} .isEmpty=${true}>&nbsp;</game-card>
-            <game-card .gridX='${2}' .gridY='${1}' .isGameCard='${true}' .isHidden=${false} .isEmpty=${true}>&nbsp;</game-card>
-            <game-card .gridX='${2}' .gridY='${2}' .isGameCard='${true}' .isHidden=${false} .isEmpty=${true}>&nbsp;</game-card>
-            <game-card .gridX='${2}' .gridY='${3}' .isGameCard='${true}' .isHidden=${false} .isEmpty=${true}>&nbsp;</game-card>
-            <game-card .gridX='${2}' .gridY='${4}' .isGameCard='${true}' .isHidden=${false} .isEmpty=${true}>&nbsp;</game-card>
-
-            <game-card .gridX='${3}' .gridY='${0}' .isGameCard='${true}' .isHidden=${false} .isEmpty=${true}>&nbsp;</game-card>
-            <game-card .gridX='${3}' .gridY='${1}' .isGameCard='${true}' .isHidden=${false} .isEmpty=${true}>&nbsp;</game-card>
-            <game-card .gridX='${3}' .gridY='${2}' .isGameCard='${true}' .isHidden=${false} .isEmpty=${true}>&nbsp;</game-card>
-            <game-card .gridX='${3}' .gridY='${3}' .isGameCard='${true}' .isHidden=${false} .isEmpty=${true}>&nbsp;</game-card>
-            <game-card .gridX='${3}' .gridY='${4}' .isGameCard='${true}' .isHidden=${false} .isEmpty=${true}>&nbsp;</game-card>
-
-            <game-card .gridX='${4}' .gridY='${0}' .isGameCard='${true}' .isHidden=${true} .isEmpty=${false}>&nbsp;</game-card>
-            <game-card .gridX='${4}' .gridY='${1}' .isGameCard='${true}' .isHidden=${false} .isEmpty=${true}>&nbsp;</game-card>
-            <game-card .gridX='${4}' .gridY='${2}' .isGameCard='${true}' .isHidden=${false} .isEmpty=${true}>&nbsp;</game-card>
-            <game-card .gridX='${4}' .gridY='${3}' .isGameCard='${true}' .isHidden=${false} .isEmpty=${true}>&nbsp;</game-card>
-            <game-card .gridX='${4}' .gridY='${4}' .isGameCard='${true}' .isHidden=${true} .isEmpty=${false}>&nbsp;</game-card>
-
-            <game-card id='deck' .isEmpty=${true}>Deal</game-card>
-            <game-card id='hand' .isEmpty=${true}>&nbsp;</game-card>
-            <game-card id='aces' .isEmpty=${true}>Aces</game-card>
-            <game-card id='jokers' .isEmpty=${true}>Jokers</game-card>
-            <game-card id='discard' .isEmpty=${true}>&nbsp;</game-card>
+            ${this.renderGrid()}
+            ${this.renderHand()}
           </div>
         </div>
       </section>

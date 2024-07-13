@@ -13,7 +13,7 @@ import Card from './card'
  *   in the `Deck` class.
  */
 export default class CardStack {
-  get size() {
+  get Size() {
     return this.stack.length
   }
 

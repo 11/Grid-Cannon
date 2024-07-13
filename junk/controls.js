@@ -1,4 +1,4 @@
-import CardStack from './card-stack.js'
+import CardStack from './card-stack'
 
 export default class Controls {
   get handHtml() {

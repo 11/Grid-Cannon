@@ -1,7 +1,4 @@
-import Deck from './deck.js'
-import Card from './card.js'
-import Grid from './grid.js'
-import Controls from './controls.js'
+
 
 export default class Game {
   get deck() {
