@@ -82,6 +82,7 @@ export class ViewGame extends LitElement {
             .isGameCard=${true}
             .isHidden=${false}
             .isEmpty=${isNil(cardAttr)}
+            .suit=${cardAttr?.suit}
           >
             ${cardAttr?.cardText}
           </game-card>

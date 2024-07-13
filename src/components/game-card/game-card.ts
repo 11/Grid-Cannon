@@ -47,16 +47,18 @@ export class GameCard extends LitElement {
   render() {
     let classMap = ['card']
 
-    if (this.isHidden) {
-      classMap.push('hidden')
+    if (!this.isFaceShowing) {
+      classMap.push('back')
     }
 
     if (this.isEmpty) {
       classMap.push('empty')
+    } else {
+      classMap.push('face')
     }
 
-    if (!this.isFaceShowing) {
-      classMap.push('card-back')
+    if (this.isHidden) {
+      classMap.push('hidden')
     }
 
     return html`
@@ -66,8 +68,10 @@ export class GameCard extends LitElement {
         data-grid-y='${this.gridY}'
         data-game-card='${this.isGameCard}'
         data-game-is-face-showing='${this.isFaceShowing}'
+        data-is-empty=${this.isEmpty}
+        data-suit=${this.suit}
       >
-        ${this.children.length === 0
+        ${this.isEmpty
           ? html`&nbsp;`
           : html`<slot></slot>`}
       </div>

@@ -17,6 +17,13 @@ export const Card = css`
     font-size: 1.5rem;
 
     min-width: 50px;
+    height: 90%;
+
+    color: black;
+  }
+
+  .card[data-suit="DIAMOND"], .card[data-suit="HEART"] {
+    color: red;
   }
 `
 
@@ -26,6 +33,7 @@ export const CardFace = css`
     background-color: white;
   }
 `
+
 export const CardEmpty = css`
   .empty {
     padding: .25rem;
@@ -43,6 +51,7 @@ export const CardBack = css`
   .back {
     padding: .25rem;
     background: radial-gradient(circle closest-side, blue, purple);
+    color: yellow;
   }
 `
 
