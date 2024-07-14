@@ -83,8 +83,8 @@ export class ViewGame extends LitElement {
             .isHidden=${false}
             .isEmpty=${isNil(cardAttr)}
             .suit=${cardAttr?.suit}
+            .cardText=${cardAttr?.cardText}
           >
-            ${cardAttr?.cardText}
           </game-card>
         `
       })}
@@ -106,33 +106,30 @@ export class ViewGame extends LitElement {
         id='deck'
         .isEmpty=${(this.gameDeck?.Size === 0)}
         .isFaceShowing=${false}
+        .cardText=${'Deal'}
       >
-        Deal
       </game-card>
 
       <game-card
         id='hand'
         .isEmpty=${isNil(hand)}
+        .cardText=${hand?.cardText}
       >
-        ${hand?.cardText}
       </game-card>
 
       <game-card
         id='aces'
         .isEmpty=${isNil(ace)}
+        .cardText=${!isNil(ace) ? ace.cardText : 'Aces'}
       >
-        ${!isNil(ace)
-          ? html`${ace.cardText}`
-          : html`Aces`}
       </game-card>
 
       <game-card
         id='jokers'
-        .isEmpty=${true}
+        .isEmpty=${isNil(joker)}
+        .cardText=${!isNil(joker) ? joker?.cardText : 'Jokers' }
+        .rank=${joker?.rank}
       >
-        ${!isNil(joker)
-          ? html`${joker.cardText}`
-          : html`Jokers`}
       </game-card>
 
       <game-card

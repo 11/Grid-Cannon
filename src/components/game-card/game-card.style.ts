@@ -25,6 +25,10 @@ export const Card = css`
   .card[data-suit="DIAMOND"], .card[data-suit="HEART"] {
     color: red;
   }
+
+  .card[data-rank="0"] {
+    color: purple;
+  }
 `
 
 export const CardFace = css`
