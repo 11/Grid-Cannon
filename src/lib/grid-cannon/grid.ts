@@ -115,7 +115,7 @@ export default class Grid {
     return true
   }
 
-  public attack(gridX: number, gridY: number): void {
+  public attack(gridX: number, gridY: number): number {
     const getTriggerAndAttackersAndFaceCard = (x: number, y: number) => {
       const placementCoordinates = `${x}${y}`
       switch (placementCoordinates) {
@@ -157,6 +157,8 @@ export default class Grid {
     // the (x, y) value is the coordinate of the spot card the player is placing
     const attackInfo = getTriggerAndAttackersAndFaceCard(gridX, gridY)
 
+    let cardScore = 0
+    let attackersCount = 0
     for (const { trigger, attackers, face } of attackInfo) {
       if (isNil(trigger) || isNil(attackers) || isNil(face)) {
         continue
@@ -186,9 +188,13 @@ export default class Grid {
         const attackedRoyal = this.peek(x, y)
         if (!isNil(attackedRoyal)) {
           attackedRoyal.update({ isDead: true })
+          cardScore += attackedRoyal.Score
+          attackersCount++
         }
       }
     }
+
+    return cardScore * attackersCount
   }
 
   public findValidGridPlacements(selectedCard: Card): string[] {

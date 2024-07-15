@@ -116,11 +116,9 @@ export function drawHand(deck: Deck, grid: Grid, hand: Hand): void {
 
   // if there are no royals to kill on grid,
   // flip through deck until next card is a royal
-  console.log(deck.Size)
   if (grid.IsAllPlayedRoyalsDead) {
     deck.flipToNextRoyal()
   }
-  console.log(deck.Size)
 
   const card = deck.pop()
   if (isNil(card)) {
@@ -189,7 +187,7 @@ export function selectJoker(deck: Deck, grid: Grid, hand: Hand): void {
   grid.showPlayablePositions(card)
 }
 
-export function selectGridPosition(gridX: number, gridY: number, deck: Deck, grid: Grid, hand: Hand): void {
+export function selectGridPosition(gridX: number, gridY: number, deck: Deck, grid: Grid, hand: Hand): number {
   console.log('#selectGridPosition')
   const gridCard = grid.peek(gridX, gridY)
 
@@ -212,6 +210,7 @@ export function selectGridPosition(gridX: number, gridY: number, deck: Deck, gri
     throw new Error('Selected card is null')
   }
 
+  let score = 0
   if (selectedCard.IsJoker) {
     const { aces, numbered } = grid.clear(gridX, gridY)
     deck.push(...numbered)
@@ -224,9 +223,11 @@ export function selectGridPosition(gridX: number, gridY: number, deck: Deck, gri
     || selectedCard.Rank >= gridCard.Rank
   ) {
     grid.push(gridX, gridY, selectedCard)
-    grid.attack(gridX, gridY)
+    score = grid.attack(gridX, gridY)
   }
 
   selectedCard.update({ isHighlighted: false })
   grid.hidePlayablePositions()
+
+  return score
 }

@@ -77,16 +77,17 @@ export const CardColorMap: Record<string, CardColors> = {
 }
 
 export interface CardAttributes {
-  name: CardFaces
-  abbreviation: string
-  suit: CardSuits | null
-  symbol: string
-  rank: number
-  value: number
-  color: CardColors
   gridX: number | null
   gridY: number | null
+  rank: number
+  name: CardFaces
+  suit: CardSuits | null
+  symbol: string
+  abbreviation: string
+  value: number
+  color: CardColors
   cardText: string
+  score: number
   isNumber: boolean
   isFace: boolean
   isJoker: boolean
@@ -164,6 +165,12 @@ export default class Card {
 
   private isHighlighted: boolean
 
+  // Scores for each card
+  // King => 3
+  // Queen => 2
+  // Jack => 1
+  private score: number
+
   /**
    * Grid position
    */
@@ -179,11 +186,27 @@ export default class Card {
     this.color = CardColorMap[this.suit]
     this.symbol = CardSuitToSymbolMap[this.suit]
     this.rank = CardFaceToRankMap[this.name]
+    this.score = (this.rank <= 10) ? 0 : Math.abs(this.rank - 10)
     this.value = this.rank
     this.isDead = false
     this.isUpsideDown = true
     this.isHighlighted = false
+  }
 
+  public get GridX() {
+    return this.gridX
+  }
+
+  public get GridY() {
+    return this.gridY
+  }
+
+  public get GridPosition() {
+    return [this.gridX, this.gridY]
+  }
+
+  public get Score() {
+    return this.score
   }
 
   public get Rank() {
@@ -196,6 +219,14 @@ export default class Card {
 
   public get Suit() {
     return this.suit
+  }
+
+  public get CardText() {
+    return `${this.abbreviation} ${this.symbol}`.trim()
+  }
+
+  public get Color() {
+    return this.color
   }
 
   public get isNumber(): boolean {
@@ -218,32 +249,12 @@ export default class Card {
     return this.isHighlighted
   }
 
-  public get CardText() {
-    return `${this.abbreviation} ${this.symbol}`.trim()
-  }
-
-  public get Color() {
-    return this.color
-  }
-
-  public get GridX() {
-    return this.gridX
-  }
-
-  public get GridY() {
-    return this.gridY
-  }
-
-  public get GridPosition() {
-    return [this.gridX, this.gridY]
+  public get IsDead() {
+    return this.isDead
   }
 
   public get Abbreviation() {
     return this.abbreviation
-  }
-
-  public get IsDead() {
-    return this.isDead
   }
 
   public update(card: Partial<Pick<CardAttributes, UpdateableCardFields>>) {
@@ -274,15 +285,16 @@ export default class Card {
 
   public toJSON(): CardAttributes {
     return {
-      name: this.name,
-      abbreviation: this.abbreviation,
-      suit: this.suit,
-      symbol: this.symbol,
-      rank: this.rank,
-      value: this.value,
-      color: this.color,
       gridX: this.gridX,
       gridY: this.gridY,
+      rank: this.rank,
+      suit: this.suit,
+      name: this.name,
+      symbol: this.symbol,
+      abbreviation: this.abbreviation,
+      value: this.value,
+      color: this.color,
+      score: this.score,
       isNumber: this.isNumber,
       isFace: this.IsFace,
       isJoker: this.IsJoker,

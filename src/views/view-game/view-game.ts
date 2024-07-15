@@ -26,15 +26,15 @@ export class ViewGame extends LitElement {
 
   static properties = {
     grid: { type: Array },
-    aces: { type: Array },
-    jokers: { type: Array },
     hand: { type: Object },
     event: { type: String },
+    score: { type: Number },
   }
 
   grid: Array<CardAttributes | null>
   hand: HandRenderState | null
   event: GameEvents
+  score: number
 
   gameDeck: Deck | null
   gameGrid: Grid | null
@@ -46,6 +46,7 @@ export class ViewGame extends LitElement {
     this.grid = []
     this.hand = null
     this.event = GameEvents.SELECT_DECK
+    this.score = 0
 
     this.gameGrid = null
     this.gameHand = null
@@ -117,7 +118,8 @@ export class ViewGame extends LitElement {
                 || this.event === GameEvents.SELECT_ACE
                 || this.event === GameEvents.SELECT_JOKER
               ) {
-                selectGridPosition(gridX, gridY, this.gameDeck, this.gameGrid, this.gameHand)
+                const score = selectGridPosition(gridX, gridY, this.gameDeck, this.gameGrid, this.gameHand)
+                this.score += score
                 this.grid = this.gameGrid.getRenderState()
                 this.hand = this.gameHand.getRenderState()
                 this.event = GameEvents.SELECT_GRID_POSITION
@@ -237,6 +239,10 @@ export class ViewGame extends LitElement {
     `
   }
 
+  renderScore() {
+    console.log(this.score)
+  }
+
   renderWinBanner() {
     return html`
       <div>You win<div>
@@ -247,6 +253,8 @@ export class ViewGame extends LitElement {
     if (this.gameGrid?.IsAllRoyalsDead) {
       return this.renderWinBanner()
     }
+
+    this.renderScore()
 
     return html`
       <section class='grid-cannon hidden'>
