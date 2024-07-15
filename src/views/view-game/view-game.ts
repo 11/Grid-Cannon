@@ -77,6 +77,7 @@ export class ViewGame extends LitElement {
         const gridY = Math.floor(index % GRID_SIZE_Y)
 
         if (Grid.HIDDEN_POSITIONS.has(`${gridX}${gridY}`)) {
+          console.log(`${gridX}x${gridY}`)
           return html`
             <game-card
               .gridX=${gridX}
@@ -88,21 +89,29 @@ export class ViewGame extends LitElement {
           `
         }
 
+        const isGameCard = !Grid.FACE_POSITIONS.has(`${gridX}${gridY}`)
+        const isEmptyCardHighlightable = isNil(cardAttr)
+          && !isNil(this.gameHand?.peekHand())
+          && !this.gameHand?.peekHand()?.IsFace
+          && (this.event === GameEvents.SELECT_ACE || this.event === GameEvents.SELECT_JOKER || this.event === GameEvents.SELECT_HAND)
+          && isGameCard
+
+        if (gridX === 2 && gridY === 2) {
+          console.log(`${gridX}x${gridY}`, isEmptyCardHighlightable)
+          console.log(isNil(cardAttr), !isNil(this.gameHand?.peekHand()), !this.gameHand?.peekHand()?.IsFace, (this.event === GameEvents.SELECT_ACE || this.event === GameEvents.SELECT_JOKER || this.event === GameEvents.SELECT_HAND),isGameCard)
+        }
+
         return html`
           <game-card
             .gridX=${gridX}
             .gridY=${gridY}
             .suit=${cardAttr?.suit}
             .cardText=${cardAttr?.cardText}
-            .isGameCard=${true}
+            .isGameCard=${isGameCard}
             .isHidden=${false}
             .isEmpty=${isNil(cardAttr)}
             .isDead=${cardAttr?.isDead}
-            .isHighlighted=${cardAttr?.isHighlighted || (
-              isNil(cardAttr)
-              && (this.event === GameEvents.SELECT_ACE || this.event === GameEvents.SELECT_JOKER || this.event === GameEvents.SELECT_HAND)
-              && gridX === 2
-              && gridY === 2)}
+            .isHighlighted=${isEmptyCardHighlightable || cardAttr?.isHighlighted}
             @click=${() => {
               if(isNil(this.gameDeck) || isNil(this.gameGrid) || isNil(this.gameHand)) {
                 return

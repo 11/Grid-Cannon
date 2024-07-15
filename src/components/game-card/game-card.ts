@@ -45,7 +45,7 @@ export class GameCard extends LitElement {
     this.suit = ''
     this.rank = -1
     this.cardText = null
-    this.isGameCard = true
+    this.isGameCard = false
     this.isFaceShowing = true
     this.isHidden = false
     this.isEmpty = true

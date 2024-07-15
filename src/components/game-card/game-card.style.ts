@@ -39,13 +39,13 @@ export const Card = css`
     color: yellow;
   }
 
-  .card[data-is-highlighted="true"] {
-    border: 3px solid yellow;
-  }
-
   .card[data-is-empty="true"] {
     padding: .25rem;
     border: 3px dotted white;
+  }
+
+  .card[data-is-highlighted="true"] {
+    border: 3px solid yellow;
   }
 
   .card[data-is-empty="false"] {
