@@ -107,7 +107,8 @@ export class ViewGame extends LitElement {
             .isDead=${cardAttr?.isDead}
             .isHighlighted=${isEmptyCardHighlightable || cardAttr?.isHighlighted}
             @click=${() => {
-              if(isNil(this.gameDeck) || isNil(this.gameGrid) || isNil(this.gameHand)) {
+
+              if(!isGameCard || isNil(this.gameDeck) || isNil(this.gameGrid) || isNil(this.gameHand)) {
                 return
               }
 
