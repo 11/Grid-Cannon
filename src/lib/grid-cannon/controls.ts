@@ -90,12 +90,12 @@ export function dealGame(): GameData {
 
   let joker
   while(joker = jokers.pop()) {
-    hand.putJokers(joker)
+    hand.pushJokers(joker)
   }
 
   let ace
   while (ace = aces.pop()) {
-    hand.putAces(ace)
+    hand.pushAces(ace)
   }
 
   return {
@@ -119,11 +119,11 @@ export function drawHand(deck: Deck, grid: Grid, hand: Hand): void {
   }
 
   if (card.IsJoker) {
-    hand.putJokers(card)
+    hand.pushJokers(card)
   } else if (card.IsAce) {
-    hand.putAces(card)
+    hand.pushAces(card)
   } else {
-    hand.putHand(card)
+    hand.pushHand(card)
   }
 }
 
@@ -204,12 +204,11 @@ export function selectGridPosition(gridX: number, gridY: number, deck: Deck, gri
   }
 
   if (selectedCard.IsJoker) {
-    debugger
-    const cardPile = grid.clear(gridX, gridY)
-    deck.push(...cardPile)
-    // deck.shuffle()
+    const { aces, numbered } = grid.clear(gridX, gridY)
+    deck.push(...numbered)
+    hand.pushAces(...aces)
 
-    hand.putDiscards(selectedCard)
+    hand.pushDiscards(selectedCard)
   } else if (
     selectedCard.IsAce
     || isNil(gridCard)

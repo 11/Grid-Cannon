@@ -66,15 +66,23 @@ export default class CardStack {
     return true
   }
 
-  public clear(): Card[] {
-    const result = []
+  public clear(): { aces: Card[], numbered: Card[] } {
+    const aces = []
+    const numbered = []
 
-    let item
-    while (item = this.stack.pop()) {
-      result.push(item)
+    let card
+    while(card = this.stack.pop()) {
+      if (card.IsAce) {
+        aces.push(card)
+      } else {
+        numbered.push(card)
+      }
     }
 
-    return result
+    return {
+      aces,
+      numbered
+    }
   }
 
   /**

@@ -29,8 +29,8 @@ export default class Hand {
     this.hand = null
   }
 
-  public putJokers(card: Card): void {
-    this.jokers.push(card)
+  public pushJokers(...card: Card[]): void {
+    this.jokers.push(...card)
   }
 
   public popJokers(): Card | null {
@@ -41,8 +41,8 @@ export default class Hand {
     return this.jokers.peek()
   }
 
-  public putAces(card: Card): void {
-    this.aces.push(card)
+  public pushAces(...card: Card[]): void {
+    this.aces.push(...card)
   }
 
   public popAces(): Card | null {
@@ -53,8 +53,8 @@ export default class Hand {
     return this.aces.peek()
   }
 
-  public putDiscards(card: Card): void {
-    this.discards.push(card)
+  public pushDiscards(...card: Card[]): void {
+    this.discards.push(...card)
   }
 
   public popDiscards(): Card | null {
@@ -65,7 +65,7 @@ export default class Hand {
     return this.discards.peek()
   }
 
-  public putHand(card: Card): void {
+  public pushHand(card: Card): void {
     this.hand = card
   }
 

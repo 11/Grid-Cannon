@@ -55,7 +55,7 @@ export default class Grid {
     return card
   }
 
-  public clear(gridX: number, gridY: number): Card[]{
+  public clear(gridX: number, gridY: number): { aces: Card[], numbered: Card[] } {
     const stride = (5 * gridX) + gridY
 
     const cardStack = this.grid.at(stride)

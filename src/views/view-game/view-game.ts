@@ -226,7 +226,7 @@ export class ViewGame extends LitElement {
         .isEmpty=${isNil(discard)}
         .isFaceShowing=${isNil(discard)}
         .isGameCard=${true}
-        .cardText=${'Discard'}
+        .cardText=${isNil(discard) ? 'Discard' : '&nbsp;'}
       >
       </game-card>
     `

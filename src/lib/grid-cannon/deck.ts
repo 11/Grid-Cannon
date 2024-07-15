@@ -56,7 +56,7 @@ export default class Deck {
   }
 
   public push(...cards: Card[]): boolean {
-    this.cards.push(...cards)
+    this.cards.placeAtBottom(...cards)
     return true
   }
 }
