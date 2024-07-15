@@ -24,6 +24,7 @@ export class WebLink extends LitElement {
     }
 
     .secondary {
+      background: white;
       color: black;
     }
   `

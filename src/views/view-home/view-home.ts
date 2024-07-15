@@ -1,9 +1,6 @@
 import { html, LitElement } from 'lit'
 import * as S from './view-home.style'
-
-
 import '@/elements/web-link'
-import { getFormattedDate } from '@/lib/date'
 
 export class ViewHome extends LitElement {
   static styles = [
@@ -17,6 +14,7 @@ export class ViewHome extends LitElement {
     S.Primary,
     S.Secondary,
     S.Credits
+
   ]
 
   render() {
@@ -28,8 +26,8 @@ export class ViewHome extends LitElement {
             <div class='tagline'>Destroy all 12 royals as fast as you can</div>
           </div>
           <div class='menu-options'>
-            <web-link href='/new-game'>Daily board – ${getFormattedDate()}</web-link>
-            <web-link .usePrimary=${false}  href='/'>How to play</web-link>
+            <web-link href='/new-game'>New game </web-link>
+            <web-link .usePrimary=${false} .secondary=${true} href='/'>How to play</web-link>
           </div>
           <div class='credits'>
             <div>Website designed and programmed by <a target="_blank" href="https://doug.art">Doug Rudolph</a></div>

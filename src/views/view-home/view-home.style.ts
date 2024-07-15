@@ -7,6 +7,7 @@ export const StartScreen = css`
     display: flex;
     justify-content: center;
     align-items: center;
+    background-color: #f0f0f0;
   }
 `
 
