@@ -29,7 +29,6 @@ export default class Grid {
   }
 
   public get IsAllPlayedRoyalsDead() {
-    let flag = true
     for (const [x, y] of this.royalPositions) {
       const card = this.peek(x, y)
       if (isNil(card)) {
@@ -37,11 +36,27 @@ export default class Grid {
       }
 
       if (!card.IsDead) {
-        flag = false
+        return false
       }
     }
 
-    return flag
+    return true
+  }
+
+  public get IsAllRoyalsDead() {
+    for (const [x, y] of this.royalPositions) {
+      const card = this.peek(x, y)
+      if (isNil(card)) {
+        return false
+      }
+
+      const isAlive = !card.IsDead
+      if (isAlive) {
+        return false
+      }
+    }
+
+    return true
   }
 
   public setup(deck: Deck) {

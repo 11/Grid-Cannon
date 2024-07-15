@@ -237,7 +237,17 @@ export class ViewGame extends LitElement {
     `
   }
 
+  renderWinBanner() {
+    return html`
+      <div>You win<div>
+    `
+  }
+
   render() {
+    if (this.gameGrid?.IsAllRoyalsDead) {
+      return this.renderWinBanner()
+    }
+
     return html`
       <section class='grid-cannon hidden'>
         <div class='grid-container'>
