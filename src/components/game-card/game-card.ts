@@ -8,7 +8,8 @@ import Grid from '@/lib/grid-cannon/grid'
 export class GameCard extends LitElement {
   static styles = [
     S.Card,
-    S.StackCount,
+    S.CardStat,
+    S.CardText,
   ]
 
   static properties = {
@@ -84,18 +85,26 @@ export class GameCard extends LitElement {
     }
 
     return html`
-      <div>${unsafeHTML(cardText)}</div>
+      <div class='card-text'>${unsafeHTML(cardText)}</div>
     `
   }
 
-  renderStackCount() {
-    if (this.isHidden || this.isEmpty || this.rank > 10 || this.isDead || Grid.ROYAL_POSITIONS.has(`${this.gridX}${this.gridY}`)) {
+  renderCardStat() {
+    if (this.isHidden || this.isEmpty || this.isDead) {
       return html`<span>&nbsp;</span>`
+    }
+
+    if (Grid.ROYAL_POSITIONS.has(`${this.gridX}${this.gridY}`)) {
+      return html`
+        <div class='card-stat'>
+          (${this.rank})
+        </div>
+      `
     }
 
     return html`
       <div
-        class='stack-count'
+        class='card-stat'
         data-is-face-showing=${this.isFaceShowing}
       >
         (x${this.stackSize})
@@ -118,9 +127,10 @@ export class GameCard extends LitElement {
         data-is-highlighted=${this.isHighlighted}
         data-is-dead=${this.isDead}
         data-is-hidden=${this.isHidden}
+        data-is-face=${this.isFace}
       >
         ${this.renderCardText()}
-        ${this.renderStackCount()}
+        ${this.renderCardStat()}
       </div>
     `
   }

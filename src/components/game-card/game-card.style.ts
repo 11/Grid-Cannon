@@ -66,20 +66,37 @@ export const Card = css`
     }
   }
 `
+export const CardText = css`
+  .card-text{
+    height: 80%;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    flex: 1;
+  }
 
-export const StackCount = css`
-  .stack-count {
+  @media screen and (max-width: ${device.PHONE_WIDTH_CSS}) {
+    .card-stat{
+      font-size: .85rem;
+    }
+  }
+`
+
+export const CardStat = css`
+  .card-stat {
+    height: 20%;
     color: black;
     font-size: 1.5rem;
     font-family: arial;
   }
 
-  .stack-count[data-is-face-showing="false"] {
+  .card-stat[data-is-face-showing="false"] {
     color: yellow;
   }
 
   @media screen and (max-width: ${device.PHONE_WIDTH_CSS}) {
-    .stack-count {
+    .card-stat{
       font-size: .85rem;
     }
   }

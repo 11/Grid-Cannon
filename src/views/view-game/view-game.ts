@@ -101,6 +101,7 @@ export class ViewGame extends LitElement {
           <game-card
             .gridX=${gridX}
             .gridY=${gridY}
+            .rank=${cardAttr?.rank}
             .suit=${cardAttr?.suit}
             .cardText=${cardAttr?.cardText}
             .isGameCard=${isGameCard}
