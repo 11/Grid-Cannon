@@ -7,13 +7,6 @@ export const ROUTING_TABLE = [
     },
   },
   {
-    path: '/daily-board',
-    component: 'view-game',
-    action: async () => {
-      await import('./views/view-game/view-game')
-    },
-  },
-  {
     path: '/',
     component: 'view-home',
     action: async () => {
