@@ -41,6 +41,10 @@ export default class Hand {
     return this.jokers.peek()
   }
 
+  public jokersSize(): number {
+    return this.jokers.Size
+  }
+
   public pushAces(...card: Card[]): void {
     this.aces.push(...card)
   }
@@ -53,6 +57,10 @@ export default class Hand {
     return this.aces.peek()
   }
 
+  public acesSize(): number {
+    return this.aces.Size
+  }
+
   public pushDiscards(...card: Card[]): void {
     this.discards.push(...card)
   }
@@ -63,6 +71,10 @@ export default class Hand {
 
   public peekDiscards(): Card | null {
     return this.discards.peek()
+  }
+
+  public discardsSize(): number {
+    return this.discards.Size
   }
 
   public pushHand(card: Card): void {

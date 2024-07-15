@@ -88,6 +88,7 @@ export interface CardAttributes {
   color: CardColors
   cardText: string
   score: number
+  stackSize: number
   isNumber: boolean
   isFace: boolean
   isJoker: boolean
@@ -97,7 +98,7 @@ export interface CardAttributes {
   isHighlighted: boolean
 }
 
-export type UpdateableCardFields = 'value' | 'gridX' | 'gridY' | 'isDead' | 'isUpsideDown' | 'isHighlighted'
+export type UpdateableCardFields = 'value' | 'gridX' | 'gridY' | 'isDead' | 'isUpsideDown' | 'isHighlighted' | 'stackSize'
 
 export default class Card {
   /**
@@ -157,6 +158,14 @@ export default class Card {
   // Suit color
   private color: CardColors
 
+  // Scores for each card
+  // King => 3
+  // Queen => 2
+  // Jack => 1
+  private score: number
+
+  private stackSize: number
+
   // If a face card has been isKilled
   private isDead: boolean
 
@@ -165,11 +174,7 @@ export default class Card {
 
   private isHighlighted: boolean
 
-  // Scores for each card
-  // King => 3
-  // Queen => 2
-  // Jack => 1
-  private score: number
+
 
   /**
    * Grid position
@@ -187,6 +192,7 @@ export default class Card {
     this.symbol = CardSuitToSymbolMap[this.suit]
     this.rank = CardFaceToRankMap[this.name]
     this.score = (this.rank <= 10) ? 0 : Math.abs(this.rank - 10)
+    this.stackSize = 0
     this.value = this.rank
     this.isDead = false
     this.isUpsideDown = true
@@ -270,6 +276,10 @@ export default class Card {
       this.gridY = card.gridY
     }
 
+    if (!isNil(card.stackSize)) {
+      this.stackSize = card.stackSize
+    }
+
     if (!isNil(card.isDead)) {
       this.isDead = card.isDead
     }
@@ -295,6 +305,7 @@ export default class Card {
       value: this.value,
       color: this.color,
       score: this.score,
+      stackSize: this.stackSize,
       isNumber: this.isNumber,
       isFace: this.IsFace,
       isJoker: this.IsJoker,

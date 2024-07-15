@@ -364,6 +364,7 @@ export default class Grid {
           continue
         }
 
+        card.update({ stackSize: stack.Size })
         const cardAttrs = card.toJSON()
         result.push(cardAttrs)
       }

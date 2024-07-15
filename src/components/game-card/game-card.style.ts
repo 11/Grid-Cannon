@@ -4,7 +4,7 @@ import * as device from '@/lib/device'
 export const Card = css`
   .card {
     display: flex;
-    flex-direction: row;
+    flex-direction: column;
     justify-content: center;
     align-items: center;
 
@@ -63,6 +63,24 @@ export const Card = css`
       height: 90%;
       min-width: 10px;
       font-size: 1.25rem;
+    }
+  }
+`
+
+export const StackCount = css`
+  .stack-count {
+    color: black;
+    font-size: 1.5rem;
+    font-family: arial;
+  }
+
+  .stack-count[data-is-face-showing="false"] {
+    color: yellow;
+  }
+
+  @media screen and (max-width: ${device.PHONE_WIDTH_CSS}) {
+    .stack-count {
+      font-size: .85rem;
     }
   }
 `

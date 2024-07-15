@@ -3,10 +3,12 @@ import { unsafeHTML } from 'lit/directives/unsafe-html.js'
 import * as S from './game-card.style'
 import { isNil } from 'lodash'
 import * as device from '@/lib/device'
+import Grid from '@/lib/grid-cannon/grid'
 
 export class GameCard extends LitElement {
   static styles = [
-    S.Card
+    S.Card,
+    S.StackCount,
   ]
 
   static properties = {
@@ -15,13 +17,14 @@ export class GameCard extends LitElement {
     suit: { type: String },
     rank: { type: Number },
     cardText: { type: String },
+    stackSize: { type: Number },
     isGameCard: { type: Boolean },
     isFaceShowing: { type: Boolean },
     isHidden: { type: Boolean},
     isEmpty: { type: Boolean },
     isHighlighted: { type: Boolean },
     isDead: { type: Boolean },
-    stackSize: { type: Number },
+    isFace: { type: Boolean },
   }
 
   gridX: number
@@ -29,13 +32,14 @@ export class GameCard extends LitElement {
   suit: string
   rank: number
   cardText: string | null
+  stackSize: number
   isGameCard: boolean
   isFaceShowing: boolean
   isHidden: boolean
   isEmpty: boolean
   isHighlighted: boolean
   isDead: boolean
-  stackSize: number
+  isFace: boolean
 
   constructor() {
     super()
@@ -45,16 +49,17 @@ export class GameCard extends LitElement {
     this.suit = ''
     this.rank = -1
     this.cardText = null
+    this.stackSize = 0
     this.isGameCard = false
     this.isFaceShowing = true
     this.isHidden = false
     this.isEmpty = true
     this.isHighlighted = false
     this.isDead = false
-    this.stackSize = 0
+    this.isFace = false
   }
 
-  private determineCardText(): string {
+  private renderCardText() {
     let cardText = '&nbsp;'
     if (!isNil(this.cardText) && !this.isDead) {
       cardText = this.cardText
@@ -78,11 +83,27 @@ export class GameCard extends LitElement {
       }
     }
 
-    return cardText
+    return html`
+      <div>${unsafeHTML(cardText)}</div>
+    `
+  }
+
+  renderStackCount() {
+    if (this.isHidden || this.isEmpty || this.rank > 10 || this.isDead || Grid.ROYAL_POSITIONS.has(`${this.gridX}${this.gridY}`)) {
+      return html`<span>&nbsp;</span>`
+    }
+
+    return html`
+      <div
+        class='stack-count'
+        data-is-face-showing=${this.isFaceShowing}
+      >
+        (x${this.stackSize})
+      </div>
+    `
   }
 
   render() {
-    const cardText = this.determineCardText()
 
     return html`
       <div
@@ -98,7 +119,8 @@ export class GameCard extends LitElement {
         data-is-dead=${this.isDead}
         data-is-hidden=${this.isHidden}
       >
-        ${unsafeHTML(cardText)}
+        ${this.renderCardText()}
+        ${this.renderStackCount()}
       </div>
     `
   }

@@ -108,6 +108,8 @@ export class ViewGame extends LitElement {
             .isEmpty=${isNil(cardAttr)}
             .isDead=${cardAttr?.isDead}
             .isHighlighted=${isEmptyCardHighlightable || cardAttr?.isHighlighted}
+            .isFaceCard=${cardAttr?.isFace}
+            .stackSize=${cardAttr?.stackSize}
             @click=${() => {
 
               if(!isGameCard || isNil(this.gameDeck) || isNil(this.gameGrid) || isNil(this.gameHand)) {
@@ -150,6 +152,7 @@ export class ViewGame extends LitElement {
         id='deck'
         .isEmpty=${(this.gameDeck?.Size === 0)}
         .isFaceShowing=${this.gameDeck?.Size === 0}
+        .stackSize=${this.gameDeck?.Size}
         .cardText=${'Deal'}
         @click=${() => {
           if(isNil(this.gameDeck) || isNil(this.gameGrid) || isNil(this.gameHand)) {
@@ -196,6 +199,7 @@ export class ViewGame extends LitElement {
         .isGameCard=${true}
         .suit=${ace?.suit}
         .rank=${ace?.rank}
+        .stackSize=${this.gameHand?.acesSize()}
         @click=${() => {
           if(isNil(this.gameDeck) || isNil(this.gameGrid) || isNil(this.gameHand)) {
             return
@@ -216,6 +220,7 @@ export class ViewGame extends LitElement {
         .suit=${joker?.suit}
         .rank=${joker?.rank}
         .isHighlighted=${joker?.isHighlighted}
+        .stackSize=${this.gameHand?.jokersSize()}
         @click=${() => {
           if(isNil(this.gameDeck) || isNil(this.gameGrid) || isNil(this.gameHand)) {
             return
@@ -235,6 +240,7 @@ export class ViewGame extends LitElement {
         .isFaceShowing=${isNil(discard)}
         .isGameCard=${true}
         .cardText=${isNil(discard) ? 'Discard' : '&nbsp;'}
+        .stackSize=${this.gameHand?.discardsSize()}
       >
       </game-card>
     `
