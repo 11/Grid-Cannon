@@ -18,7 +18,7 @@ export function dealGame(): GameData {
   const hand = new Hand()
 
   const generateNewGridByDifficulty = () => {
-    const gameDifficulty = new Set([3, 7])
+    const gameDifficulty = new Set([4, 7])
 
     let spots, faces, aces, jokers
     do {

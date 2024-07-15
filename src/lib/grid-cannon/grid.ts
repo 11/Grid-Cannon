@@ -1,4 +1,3 @@
-// import Game from './game'
 import { isNil } from 'lodash'
 import Card, { CardAttributes } from './card'
 import CardStack from './card-stack'
@@ -13,6 +12,8 @@ export default class Grid {
 
   // valid grid X and Y position for each type of card
   public static readonly HIDDEN_POSITIONS: Set<string> = new Set(['00', '04', '40', '44'])
+
+  //
   public readonly startNumberPositions: number[][] = [[1,1], [1,2], [1,3], [2,1], [2,3], [3,1], [3,2], [3,3]]
   private readonly numberedPositions: number[][] = [[1,1], [1,2], [1,3], [2,1], [2,2], [2,3], [3,1], [3,2], [3,3]]
   private readonly facePositions: number[][] = [[0,1], [0,2], [0,3], [1,0], [1,4], [2,0], [2,4], [3,0], [3,4], [4,1], [4,2],[4,3]]
@@ -338,7 +339,7 @@ export default class Grid {
   /**
    * A way to print out state of grid while debugging
    */
-  printAsTable() {
+  public printAsTable() {
     const cardAbbreviations = this.grid.map(stack => {
       let abrv = 'XX'
       if (isNil(stack)) {

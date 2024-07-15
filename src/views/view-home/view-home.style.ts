@@ -1,4 +1,5 @@
 import { css } from 'lit'
+import * as device from '@/lib/device'
 
 export const StartScreen = css`
   .start-screen {
@@ -32,6 +33,12 @@ export const GameHeadline = css`
     align-items: center;
     gap: .75rem;
   }
+
+  @media screen and (max-width: ${device.PHONE_WIDTH}) {
+    .game-headline {
+      padding: 1rem;
+    }
+  }
 `
 
 export const Title = css`
@@ -44,6 +51,13 @@ export const Tagline = css`
   .tagline {
     font-size: 2rem;
     letter-spacing: .5px;
+  }
+
+  @media screen and (max-width: ${device.PHONE_WIDTH}) {
+    .tagline {
+      text-align: center;
+      font-size: 1.5rem;
+    }
   }
 `
 export const MenuOptions = css`
@@ -92,5 +106,11 @@ export const Credits = css`
     align-items: center;
     justify-content: center;
     gap: .75rem;
+  }
+
+  @media screen and (max-width: ${device.PHONE_WIDTH}) {
+    .credits {
+      padding: 1rem;
+    }
   }
 `
