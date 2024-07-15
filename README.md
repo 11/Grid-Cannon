@@ -4,6 +4,11 @@ This is a complete JavaScript and HTML5 implementation of Tom Francis' solitare 
 
 ---
 
+### Device support
+Works on all devices (mobile, tablet, and desktop) in all aspect ratios. The site is also designed to work as a PWA
+
+---
+
 ### Rules
 1. <a href="#setup">Setup</a>
 2. <a href="#objective">Objective</a>
@@ -35,7 +40,7 @@ To find and kill all royals in the deck before running out of cards.
 
 <b>NOTE:</b> If you cannot place the drawn card in the grid, and you do not have any Aces or Jokers, the drawn card goes facedown in a discard pile and cannot be used the rest of the game.</b>
 
-### Aces and Jokers
+### Aces and jokers
 Aces and Jokers are special cards that you can use at any point throughout the game
 1. Using an Ace allows you to pick up a stack of cards in the 3x3 grid and shuffle it back into the deck. After using an Ace, place the card in the discard pile.
 2. Using a Joker allows you to take the top card off any stack and place it on top of any another playable position in the 3x3 grid. After using a Joker, place the card in the discard pile.
