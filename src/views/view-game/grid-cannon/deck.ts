@@ -54,4 +54,9 @@ export default class Deck {
   public pop(): Card | null {
     return this.cards.pop()
   }
+
+  public push(...cards: Card[]): boolean {
+    this.cards.push(...cards)
+    return true
+  }
 }

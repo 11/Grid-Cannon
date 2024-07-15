@@ -6,8 +6,16 @@ import type { CardAttributes } from './grid-cannon/card'
 import Deck from './grid-cannon/deck'
 import Grid, { GRID_SIZE_X, GRID_SIZE_Y } from './grid-cannon/grid'
 import Hand, { HandRenderState } from './grid-cannon/hand'
-import { dealGame } from './grid-cannon/controls'
+import { dealGame, drawHand, selectAce, selectGridPosition, selectHand, selectJoker } from './grid-cannon/controls'
 import { isNil } from 'lodash'
+
+export enum GameEvents {
+  SELECT_DECK,
+  SELECT_HAND,
+  SELECT_JOKER,
+  SELECT_ACE,
+  SELECT_GRID_POSITION,
+}
 
 export class ViewGame extends LitElement {
   static styles = [
@@ -21,12 +29,12 @@ export class ViewGame extends LitElement {
     aces: { type: Array },
     jokers: { type: Array },
     hand: { type: Object },
-    event: { typep: String },
+    event: { type: String },
   }
 
   grid: Array<CardAttributes | null>
   hand: HandRenderState | null
-  event: string | null
+  event: GameEvents
 
   gameDeck: Deck | null
   gameGrid: Grid | null
@@ -37,7 +45,7 @@ export class ViewGame extends LitElement {
 
     this.grid = []
     this.hand = null
-    this.event = null
+    this.event = GameEvents.SELECT_DECK
 
     this.gameGrid = null
     this.gameHand = null
@@ -54,7 +62,12 @@ export class ViewGame extends LitElement {
 
     this.grid = this.gameGrid.getRenderState()
     this.hand = this.gameHand.getRenderState()
-    this.event = 'deal'
+  }
+
+  protected shouldUpdate(changedProperties: Map<string | number | symbol, unknown>): boolean {
+    super.update(changedProperties);
+    const eventNew = changedProperties.get('event')
+    return this.event !== eventNew
   }
 
   renderGrid() {
@@ -63,7 +76,7 @@ export class ViewGame extends LitElement {
         const gridX = Math.floor(index / GRID_SIZE_X)
         const gridY = Math.floor(index % GRID_SIZE_Y)
 
-        if (Grid.EMPTY_POSITIONS.has(`${gridX}${gridY}`)) {
+        if (Grid.HIDDEN_POSITIONS.has(`${gridX}${gridY}`)) {
           return html`
             <game-card
               .gridX=${gridX}
@@ -79,11 +92,33 @@ export class ViewGame extends LitElement {
           <game-card
             .gridX=${gridX}
             .gridY=${gridY}
+            .suit=${cardAttr?.suit}
+            .cardText=${cardAttr?.cardText}
             .isGameCard=${true}
             .isHidden=${false}
             .isEmpty=${isNil(cardAttr)}
-            .suit=${cardAttr?.suit}
-            .cardText=${cardAttr?.cardText}
+            .isDead=${cardAttr?.isDead}
+            .isHighlighted=${cardAttr?.isHighlighted || (
+              isNil(cardAttr)
+              && (this.event === GameEvents.SELECT_ACE || this.event === GameEvents.SELECT_JOKER || this.event === GameEvents.SELECT_HAND)
+              && gridX === 2
+              && gridY === 2)}
+            @click=${() => {
+              if(isNil(this.gameDeck) || isNil(this.gameGrid) || isNil(this.gameHand)) {
+                return
+              }
+
+              if (
+                this.event === GameEvents.SELECT_HAND
+                || this.event === GameEvents.SELECT_ACE
+                || this.event === GameEvents.SELECT_JOKER
+              ) {
+                selectGridPosition(gridX, gridY, this.gameDeck, this.gameGrid, this.gameHand)
+                this.grid = this.gameGrid.getRenderState()
+                this.hand = this.gameHand.getRenderState()
+                this.event = GameEvents.SELECT_GRID_POSITION
+              }
+            }}
           >
           </game-card>
         `
@@ -95,9 +130,11 @@ export class ViewGame extends LitElement {
     let ace = null
     let joker = null
     let hand = null
+    let discard = null
     if (!isNil(this.hand )) {
       ace = this.hand.ace
       joker = this.hand.joker
+      discard = this.hand.discard
       hand = this.hand.hand
     }
 
@@ -107,6 +144,18 @@ export class ViewGame extends LitElement {
         .isEmpty=${(this.gameDeck?.Size === 0)}
         .isFaceShowing=${false}
         .cardText=${'Deal'}
+        @click=${() => {
+          if(isNil(this.gameDeck) || isNil(this.gameGrid) || isNil(this.gameHand)) {
+            return
+          }
+
+          if (isNil(this.gameHand.peekHand()) && this.gameDeck.Size > 0) {
+            drawHand(this.gameDeck, this.gameGrid, this.gameHand)
+            this.grid = this.gameGrid.getRenderState()
+            this.hand = this.gameHand.getRenderState()
+            this.event = GameEvents.SELECT_DECK
+          }
+        }}
       >
       </game-card>
 
@@ -114,6 +163,21 @@ export class ViewGame extends LitElement {
         id='hand'
         .isEmpty=${isNil(hand)}
         .cardText=${hand?.cardText}
+        .isHighlighted=${hand?.isHighlighted}
+        .isGameCard=${true}
+        .suit=${hand?.suit}
+        @click=${() => {
+          if(isNil(this.gameDeck) || isNil(this.gameGrid) || isNil(this.gameHand)) {
+            return
+          }
+
+          if (!isNil(this.gameHand.peekHand())) {
+            selectHand(this.gameDeck, this.gameGrid, this.gameHand)
+            this.grid = this.gameGrid.getRenderState()
+            this.hand = this.gameHand.getRenderState()
+            this.event = GameEvents.SELECT_HAND
+          }
+        }}
       >
       </game-card>
 
@@ -121,6 +185,20 @@ export class ViewGame extends LitElement {
         id='aces'
         .isEmpty=${isNil(ace)}
         .cardText=${!isNil(ace) ? ace.cardText : 'Aces'}
+        .isHighlighted=${ace?.isHighlighted}
+        .isGameCard=${true}
+        .suit=${ace?.suit}
+        .rank=${ace?.rank}
+        @click=${() => {
+          if(isNil(this.gameDeck) || isNil(this.gameGrid) || isNil(this.gameHand)) {
+            return
+          }
+
+          selectAce(this.gameDeck, this.gameGrid, this.gameHand)
+          this.grid = this.gameGrid.getRenderState()
+          this.hand = this.gameHand.getRenderState()
+          this.event = GameEvents.SELECT_ACE
+        }}
       >
       </game-card>
 
@@ -129,12 +207,26 @@ export class ViewGame extends LitElement {
         .isEmpty=${isNil(joker)}
         .cardText=${!isNil(joker) ? joker?.cardText : 'Jokers' }
         .rank=${joker?.rank}
+        .isHighlighted=${joker?.isHighlighted}
+        @click=${() => {
+          if(isNil(this.gameDeck) || isNil(this.gameGrid) || isNil(this.gameHand)) {
+            return
+          }
+
+          selectJoker(this.gameDeck, this.gameGrid, this.gameHand)
+          this.grid = this.gameGrid.getRenderState()
+          this.hand = this.gameHand.getRenderState()
+          this.event = GameEvents.SELECT_JOKER
+        }}
       >
       </game-card>
 
       <game-card
         id='discard'
-        .isEmpty=${true}
+        .isEmpty=${isNil(discard)}
+        .isFaceShowing=${isNil(discard)}
+        .isGameCard=${true}
+        .cardText=${'Discard'}
       >
       </game-card>
     `

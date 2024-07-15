@@ -16,43 +16,52 @@ export class GameCard extends LitElement {
   static properties = {
     gridX: { type: Number },
     gridY: { type: Number },
+    suit: { type: String },
+    rank: { type: Number },
+    cardText: { type: String },
     isGameCard: { type: Boolean },
     isFaceShowing: { type: Boolean },
     isHidden: { type: Boolean},
     isEmpty: { type: Boolean },
-    suit: { type: String },
-    rank: { type: Number },
-    cardText: { type: String },
+    isHighlighted: { type: Boolean },
+    isDead: { type: Boolean },
+    stackSize: { type: Number },
   }
 
   gridX: number
   gridY: number
+  suit: string
+  rank: number
+  cardText: string | null
   isGameCard: boolean
   isFaceShowing: boolean
   isHidden: boolean
   isEmpty: boolean
-  suit: string
-  rank: number
-  cardText: string | null
+  isHighlighted: boolean
+  isDead: boolean
+  stackSize: number
 
   constructor() {
     super()
 
     this.gridX = 0
     this.gridY = 0
+    this.suit = ''
+    this.rank = -1
+    this.cardText = null
     this.isGameCard = true
     this.isFaceShowing = true
     this.isHidden = false
     this.isEmpty = true
-    this.suit = ''
-    this.rank = -1
-    this.cardText = null
+    this.isHighlighted = false
+    this.isDead = false
+    this.stackSize = 0
   }
 
   private determineClass(): string {
     let classMap = ['card']
 
-    if (!this.isFaceShowing) {
+    if (!this.isFaceShowing || this.isDead) {
       classMap.push('back')
     }
 
@@ -71,8 +80,7 @@ export class GameCard extends LitElement {
 
   private determineCardText(): string {
     let cardText = '&nbsp;'
-
-    if (!isNil(this.cardText)) {
+    if (!isNil(this.cardText) && !this.isDead) {
       cardText = this.cardText
     }
 
@@ -88,11 +96,13 @@ export class GameCard extends LitElement {
         class=${classMap}
         data-grid-x=${this.gridX}
         data-grid-y=${this.gridY}
+        data-suit=${this.suit}
+        data-rank=${this.rank}
         data-game-card=${this.isGameCard}
         data-game-is-face-showing=${this.isFaceShowing}
         data-is-empty=${this.isEmpty}
-        data-suit=${this.suit}
-        data-rank=${this.rank}
+        data-is-highlighted=${this.isHighlighted}
+        data-is-dead=${this.isDead}
       >
         ${unsafeHTML(cardText)}
       </div>

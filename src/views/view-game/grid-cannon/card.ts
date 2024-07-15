@@ -91,12 +91,12 @@ export interface CardAttributes {
   isFace: boolean
   isJoker: boolean
   isAce: boolean
-  isKilled: boolean
+  isDead: boolean
   isUpsideDown: boolean
-  isSelected: boolean
+  isHighlighted: boolean
 }
 
-export type UpdateableCardFields = 'value' | 'gridX' | 'gridY' | 'isKilled' | 'isUpsideDown' | 'isSelected'
+export type UpdateableCardFields = 'value' | 'gridX' | 'gridY' | 'isDead' | 'isUpsideDown' | 'isHighlighted'
 
 export default class Card {
   /**
@@ -153,22 +153,16 @@ export default class Card {
    */
   private value: number
 
-  /**
-   * Suit color
-   */
+  // Suit color
   private color: CardColors
 
-  /**
-   * If a face card has been isKilled
-   */
-  private isKilled: boolean
+  // If a face card has been isKilled
+  private isDead: boolean
 
-  /**
-   * Stores if front or back of card should be rendered
-   */
+  // Stores if front or back of card should be rendered
   private isUpsideDown: boolean
 
-  private isSelected: boolean
+  private isHighlighted: boolean
 
   /**
    * Grid position
@@ -186,9 +180,14 @@ export default class Card {
     this.symbol = CardSuitToSymbolMap[this.suit]
     this.rank = CardFaceToRankMap[this.name]
     this.value = this.rank
-    this.isKilled = false
+    this.isDead = false
     this.isUpsideDown = true
-    this.isSelected = false
+    this.isHighlighted = false
+
+  }
+
+  public get Rank() {
+    return this.rank
   }
 
   public get Value() {
@@ -215,6 +214,10 @@ export default class Card {
     return this.rank === 1
   }
 
+  public get IsHighlighted() {
+    return this.isHighlighted
+  }
+
   public get CardText() {
     return `${this.abbreviation} ${this.symbol}`
   }
@@ -235,18 +238,8 @@ export default class Card {
     return [this.gridX, this.gridY]
   }
 
-  public get IsSelected() {
-    return this.isSelected
-  }
-
   public get Abbreviation() {
     return this.abbreviation
-  }
-
-  public kill() {
-    if (this.IsFace) {
-      this.isKilled = true
-    }
   }
 
   public update(card: Partial<Pick<CardAttributes, UpdateableCardFields>>) {
@@ -262,16 +255,16 @@ export default class Card {
       this.gridY = card.gridY
     }
 
-    if (!isNil(card.isKilled)) {
-      this.isKilled = card.isKilled
+    if (!isNil(card.isDead)) {
+      this.isDead = card.isDead
     }
 
     if (!isNil(card.isUpsideDown)) {
       this.isUpsideDown = card.isUpsideDown
     }
 
-    if (!isNil(card.isSelected)) {
-      this.isSelected = card.isSelected
+    if (!isNil(card.isHighlighted)) {
+      this.isHighlighted= card.isHighlighted
     }
   }
 
@@ -291,9 +284,9 @@ export default class Card {
       isJoker: this.IsJoker,
       isAce: this.IsAce,
       cardText: this.CardText,
-      isKilled: this.isKilled,
+      isDead: this.isDead,
       isUpsideDown: this.isUpsideDown,
-      isSelected: this.isSelected,
+      isHighlighted: this.isHighlighted,
     }
   }
 }

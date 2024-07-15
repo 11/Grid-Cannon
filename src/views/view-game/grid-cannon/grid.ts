@@ -8,19 +8,11 @@ export const GRID_SIZE_X = 5
 export const GRID_SIZE_Y = 5
 
 export default class Grid {
-  // get htmlGrid() {
-  //   return Array.from(document.querySelectorAll('.game-grid > [data-game-card="true"]'))
-  // }
-
-  /**
-   * game grid
-   */
+  // game grid
   private grid: Array<CardStack | null>
 
-  /**
-   * valid grid X and Y position for each type of card
-   */
-  public static readonly EMPTY_POSITIONS: Set<string> = new Set(['00', '04', '40', '44'])
+  // valid grid X and Y position for each type of card
+  public static readonly HIDDEN_POSITIONS: Set<string> = new Set(['00', '04', '40', '44'])
   public readonly startNumberPositions: number[][] = [[1,1], [1,2], [1,3], [2,1], [2,3], [3,1], [3,2], [3,3]]
   private readonly numberedPositions: number[][] = [[1,1], [1,2], [1,3], [2,1], [2,2], [2,3], [3,1], [3,2], [3,3]]
   private readonly facePositions: number[][] = [[0,1], [0,2], [0,3], [1,0], [1,4], [2,0], [2,4], [3,0], [3,4], [4,1], [4,2],[4,3]]
@@ -35,38 +27,8 @@ export default class Grid {
     ]
   }
 
-  // bindGameEvents(chooseGridPositionEvent) {
-  //   this.htmlGrid.forEach(cardElement => {
-  //     if (!cardElement.classList.contains('hidden')) {
-  //       cardElement.onclick = chooseGridPositionEvent.bind(window.game)
-  //     }
-  //   })
-  // }
-
-  // _clearScreen() {
-  //   const htmlGrid = this.htmlGrid
-
-  //   for (let i = 0; i < this._grid.length; i++) {
-  //     const card = this._grid[i]
-  //     const cardDiv = htmlGrid[i]
-  //     if (cardDiv.classList.contains('hidden')) {
-  //       continue
-  //     } else if (!card) {
-  //       cardDiv.classList.add('empty')
-  //     }
-
-  //     cardDiv.textContent = ''
-  //     cardDiv.style.color = ''
-  //   }
-  // }
-
   public setup(deck: Deck) {
   }
-
-  // getCardHtmlFromGridPosition(x, y) {
-  //   const stride = (5 * x) + y
-  //   return this.htmlGrid.at(stride)
-  // }
 
   public peek(x: number, y: number): Card | null {
     const stride = (5 * x) + y
@@ -93,7 +55,7 @@ export default class Grid {
     return card
   }
 
-  public clear(gridX: number, gridY: number): boolean {
+  public clear(gridX: number, gridY: number): Card[]{
     const stride = (5 * gridX) + gridY
 
     const cardStack = this.grid.at(stride)
@@ -101,9 +63,7 @@ export default class Grid {
       throw new Error('Could not clear card stack in grid')
     }
 
-    cardStack.clear()
-
-    return true
+    return cardStack.clear()
   }
 
   public push(gridX: number, gridY: number, card: Card): boolean {
@@ -115,7 +75,7 @@ export default class Grid {
 
     const cardStack = this.grid.at(stride)
     if (isNil(cardStack)) {
-      throw new Error('Could place card in grid')
+      throw new Error('Couldn\'t place card in grid')
     }
 
     cardStack.push(card)
@@ -178,9 +138,9 @@ export default class Grid {
 
       const hitValue = attacker1.Value + attacker2.Value
 
-      const isFaceKing = face.Value === 13
-      const isFaceQueen = face.Value === 12
-      const isFaceJack = face.Value === 11
+      const isFaceKing = face.Rank === 13
+      const isFaceQueen = face.Rank === 12
+      const isFaceJack = face.Rank === 11
 
       const isKingDead = isFaceKing && hitValue >= face.Value && attacker1.Suit === face.Suit && attacker2.Suit === face.Suit
       const isQueenDead = isFaceQueen && hitValue >= face.Value && attacker1.Color === face.Color && attacker2.Color === face.Color
@@ -193,7 +153,7 @@ export default class Grid {
 
         const attackedRoyal = this.peek(x, y)
         if (!isNil(attackedRoyal)) {
-          attackedRoyal.kill()
+          attackedRoyal.update({ isDead: true })
         }
       }
     }
@@ -295,30 +255,58 @@ export default class Grid {
     }
   }
 
-  // render() {
-  //   const htmlGrid = this.htmlGrid
+  public showPlayablePositions(card: Card): void {
+    if (isNil(this.grid)) {
+      return
+    }
 
-  //   for (let i = 0; i < this._grid.length; i++) {
-  //     const card = this._grid[i].peek()
-  //     const cardDiv = htmlGrid[i]
-  //     const x = parseInt(cardDiv.getAttribute('data-grid-x'))
-  //     const y = parseInt(cardDiv.getAttribute('data-grid-y'))
+    const PLAYABLE_BOUNDS_MIN = 1
+    const PLAYABLE_BOUNDS_MAX = 3
+    for (let x = PLAYABLE_BOUNDS_MIN; x <= PLAYABLE_BOUNDS_MAX; x++) {
+      for (let y = PLAYABLE_BOUNDS_MIN; y <= PLAYABLE_BOUNDS_MAX; y++) {
+        const stride = (5 * x) + y
+        const stack = this.grid[stride]
+        if (isNil(stack)) {
+          continue
+        }
 
-  //     if (window.game.gameState.selectedCardValidPlacementPositions?.has(`${x}${y}`)) {
-  //       cardDiv.classList.add('selected')
-  //     } else {
-  //       cardDiv.classList.remove('selected')
-  //     }
+        const gridCard = stack.peek()
+        if (isNil(gridCard)) {
+          continue
+        }
 
-  //     if (!card) {
-  //       cardDiv.classList.add('empty')
-  //       cardDiv.innerHTML = '&nbsp;'
-  //       continue
-  //     }
+        if (card.IsAce || card.IsJoker) {
+          gridCard.update({ isHighlighted: true })
+        } else if (gridCard.Rank <= card.Rank) {
+          gridCard.update({ isHighlighted: true })
+        }
+      }
+    }
+  }
 
-  //     card.render(cardDiv)
-  //   }
-  // }
+  public hidePlayablePositions(): void {
+    if (isNil(this.grid)) {
+      return
+    }
+
+    for (let x = 0; x < GRID_SIZE_X; x++) {
+      for (let y = 0; y < GRID_SIZE_Y; y++) {
+        const stride = (5 * x) + y
+        const stack = this.grid[stride]
+        if (isNil(stack)) {
+          continue
+        }
+
+        const gridCard = stack.peek()
+        if (isNil(gridCard)) {
+          continue
+        }
+
+        gridCard.update({ isHighlighted: false })
+      }
+    }
+  }
+
 
   public getRenderState(): Array<CardAttributes | null> {
     const result: Array<CardAttributes | null> = []

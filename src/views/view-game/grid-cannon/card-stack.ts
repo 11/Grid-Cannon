@@ -77,19 +77,10 @@ export default class CardStack {
     return result
   }
 
-  // public contains(item: ) {
-  //   for (let i = 0; i < this.stack.length; i++) {
-  //     const current = this.stack[i]
-  //     if (current === item) {
-  //       return true
-  //     }
-  //   }
-
-  //   return false
-  // }
-
+  /**
+   * A cut is the same as rotating an array. split the deck into 2 halvse and rotate
+   */
   public rotate(index: number): boolean {
-    // a cut is the same as rotating an array. split the deck into 2 halvse and rotate
     const bottom = this.stack.splice(index)
     this.stack.unshift(...bottom)
 
@@ -103,14 +94,14 @@ export default class CardStack {
    * point in the card stack
    */
   public cut(): boolean {
-    if (this.size < 2) {
+    if (this.Size < 2) {
       return false
     }
 
     // the cut range is + or - 6 indicies away from the middle of the deck when there are more
     // that 6 cards in the deck. otherwise, if there are between 2 - 5, make the delta 0 cards
     const half = (this.stack.length / 2) - 1
-    const delta = this.size < 6
+    const delta = this.Size < 6
       ? 0
       : 6
 
@@ -125,24 +116,23 @@ export default class CardStack {
     return true
   }
 
-  // TODO: Make sure riffle works with odd and evenly sized decks
-  public riffle(): boolean {
-    const half = (this.stack.length / 2)
-    const cutPile = this.stack.splice(half)
-    for (let i = 0; i < half; i++) {
-      const cut = cutPile.shift()
-      if (!isNil(cut)) {
-        this.stack.splice(i*2, 0, cut)
+  public shuffle(): boolean{
+    const riffle = (): boolean => {
+      const half = (this.stack.length / 2)
+      const cutPile = this.stack.splice(half)
+      for (let i = 0; i < half; i++) {
+        const cut = cutPile.shift()
+        if (!isNil(cut)) {
+          this.stack.splice(i*2, 0, cut)
+        }
       }
+
+      return true
     }
 
-    return true
-  }
-
-  public shuffle(): boolean{
     for (let i = 0; i < 100; i++) {
       this.cut()
-      this.riffle()
+      riffle()
     }
 
     return true

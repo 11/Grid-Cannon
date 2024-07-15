@@ -3,6 +3,7 @@ import Card from './card'
 import Deck from './deck'
 import Grid from './grid'
 import Hand from './hand'
+import { disconnect } from 'process'
 
 export interface GameData {
   deck: Deck
@@ -11,6 +12,8 @@ export interface GameData {
 }
 
 export function dealGame(): GameData {
+  console.log('#dealGame')
+
   const deck = new Deck()
   const grid = new Grid()
   const hand = new Hand()
@@ -88,12 +91,12 @@ export function dealGame(): GameData {
 
   let joker
   while(joker = jokers.pop()) {
-    hand.putJoker(joker)
+    hand.putJokers(joker)
   }
 
   let ace
   while (ace = aces.pop()) {
-    hand.putAce(ace)
+    hand.putAces(ace)
   }
 
   return {
@@ -101,4 +104,107 @@ export function dealGame(): GameData {
     grid,
     hand,
   }
+}
+
+export function drawHand(deck: Deck, grid: Grid, hand: Hand): void {
+  console.log('#drawHand')
+
+  const card = deck.pop()
+  if (isNil(card)) {
+    return
+  }
+
+  if (card.IsJoker) {
+    hand.putJokers(card)
+  } else if (card.IsAce) {
+    hand.putAces(card)
+  } else {
+    hand.putHand(card)
+  }
+}
+
+export function selectHand(deck: Deck, grid: Grid, hand: Hand): void {
+  console.log('#selectHand')
+
+  const card = hand.peekHand()
+  if (isNil(card)) {
+    return
+  }
+
+  if (card.IsFace) {
+    const [pos] = grid.findValidGridPlacements(card)
+    const gridX = parseInt(pos[0])
+    const gridY = parseInt(pos[1])
+    grid.push(gridX, gridY, card)
+    hand.popHand()
+  } else {
+    card.update({ isHighlighted: true })
+    grid.showPlayablePositions(card)
+  }
+}
+
+export function selectAce(deck: Deck, grid: Grid, hand: Hand): void {
+  console.log('#selectAce')
+
+  const card = hand.peekAces()
+  if (isNil(card)) {
+    return
+  }
+
+  card.update({ isHighlighted: true })
+  grid.showPlayablePositions(card)
+}
+
+export function selectJoker(deck: Deck, grid: Grid, hand: Hand): void {
+  console.log('#selecJoker')
+
+  const card = hand.peekJokers()
+  if (isNil(card)) {
+    return
+  }
+
+  card.update({ isHighlighted: true })
+  grid.showPlayablePositions(card)
+}
+
+export function selectGridPosition(gridX: number, gridY: number, deck: Deck, grid: Grid, hand: Hand): void {
+  const gridCard = grid.peek(gridX, gridY)
+
+  let selectedCard = null
+  const handCard = hand.peekHand()
+  const aceCard = hand.peekAces()
+  const jokerCard = hand.peekJokers()
+  if (!isNil(handCard) && handCard.IsHighlighted) {
+    selectedCard = handCard
+    hand.popHand()
+  } else if (!isNil(aceCard) && aceCard.IsHighlighted) {
+    selectedCard = aceCard
+    hand.popAces()
+  } else if (!isNil(jokerCard) && jokerCard.IsHighlighted) {
+    selectedCard = jokerCard
+    hand.popJokers()
+  }
+
+  if (isNil(selectedCard)) {
+    throw new Error('Selected card is null')
+  }
+
+  if (selectedCard.IsJoker) {
+    debugger
+    const cardPile = grid.clear(gridX, gridY)
+    deck.push(...cardPile)
+    // deck.shuffle()
+
+    hand.putDiscards(selectedCard)
+  } else if (
+    selectedCard.IsAce
+    || isNil(gridCard)
+    || selectedCard.Rank >= gridCard.Rank
+  ) {
+    grid.push(gridX, gridY, selectedCard)
+    grid.attack(gridX, gridY)
+  }
+
+  selectedCard.update({ isHighlighted: false })
+  grid.hidePlayablePositions()
 }

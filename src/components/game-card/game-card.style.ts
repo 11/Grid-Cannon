@@ -18,16 +18,22 @@ export const Card = css`
 
     min-width: 50px;
     height: 90%;
-
-    color: black;
   }
 
   .card[data-suit="DIAMOND"], .card[data-suit="HEART"] {
     color: red;
   }
 
+  .card[data-suit="CLUB"], .card[data-suit="SPADE"] {
+    color: black;
+  }
+
   .card[data-rank="0"] {
     color: purple;
+  }
+
+  .card[data-is-highlighted="true"] {
+    border: 3px solid yellow;
   }
 `
 

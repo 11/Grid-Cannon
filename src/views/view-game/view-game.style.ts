@@ -24,8 +24,6 @@ export const GameGrid = css`
   .game-grid {
     padding: 1rem;
 
-    border: 3px solid black;
-    border-radius: 1rem;
     background-color: green;
 
     aspect-ratio: .5/.75;
