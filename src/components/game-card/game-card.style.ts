@@ -20,6 +20,10 @@ export const Card = css`
     height: 90%;
   }
 
+  .card[data-rank="0"] {
+    color: purple;
+  }
+
   .card[data-suit="DIAMOND"], .card[data-suit="HEART"] {
     color: red;
   }
@@ -28,45 +32,27 @@ export const Card = css`
     color: black;
   }
 
-  .card[data-rank="0"] {
-    color: purple;
+  .card[data-is-dead="true"], .card[data-is-face-showing="false"] {
+    padding: .25rem;
+    background: radial-gradient(circle closest-side, blue, purple);
+    color: yellow;
   }
 
   .card[data-is-highlighted="true"] {
     border: 3px solid yellow;
   }
-`
 
-export const CardFace = css`
-  .face {
-    padding: .25rem;
-    background-color: white;
-  }
-`
-
-export const CardEmpty = css`
-  .empty {
+  .card[data-is-empty="true"] {
     padding: .25rem;
     border: 3px dotted white;
   }
-`
 
-export const CardSelected = css`
-  .selected {
-    border: 3px solid yellow;
-  }
-`
-
-export const CardBack = css`
-  .back {
+  .card[data-is-empty="false"] {
     padding: .25rem;
-    background: radial-gradient(circle closest-side, blue, purple);
-    color: yellow;
+    background-color: white;
   }
-`
 
-export const CardHidden = css`
-  .hidden {
+  .card[data-is-hidden="true"] {
     background: none;
     border: none;
   }

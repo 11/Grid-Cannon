@@ -6,11 +6,11 @@ import { isNil } from 'lodash'
 export class GameCard extends LitElement {
   static styles = [
     S.Card,
-    S.CardFace,
-    S.CardEmpty,
-    S.CardSelected,
-    S.CardBack,
-    S.CardHidden,
+    // S.CardFace,
+    // S.CardEmpty,
+    // S.CardSelected,
+    // S.CardBack,
+    // S.CardHidden,
   ]
 
   static properties = {
@@ -99,10 +99,11 @@ export class GameCard extends LitElement {
         data-suit=${this.suit}
         data-rank=${this.rank}
         data-game-card=${this.isGameCard}
-        data-game-is-face-showing=${this.isFaceShowing}
+        data-is-face-showing=${this.isFaceShowing}
         data-is-empty=${this.isEmpty}
         data-is-highlighted=${this.isHighlighted}
         data-is-dead=${this.isDead}
+        data-is-hidden=${this.hidden}
       >
         ${unsafeHTML(cardText)}
       </div>
