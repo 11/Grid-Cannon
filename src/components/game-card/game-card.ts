@@ -60,9 +60,12 @@ export class GameCard extends LitElement {
       cardText = this.cardText
     }
 
+    // display abbreviated card text on mobile
     if (window.innerWidth <= device.PHONE_WIDTH) {
-      console.log(cardText)
       switch (cardText) {
+        case 'Aces':
+          cardText = 'A A'
+          break
         case 'Jokers':
           cardText = '$ $'
           break
@@ -71,9 +74,6 @@ export class GameCard extends LitElement {
           break
         case 'Discard':
           cardText = 'X X'
-          break
-        case 'Aces':
-          cardText = 'A A'
           break
       }
     }

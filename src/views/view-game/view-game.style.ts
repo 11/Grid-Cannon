@@ -3,22 +3,29 @@ import * as device from '../../lib/device'
 
 export const GridCannon = css`
   .grid-cannon {
-    width: 100%;
-    height: 100%;
+    width: 100svw;
+    height: 100svh;
+    max-width: 100svw;
+    max-height: 100svh;
+    overflow: hidden;
   }
 `
 export const GridContainer = css`
   .grid-container {
-    width: 100vw;
-    height: 100vh;
-    max-width: 100vw;
-    max-height: 100vh;
+    width: 100%;
+    height: 100%;
 
     display: flex;
     flex-direction: column;
-    justify-content: flex-start;
+    justify-content: center;
     align-items: center;
     gap: .5rem;
+  }
+
+  @media screen and (max-width: ${device.PHONE_WIDTH_CSS}) {
+    .grid-container {
+      gap: 0;
+    }
   }
 `
 export const GameGrid = css`
@@ -30,7 +37,7 @@ export const GameGrid = css`
     padding: 1rem;
     background-color: green;
 
-    height: 100%;
+    height: 95%;
     max-width: 95%;
     aspect-ratio: .5/.75;
   }
@@ -38,6 +45,7 @@ export const GameGrid = css`
   @media screen and (max-width: ${device.PHONE_WIDTH_CSS}) {
     .game-grid {
       grid-gap: .5rem;
+      padding: 0;
     }
   }
 `
