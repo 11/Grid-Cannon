@@ -77,7 +77,6 @@ export class ViewGame extends LitElement {
         const gridY = Math.floor(index % GRID_SIZE_Y)
 
         if (Grid.HIDDEN_POSITIONS.has(`${gridX}${gridY}`)) {
-          console.log(`${gridX}x${gridY}`)
           return html`
             <game-card
               .gridX=${gridX}
@@ -95,11 +94,6 @@ export class ViewGame extends LitElement {
           && !this.gameHand?.peekHand()?.IsFace
           && (this.event === GameEvents.SELECT_ACE || this.event === GameEvents.SELECT_JOKER || this.event === GameEvents.SELECT_HAND)
           && isGameCard
-
-        if (gridX === 2 && gridY === 2) {
-          console.log(`${gridX}x${gridY}`, isEmptyCardHighlightable)
-          console.log(isNil(cardAttr), !isNil(this.gameHand?.peekHand()), !this.gameHand?.peekHand()?.IsFace, (this.event === GameEvents.SELECT_ACE || this.event === GameEvents.SELECT_JOKER || this.event === GameEvents.SELECT_HAND),isGameCard)
-        }
 
         return html`
           <game-card
