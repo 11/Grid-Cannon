@@ -219,7 +219,7 @@ export default class Card {
   }
 
   public get CardText() {
-    return `${this.abbreviation} ${this.symbol}`
+    return `${this.abbreviation} ${this.symbol}`.trim()
   }
 
   public get Color() {

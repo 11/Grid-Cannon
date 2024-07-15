@@ -1,4 +1,5 @@
 import { css } from 'lit'
+import * as device from '../../lib/device'
 
 export const GridCannon = css`
   .grid-cannon {
@@ -22,16 +23,22 @@ export const GridContainer = css`
 `
 export const GameGrid = css`
   .game-grid {
-    padding: 1rem;
-
-    background-color: green;
-
-    aspect-ratio: .5/.75;
-    height: 100%;
-
     display: grid;
     grid-gap: 1rem;
     grid-template-columns: repeat(5, 1fr);
+
+    padding: 1rem;
+    background-color: green;
+
+    height: 100%;
+    max-width: 95%;
+    aspect-ratio: .5/.75;
+  }
+
+  @media screen and (max-width: ${device.PHONE_WIDTH_CSS}) {
+    .game-grid {
+      grid-gap: .5rem;
+    }
   }
 `
 export const Card = css`
@@ -53,62 +60,3 @@ export const Card = css`
     min-width: 50px;
   }
 `
-
-// .face {
-//   padding: .25rem;
-//   background-color: white;
-// }
-//
-// .empty {
-//   padding: .25rem;
-//   border: 3px dotted white;
-// }
-//
-// .selected {
-//   border: 3px solid yellow;
-// }
-//
-// .back {
-//   padding: .25rem;
-//   background: radial-gradient(circle closest-side, blue, purple);
-// }
-//
-// .hidden {
-//   background: none;
-//   border: none;
-// }
-//
-// #deck {
-//   grid-column: 1;
-//   color: rgba(0,0,0,0);
-// }
-//
-// #deck:not(.empty) {
-//   color: yellow;
-// }
-//
-// #hand {
-//   grid-column: 2;
-// }
-//
-// #aces {
-//   color: white;
-//   grid-column: 3;
-// }
-//
-// #aces .empty {
-//   color: white;
-// }
-//
-// #jokers {
-//   color: white;
-//   grid-column: 4;
-// }
-//
-// #jokers .empty {
-//   color: white;
-// }
-//
-// #discard {
-//   grid-column: 5;
-// }

@@ -1,4 +1,5 @@
 import { css } from 'lit'
+import * as device from '@/lib/device'
 
 export const Card = css`
   .card {
@@ -55,5 +56,13 @@ export const Card = css`
   .card[data-is-hidden="true"] {
     background: none;
     border: none;
+  }
+
+  @media screen and (max-width: ${device.PHONE_WIDTH_CSS}) {
+    .card {
+      height: 90%;
+      min-width: 10px;
+      font-size: 1.25rem;
+    }
   }
 `

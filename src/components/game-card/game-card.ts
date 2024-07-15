@@ -2,6 +2,7 @@ import { LitElement, html } from 'lit'
 import { unsafeHTML } from 'lit/directives/unsafe-html.js'
 import * as S from './game-card.style'
 import { isNil } from 'lodash'
+import * as device from '@/lib/device'
 
 export class GameCard extends LitElement {
   static styles = [
@@ -57,6 +58,24 @@ export class GameCard extends LitElement {
     let cardText = '&nbsp;'
     if (!isNil(this.cardText) && !this.isDead) {
       cardText = this.cardText
+    }
+
+    if (window.innerWidth <= device.PHONE_WIDTH) {
+      console.log(cardText)
+      switch (cardText) {
+        case 'Jokers':
+          cardText = '$ $'
+          break
+        case 'JOKER':
+          cardText = 'J $'
+          break
+        case 'Discard':
+          cardText = 'X X'
+          break
+        case 'Aces':
+          cardText = 'A A'
+          break
+      }
     }
 
     return cardText

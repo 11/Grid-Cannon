@@ -34,7 +34,7 @@ export const GameHeadline = css`
     gap: .75rem;
   }
 
-  @media screen and (max-width: ${device.PHONE_WIDTH}) {
+  @media screen and (max-width: ${device.PHONE_WIDTH_CSS}) {
     .game-headline {
       padding: 1rem;
     }
@@ -53,7 +53,7 @@ export const Tagline = css`
     letter-spacing: .5px;
   }
 
-  @media screen and (max-width: ${device.PHONE_WIDTH}) {
+  @media screen and (max-width: ${device.PHONE_WIDTH_CSS}) {
     .tagline {
       text-align: center;
       font-size: 1.5rem;
@@ -108,7 +108,7 @@ export const Credits = css`
     gap: .75rem;
   }
 
-  @media screen and (max-width: ${device.PHONE_WIDTH}) {
+  @media screen and (max-width: ${device.PHONE_WIDTH_CSS}) {
     .credits {
       padding: 1rem;
     }
