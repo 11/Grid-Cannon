@@ -5,7 +5,8 @@
   "main": "src/index.js",
   "scripts": {
     "dev": "vite",
-    "test": "jest"
+    "test": "jest",
+    "build": "vite build && cp _redirects dist/"
   },
   "author": "Doug Rudolph",
   "license": "ISC",
