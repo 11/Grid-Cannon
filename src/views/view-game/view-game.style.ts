@@ -45,10 +45,19 @@ export const GameGrid = css`
   @media screen and (max-width: ${device.PHONE_WIDTH_CSS}) {
     .game-grid {
       grid-gap: .5rem;
-      margin: 1rem 0;
+      margin-bottom: 1.5rem;
     }
   }
 `
+
+export const GameBanner = css`
+  .game-banner {
+    color: white;
+    font-size: 1.5rem;
+    padding-top: .5rem;
+  }
+`
+
 export const Card = css`
   .card {
     display: flex;

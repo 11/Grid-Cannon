@@ -22,6 +22,7 @@ export class ViewGame extends LitElement {
     S.GridCannon,
     S.GridContainer,
     S.GameGrid,
+    S.GameBanner
   ]
 
   static properties = {
@@ -239,8 +240,12 @@ export class ViewGame extends LitElement {
     `
   }
 
-  renderScore() {
-    console.log(this.score)
+  renderBanner() {
+    return html`
+      <div class='game-banner'>
+        Score: ${this.score}
+      </div>
+    `
   }
 
   renderWinBanner() {
@@ -254,11 +259,10 @@ export class ViewGame extends LitElement {
       return this.renderWinBanner()
     }
 
-    this.renderScore()
-
     return html`
       <section class='grid-cannon hidden'>
         <div class='grid-container'>
+          ${this.renderBanner()}
           <div class='game-grid'>
             ${this.renderGrid()}
             ${this.renderHand()}
