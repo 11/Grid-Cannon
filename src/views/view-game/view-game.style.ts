@@ -45,7 +45,7 @@ export const GameGrid = css`
   @media screen and (max-width: ${device.PHONE_WIDTH_CSS}) {
     .game-grid {
       grid-gap: .5rem;
-      padding: 0;
+      margin: 0.5rem 0;
     }
   }
 `
