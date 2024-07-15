@@ -7,7 +7,8 @@ import Card from './card'
  *
  * FYI:
  * - The top of the stack is the nth element in the list
- * - The bottom of the stack is the 0th element of the list
+ * - The last element of the array is the top of card stack
+ * - the first element of the array is the bottom of the card stack
  * - The `placeAtBottomOfStack` method technically makes `CardStack` break the traditional
  *   mental model of a stack data structure, but it's needed in certain edge cases - specifically
  *   in the `Deck` class.
@@ -58,11 +59,11 @@ export default class CardStack {
   }
 
   public placeAtBottom(...cards: Card[]): boolean {
-    if (!cards) {
+    if (isNil(cards) || cards.length === 0) {
       return false
     }
 
-    this.stack.concat(cards)
+    this.stack = [...cards, ...this.stack]
     return true
   }
 

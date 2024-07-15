@@ -1,3 +1,4 @@
+import { isNil } from 'lodash'
 import Card, { CardFaces, CardSuits } from './card'
 import CardStack from './card-stack'
 
@@ -51,12 +52,44 @@ export default class Deck {
     this.cards.shuffle()
   }
 
+  public peek(): Card | null {
+    return this.cards.peek()
+  }
+
   public pop(): Card | null {
     return this.cards.pop()
   }
 
   public push(...cards: Card[]): boolean {
     this.cards.placeAtBottom(...cards)
+    return true
+  }
+
+  public flipToNextRoyal(): boolean {
+    // flip through the deck until we find a face card
+    // or run out of cards
+    let tempPile: Card[] = []
+    let card
+    while (card = this.peek()) {
+      if (isNil(card)) {
+        break
+      }
+
+      if (card.IsFace) {
+        break
+      } else {
+        this.pop()
+        tempPile.push(card)
+      }
+    }
+
+    // if there are no more cards in thd deck, then we failed to find a royal
+    if (this.Size === 0) {
+      return false
+    }
+
+    // put cards back in at the bottom of the deck and return true
+    this.push(...tempPile)
     return true
   }
 }

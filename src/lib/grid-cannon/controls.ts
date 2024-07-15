@@ -108,10 +108,19 @@ export function dealGame(): GameData {
 export function drawHand(deck: Deck, grid: Grid, hand: Hand): void {
   console.log('#drawHand')
 
+  // clear highlights
   grid.hidePlayablePositions()
   hand.peekHand()?.update({ isHighlighted: false })
   hand.peekJokers()?.update({ isHighlighted: false })
   hand.peekAces()?.update({ isHighlighted: false })
+
+  // if there are no royals to kill on grid,
+  // flip through deck until next card is a royal
+  console.log(deck.Size)
+  if (grid.IsAllPlayedRoyalsDead) {
+    deck.flipToNextRoyal()
+  }
+  console.log(deck.Size)
 
   const card = deck.pop()
   if (isNil(card)) {

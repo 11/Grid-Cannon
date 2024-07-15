@@ -242,6 +242,10 @@ export default class Card {
     return this.abbreviation
   }
 
+  public get IsDead() {
+    return this.isDead
+  }
+
   public update(card: Partial<Pick<CardAttributes, UpdateableCardFields>>) {
     if (!isNil(card.value)) {
       this.value = card.value

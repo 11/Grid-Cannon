@@ -88,7 +88,7 @@ export class ViewGame extends LitElement {
           `
         }
 
-        const isGameCard = !Grid.FACE_POSITIONS.has(`${gridX}${gridY}`)
+        const isGameCard = !Grid.ROYAL_POSITIONS.has(`${gridX}${gridY}`)
         const isEmptyCardHighlightable = isNil(cardAttr)
           && !isNil(this.gameHand?.peekHand())
           && !this.gameHand?.peekHand()?.IsFace

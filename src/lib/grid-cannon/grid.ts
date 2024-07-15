@@ -12,8 +12,9 @@ export default class Grid {
 
   // valid grid X and Y position for each type of card
   public static readonly HIDDEN_POSITIONS: Set<string> = new Set(['00', '04', '40', '44'])
-  public static readonly FACE_POSITIONS: Set<string> = new Set(['01', '02', '03', '10', '14', '20', '24', '30', '34', '41', '42','43'])
+  public static readonly ROYAL_POSITIONS: Set<string> = new Set(['01', '02', '03', '10', '14', '20', '24', '30', '34', '41', '42','43'])
 
+  private readonly royalPositions: number[][] = [[0,1], [0,2], [0,3], [1,0], [1,4], [2,0], [2,4], [3,0], [3,4], [4,1], [4,2], [4,3]]
   public readonly startNumberPositions: number[][] = [[1,1], [1,2], [1,3], [2,1], [2,3], [3,1], [3,2], [3,3]]
   private readonly numberedPositions: number[][] = [[1,1], [1,2], [1,3], [2,1], [2,2], [2,3], [3,1], [3,2], [3,3]]
 
@@ -25,6 +26,22 @@ export default class Grid {
       new CardStack(), new CardStack(), new CardStack(), new CardStack(), new CardStack(),
       null,            new CardStack(), new CardStack(), new CardStack(), null,
     ]
+  }
+
+  public get IsAllPlayedRoyalsDead() {
+    let flag = true
+    for (const [x, y] of this.royalPositions) {
+      const card = this.peek(x, y)
+      if (isNil(card)) {
+        continue
+      }
+
+      if (!card.IsDead) {
+        flag = false
+      }
+    }
+
+    return flag
   }
 
   public setup(deck: Deck) {
@@ -308,7 +325,6 @@ export default class Grid {
       }
     }
   }
-
 
   public getRenderState(): Array<CardAttributes | null> {
     const result: Array<CardAttributes | null> = []
