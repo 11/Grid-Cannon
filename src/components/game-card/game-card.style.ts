@@ -20,7 +20,7 @@ export const Card = css`
     height: 90%;
   }
 
-  .card[data-rank="0"] {
+  .card[data-suit="NULL"] {
     color: purple;
   }
 

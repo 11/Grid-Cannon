@@ -5,12 +5,7 @@ import { isNil } from 'lodash'
 
 export class GameCard extends LitElement {
   static styles = [
-    S.Card,
-    // S.CardFace,
-    // S.CardEmpty,
-    // S.CardSelected,
-    // S.CardBack,
-    // S.CardHidden,
+    S.Card
   ]
 
   static properties = {
@@ -58,26 +53,6 @@ export class GameCard extends LitElement {
     this.stackSize = 0
   }
 
-  private determineClass(): string {
-    let classMap = ['card']
-
-    if (!this.isFaceShowing || this.isDead) {
-      classMap.push('back')
-    }
-
-    if (this.isEmpty) {
-      classMap.push('empty')
-    } else {
-      classMap.push('face')
-    }
-
-    if (this.isHidden) {
-      classMap.push('hidden')
-    }
-
-    return classMap.join(' ')
-  }
-
   private determineCardText(): string {
     let cardText = '&nbsp;'
     if (!isNil(this.cardText) && !this.isDead) {
@@ -88,22 +63,21 @@ export class GameCard extends LitElement {
   }
 
   render() {
-    const classMap = this.determineClass()
     const cardText = this.determineCardText()
 
     return html`
       <div
-        class=${classMap}
+        class='card'
         data-grid-x=${this.gridX}
         data-grid-y=${this.gridY}
         data-suit=${this.suit}
         data-rank=${this.rank}
-        data-game-card=${this.isGameCard}
+        data-is-game-card=${this.isGameCard}
         data-is-face-showing=${this.isFaceShowing}
         data-is-empty=${this.isEmpty}
         data-is-highlighted=${this.isHighlighted}
         data-is-dead=${this.isDead}
-        data-is-hidden=${this.hidden}
+        data-is-hidden=${this.isHidden}
       >
         ${unsafeHTML(cardText)}
       </div>

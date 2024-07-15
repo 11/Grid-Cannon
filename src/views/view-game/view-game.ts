@@ -206,6 +206,7 @@ export class ViewGame extends LitElement {
         id='jokers'
         .isEmpty=${isNil(joker)}
         .cardText=${!isNil(joker) ? joker?.cardText : 'Jokers' }
+        .suit=${joker?.suit}
         .rank=${joker?.rank}
         .isHighlighted=${joker?.isHighlighted}
         @click=${() => {
