@@ -130,7 +130,10 @@ export default class CardStack {
       return true
     }
 
-    for (let i = 0; i < 100; i++) {
+    const min = 1
+    const max = 10000
+    const runs = Math.floor(Math.random() * (max - min) + min)
+    for (let i = 0; i < runs; i++) {
       this.cut()
       riffle()
     }

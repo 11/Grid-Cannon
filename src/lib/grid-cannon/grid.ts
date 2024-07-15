@@ -93,7 +93,7 @@ export default class Grid {
             { trigger: this.peek(x, y), attackers: [this.peek(x, y+1), this.peek(x, y+2)], face: this.peek(1, 4) },
           ]
         case '12':
-          return [{ trigger: this.peek(x, y), attackers: [this.peek(x+1, y), this.peek(x+2, y)], face: this.peek(2, 4) }]
+          return [{ trigger: this.peek(x, y), attackers: [this.peek(x+1, y), this.peek(x+2, y)], face: this.peek(4, 2) }]
         case '13':
           return [
             { trigger: this.peek(x, y), attackers: [this.peek(x, y-1), this.peek(x, y-2)], face: this.peek(1, 0) },
@@ -279,6 +279,8 @@ export default class Grid {
           gridCard.update({ isHighlighted: true })
         } else if (gridCard.Rank <= card.Rank) {
           gridCard.update({ isHighlighted: true })
+        } else {
+          gridCard.update({ isHighlighted: false })
         }
       }
     }

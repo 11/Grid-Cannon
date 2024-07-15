@@ -3,7 +3,6 @@ import Card from './card'
 import Deck from './deck'
 import Grid from './grid'
 import Hand from './hand'
-import { disconnect } from 'process'
 
 export interface GameData {
   deck: Deck
@@ -28,7 +27,7 @@ export function dealGame(): GameData {
       aces = []
       jokers = []
 
-      deck.buildNewOrderedDeck()
+      deck.buildNewOrderedDeck(true)
       deck.shuffle()
 
       while (spots.length <= 7) {
@@ -109,6 +108,11 @@ export function dealGame(): GameData {
 export function drawHand(deck: Deck, grid: Grid, hand: Hand): void {
   console.log('#drawHand')
 
+  grid.hidePlayablePositions()
+  hand.peekHand()?.update({ isHighlighted: false })
+  hand.peekJokers()?.update({ isHighlighted: false })
+  hand.peekAces()?.update({ isHighlighted: false })
+
   const card = deck.pop()
   if (isNil(card)) {
     return
@@ -131,6 +135,9 @@ export function selectHand(deck: Deck, grid: Grid, hand: Hand): void {
     return
   }
 
+  hand.peekAces()?.update({ isHighlighted: false })
+  hand.peekJokers()?.update({ isHighlighted: false })
+
   if (card.IsFace) {
     const [pos] = grid.findValidGridPlacements(card)
     const gridX = parseInt(pos[0])
@@ -151,12 +158,18 @@ export function selectAce(deck: Deck, grid: Grid, hand: Hand): void {
     return
   }
 
+  hand.peekHand()?.update({ isHighlighted: false })
+  hand.peekJokers()?.update({ isHighlighted: false })
+
   card.update({ isHighlighted: true })
   grid.showPlayablePositions(card)
 }
 
 export function selectJoker(deck: Deck, grid: Grid, hand: Hand): void {
   console.log('#selecJoker')
+
+  hand.peekHand()?.update({ isHighlighted: false })
+  hand.peekAces()?.update({ isHighlighted: false })
 
   const card = hand.peekJokers()
   if (isNil(card)) {
@@ -168,6 +181,7 @@ export function selectJoker(deck: Deck, grid: Grid, hand: Hand): void {
 }
 
 export function selectGridPosition(gridX: number, gridY: number, deck: Deck, grid: Grid, hand: Hand): void {
+  console.log('#selectGridPosition')
   const gridCard = grid.peek(gridX, gridY)
 
   let selectedCard = null

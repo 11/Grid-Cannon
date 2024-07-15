@@ -2,11 +2,11 @@ import { LitElement, html, css, PropertyValueMap } from 'lit'
 import * as S from './view-game.style'
 
 import '@/components/game-card/'
-import type { CardAttributes } from './grid-cannon/card'
-import Deck from './grid-cannon/deck'
-import Grid, { GRID_SIZE_X, GRID_SIZE_Y } from './grid-cannon/grid'
-import Hand, { HandRenderState } from './grid-cannon/hand'
-import { dealGame, drawHand, selectAce, selectGridPosition, selectHand, selectJoker } from './grid-cannon/controls'
+import type { CardAttributes } from '../../lib/grid-cannon/card'
+import Deck from '../../lib/grid-cannon/deck'
+import Grid, { GRID_SIZE_X, GRID_SIZE_Y } from '../../lib/grid-cannon/grid'
+import Hand, { HandRenderState } from '../../lib/grid-cannon/hand'
+import { dealGame, drawHand, selectAce, selectGridPosition, selectHand, selectJoker } from '../../lib/grid-cannon/controls'
 import { isNil } from 'lodash'
 
 export enum GameEvents {
@@ -142,7 +142,7 @@ export class ViewGame extends LitElement {
       <game-card
         id='deck'
         .isEmpty=${(this.gameDeck?.Size === 0)}
-        .isFaceShowing=${false}
+        .isFaceShowing=${this.gameDeck?.Size === 0}
         .cardText=${'Deal'}
         @click=${() => {
           if(isNil(this.gameDeck) || isNil(this.gameGrid) || isNil(this.gameHand)) {

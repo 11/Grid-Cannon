@@ -1,5 +1,5 @@
-import Card, { CardFaces, CardSuits } from './card.js'
-import CardStack from './card-stack.js'
+import Card, { CardFaces, CardSuits } from './card'
+import CardStack from './card-stack'
 
 export default class Deck {
   get Size() {
