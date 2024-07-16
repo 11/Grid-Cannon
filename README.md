@@ -29,21 +29,19 @@ Works on all devices (mobile, tablet, and desktop) in all aspect ratios. The sit
     - <b>If there is no a card with the same color</b>, then the next most similar card is just the highest value card.
 
 ### Objective
-To find and kill all royals in the deck before running out of cards.
+To find and destroy all royals in the deck before running out of cards.
 
 ### How to place cards
 1. Draw the top card from the deck
 2. Place card in grid
-    - <b>If the drawn card is a royal</b>, place the card on the outside of the grid near its most similar card. You are not allowd to place royal cards on-top of dead royals.
-    - <b>If the drawn card is a Joker or Ace</b>, place the card in the your respective Ace or Joker pile.
+    - <b>If the drawn card is a royal</b>, place the card on the outside of the grid near its most similar card. You are not allowde to place royal cards on-top of dead royals.
+    - <b>If the drawn card is a Joker or Ace</b>, place the card in its own respective Ace or Joker pile.
     - <b>If the drawn card is a `2 - 10`</b>, deal on-top of any card in the 3x3 grid with a value less-than or equal to the card you're placing. You may also deal your card into the empty middle position.
-
-<b>NOTE:</b> If you cannot place the drawn card in the grid, and you do not have any Aces or Jokers, the drawn card goes facedown in a discard pile and cannot be used the rest of the game.</b>
 
 ### Aces and jokers
 Aces and Jokers are special cards that you can use at any point throughout the game
-1. Using an Ace allows you to pick up a stack of cards in the 3x3 grid and shuffle it back into the deck. After using an Ace, place the card in the discard pile.
-2. Using a Joker allows you to take the top card off any stack and place it on top of any another playable position in the 3x3 grid. After using a Joker, place the card in the discard pile.
+1. An Ace is allowed to be placed on any card. Aces have a rank of 1 and help you get out of a situation with where you can't play a numbered card
+2. Using a Joker allows you to pick up an entire stack of cards and place them at them at the bottom of the deck. The joker along with any aces in the stack go in the discard pile. 
 
 ### How to attack royal cards
 Attacking a royal requires placing a `2 - 10` card in a grid-position that is opposite of a royal - such that there are 2 cards between the card you're playing and the royal you're attacking.
@@ -55,11 +53,23 @@ Each royal has different kill conditions:
 
 After attacking and killing a royal, the royal is set face-down.
 
+### Dealing cards
+1. Your hand is a stack of up to 3 cards and you must always play the top card on your hand.
+2. If you deal a royal card, place it next to its most similar card on the perimeter of the grid.
+3. If you have no more royals to attack on the board, deal out cards until you find a royal. Place the royal next to its most similar card on the perimeter of the grid, and place the cards you dealth out on the bottom of the deck.
+
+### Scoring:
+1. Dead Jacks are 1 point
+2. Dead Queens are 2 points
+3. Dead Kings are 3 points
+4. If you kill two cards on the same turn, you get 2x points. For example: If I killed a King & Queen on the same turn, that's 3 points for the King, 2 points for the Queen, mutlipled by 2 would be 10 points. `(2 + 3) x 2 = 10 points`
+
 ### Win condition
 1. All royals are dead
 
 ### Lose condition
 1. There are Royals still alive
-2. Your deck is empty
-3. You have no more Aces
-4. You have no more Jokers
+2. You have no more Aces
+3. You have no more Jokers
+4. You can't play any cards from your hand
+ 
