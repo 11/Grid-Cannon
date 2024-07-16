@@ -59,7 +59,7 @@ After attacking and killing a royal, the royal is set face-down.
 1. Dead Jacks are 1 point
 2. Dead Queens are 2 points
 3. Dead Kings are 3 points
-4. If you kill two cards on the same turn, you get 2x points. For example: If I killed a King & Queen on the same turn, that's 3 points for the King, 2 points for the Queen, mutlipled by 2 would be 10 points. `(2 + 3) x 2 = 10 points`
+4. If you kill two cards on the same turn, you get 2x points. For example: If I killed a King & Queen on the same turn, that's 3 points for the King, 2 points for the Queen, mutlipled by 2 would be 10 points. `(3 + 2) x 2 = 10 points`
 
 ### Win condition
 1. All royals are dead
