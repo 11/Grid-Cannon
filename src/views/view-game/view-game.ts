@@ -285,17 +285,22 @@ export class ViewGame extends LitElement {
           <div class='title'>You ${isWin ? 'won!' : 'lost'}</div>
           <div class='score'>Score: ${this.score}</div>
           <div class='destroyed'>
-            Royals destroyed: ${destroyedRoyals.join(', ')}
+            Royals destroyed (${destroyedRoyals.length}/12):<br>
+            <div style='text-align: center; padding-top: .5rem;'>${destroyedRoyals.join(', ')}</div>
           </div>
 
-          <div
-            class='share'
-            @click=${() => {
-              const text = `Grid cannon\nScore: ${this.score}\nDestroyed: ${destroyedRoyals.join(', ')}`
-              navigator.clipboard.writeText(text)
-            }}
-          >
-            Share result
+          <div class='menu'>
+            <div
+              class='button primary'
+              @click=${() => {
+                const text = `Grid cannon\nScore: ${this.score}\nDestroyed (${destroyedRoyals.length}/12): ${destroyedRoyals.join(', ')}`
+                navigator.clipboard.writeText(text)
+              }}
+            >
+              Share result
+            </div>
+
+            <a class='button secondary' href='/'> New game</a>
           </div>
         <div>
       <div>

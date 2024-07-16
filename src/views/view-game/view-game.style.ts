@@ -119,21 +119,39 @@ export const GameOverBanner = css`
   }
 
   .game-over-banner .destroyed {
+    padding-bottom: 1rem;
   }
 
-  .game-over-banner .share {
+  .game-over-banner .menu {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    gap: 1rem;
+  }
+
+  .game-over-banner .button {
     max-width: 50%;
     text-align: center;
     font-family: 'Roboto', sans-serif;
     font-size: 1rem;
     font-weight: 300;
-    padding: 1rem 1.5rem;
+    padding: .75rem 1.5rem;
     border: 2px solid black;
     border-radius: 2rem;
-    color: white;
-    background-color: black;
     text-decoration: underline;
     cursor: pointer;
+  }
+
+  .primary {
+    color: white;
+    background-color: black;
+  }
+
+  .secondary {
+    color: black;
+    background-color: white;
   }
 
   @media screen and (max-width: ${device.PHONE_WIDTH_CSS}) {
