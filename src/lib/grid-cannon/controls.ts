@@ -3,6 +3,7 @@ import Card from './card'
 import Deck from './deck'
 import Grid from './grid'
 import Hand from './hand'
+import { GameEvents } from '@/views/view-game/view-game'
 
 export interface GameData {
   deck: Deck
@@ -140,7 +141,7 @@ export function drawHand(deck: Deck, grid: Grid, hand: Hand): void {
   }
 }
 
-export function selectHand(deck: Deck, grid: Grid, hand: Hand): void {
+export function selectHand(deck: Deck, grid: Grid, hand: Hand): GameEvents {
   console.log('#selectHand')
 
   grid.hidePlayablePositions()
@@ -150,7 +151,7 @@ export function selectHand(deck: Deck, grid: Grid, hand: Hand): void {
 
   const card = hand.peekHand()
   if (isNil(card)) {
-    return
+    return GameEvents.SELECT_DECK
   }
 
   hand.peekAces()?.update({ isHighlighted: false })
@@ -162,10 +163,13 @@ export function selectHand(deck: Deck, grid: Grid, hand: Hand): void {
     const gridY = parseInt(pos[1])
     grid.push(gridX, gridY, card)
     hand.popHand()
+    return GameEvents.SELECT_DECK
   } else {
     card.update({ isHighlighted: true })
     grid.showPlayablePositions(card)
   }
+
+  return GameEvents.SELECT_HAND
 }
 
 export function selectAce(deck: Deck, grid: Grid, hand: Hand): void {

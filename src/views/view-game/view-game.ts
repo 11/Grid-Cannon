@@ -214,10 +214,10 @@ export class ViewGame extends LitElement {
             return
           }
 
-          selectHand(this.gameDeck, this.gameGrid, this.gameHand)
+          const event = selectHand(this.gameDeck, this.gameGrid, this.gameHand)
           this.grid = this.gameGrid.getRenderState()
           this.hand = this.gameHand.getRenderState()
-          this.event = GameEvents.SELECT_HAND
+          this.event = event
         }}
       >
       </game-card>
