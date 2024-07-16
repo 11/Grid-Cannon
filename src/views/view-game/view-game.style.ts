@@ -131,6 +131,22 @@ export const GameOverBanner = css`
     gap: 1rem;
   }
 
+  .primary {
+    color: white;
+    background-color: black;
+    border: 2px solid white;
+  }
+
+  .secondary {
+    color: black;
+    background-color: white;
+    border: 2px solid black;
+  }
+
+  .button:active {
+    filter: invert(1);
+  }
+
   .game-over-banner .button {
     max-width: 50%;
     text-align: center;
@@ -138,20 +154,10 @@ export const GameOverBanner = css`
     font-size: 1rem;
     font-weight: 300;
     padding: .75rem 1.5rem;
-    border: 2px solid black;
     border-radius: 2rem;
     text-decoration: underline;
     cursor: pointer;
-  }
-
-  .primary {
-    color: white;
-    background-color: black;
-  }
-
-  .secondary {
-    color: black;
-    background-color: white;
+    user-select: none;
   }
 
   @media screen and (max-width: ${device.PHONE_WIDTH_CSS}) {

@@ -309,14 +309,16 @@ export class ViewGame extends LitElement {
 
   render() {
     const isWin = this.gameGrid?.IsAllRoyalsDead ?? false
-    const isLost = this.gameHand?.handSize() === 3
-      && this.gameHand?.acesSize() === 0
-      && this.gameHand?.jokersSize() === 0
-      && !isNil(this.gameHand?.peekHand())
-      && !this.gameGrid?.hasPlayablePosition(this.gameHand?.peekHand())
 
-    console.log('isWin', isWin)
-    console.log('isLost', isLost)
+    const noPowerCards =  this.gameHand?.acesSize() === 0 && this.gameHand?.jokersSize() === 0
+    const cannotPlayHand = (
+      this.gameDeck?.Size === 0
+      || this.gameHand?.handSize() === 3
+    ) && (
+      isNil(this.gameHand?.peekHand())
+      || (!this.gameGrid?.hasPlayablePosition(this.gameHand?.peekHand() ?? null))
+    )
+    const isLost = noPowerCards && cannotPlayHand
 
     return html`
       <section class='grid-cannon'>
