@@ -54,7 +54,7 @@ export const Card = css`
   }
 
   .card[data-is-highlighted="true"] {
-    border: 3px solid yellow;
+    border: 4px solid orange;
   }
 
   .card[data-is-empty="false"] {
