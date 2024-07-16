@@ -48,15 +48,23 @@ export const Card = css`
     background-color: #005900;
   }
 
+  /* need this to do so highlight orange works on empty grid positions */
+  .card[data-is-hand-card="false"][data-is-hidden="false"][data-is-empty="true"][data-is-highlighted="true"] {
+    padding: .25rem;
+    color: white;
+    border: 3px solid orange;
+    background-color: #005900;
+  }
+
+  .card[data-is-highlighted="true"] {
+    border: 4px solid orange;
+  }
+
   .card[data-is-hand-card="true"][data-is-empty="true"] {
     border: 2px dotted white;
     background-color: #005900;
     color: white;
     padding: .25rem;
-  }
-
-  .card[data-is-highlighted="true"] {
-    border: 4px solid orange;
   }
 
   .card[data-is-empty="false"] {
@@ -71,7 +79,6 @@ export const Card = css`
 
   @media screen and (max-width: ${device.PHONE_WIDTH_CSS}) {
     .card {
-      height: 100%;
       min-width: 10px;
       font-size: 1.25rem;
     }
