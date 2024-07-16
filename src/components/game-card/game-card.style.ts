@@ -16,9 +16,10 @@ export const Card = css`
     user-select: none;
 
     font-size: 1.5rem;
+    box-sizing: border-box;
 
     min-width: 50px;
-    height: 90%;
+    height: 100%;
   }
 
   .card[data-suit="NULL"] {
@@ -70,7 +71,7 @@ export const Card = css`
 
   @media screen and (max-width: ${device.PHONE_WIDTH_CSS}) {
     .card {
-      height: 90%;
+      height: 100%;
       min-width: 10px;
       font-size: 1.25rem;
     }
