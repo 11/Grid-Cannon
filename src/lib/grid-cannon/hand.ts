@@ -1,3 +1,4 @@
+import { isNil } from 'lodash'
 import Card from './card'
 import type { CardAttributes } from './card'
 import CardStack from './card-stack'
@@ -13,20 +14,20 @@ export default class Hand {
   private jokers: CardStack
   private aces: CardStack
   private discards: CardStack
-  private hand: Card | null
+  private hand: CardStack
 
   public constructor() {
     this.jokers = new CardStack()
     this.aces = new CardStack()
     this.discards = new CardStack()
-    this.hand = null
+    this.hand = new CardStack
   }
 
   public setup(): void {
     this.jokers = new CardStack()
     this.aces = new CardStack()
     this.discards = new CardStack()
-    this.hand = null
+    this.hand = new CardStack()
   }
 
   public pushJokers(...card: Card[]): void {
@@ -78,25 +79,39 @@ export default class Hand {
   }
 
   public pushHand(card: Card): void {
-    this.hand = card
+    this.hand.push(card)
   }
 
   public popHand(): Card | null {
-    const card = this.hand
-    this.hand = null
-    return card
+    return this.hand.pop()
   }
 
   public peekHand(): Card | null {
-    return this.hand
+    return this.hand.peek()
+  }
+
+  public handSize(): number {
+    return this.hand.Size
   }
 
   getRenderState(): HandRenderState {
+    this.hand.peek()?.update({ stackSize: this.handSize() })
+    const hand = this.hand.peek()?.toJSON() ?? null
+
+    this.jokers.peek()?.update({ stackSize: this.jokersSize() })
+    const joker = this.jokers.peek()?.toJSON() ?? null
+
+    this.aces.peek()?.update({ stackSize: this.acesSize() })
+    const ace = this.aces.peek()?.toJSON() ?? null
+
+    this.discards.peek()?.update({ stackSize: this.discardsSize() })
+    const discard = this.discards.peek()?.toJSON() ?? null
+
     return {
-      hand: this.hand?.toJSON() ?? null,
-      joker: this.jokers.peek()?.toJSON() ?? null,
-      ace: this.aces.peek()?.toJSON() ?? null,
-      discard: this.discards.peek()?.toJSON() ?? null,
+      hand,
+      joker,
+      ace,
+      discard,
     }
   }
 }

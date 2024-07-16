@@ -22,7 +22,8 @@ export class ViewGame extends LitElement {
     S.GridCannon,
     S.GridContainer,
     S.GameGrid,
-    S.GameBanner
+    S.ScoreBanner,
+    S.GameOverBanner,
   ]
 
   static properties = {
@@ -49,6 +50,8 @@ export class ViewGame extends LitElement {
     this.event = GameEvents.SELECT_DECK
     this.score = 0
 
+
+
     this.gameGrid = null
     this.gameHand = null
     this.gameDeck = null
@@ -72,7 +75,26 @@ export class ViewGame extends LitElement {
     return this.event !== eventNew
   }
 
-  renderGrid() {
+  private listDestroyedRoyals(): string[] {
+    const result: string[] = []
+    Array.from(Grid.ROYAL_POSITIONS).forEach(pos => {
+      const gridX = parseInt(pos[0])
+      const gridY = parseInt(pos[1])
+
+      const royal = this.gameGrid?.peek(gridX, gridY)
+      if (isNil(royal)) {
+        return null
+      }
+
+      if (royal.IsDead) {
+        result.push(royal.CardText)
+      }
+    })
+
+    return result
+  }
+
+  private renderGrid() {
     return html`
       ${this.grid.map((cardAttr: CardAttributes | null, index: number) => {
         const gridX = Math.floor(index / GRID_SIZE_X)
@@ -136,12 +158,12 @@ export class ViewGame extends LitElement {
     `
   }
 
-  renderHand() {
+  private renderHand() {
     let ace = null
     let joker = null
     let hand = null
     let discard = null
-    if (!isNil(this.hand )) {
+    if (!isNil(this.hand)) {
       ace = this.hand.ace
       joker = this.hand.joker
       discard = this.hand.discard
@@ -160,7 +182,7 @@ export class ViewGame extends LitElement {
             return
           }
 
-          if (isNil(this.gameHand.peekHand()) && this.gameDeck.Size > 0) {
+          if (this.gameDeck.Size > 0) {
             drawHand(this.gameDeck, this.gameGrid, this.gameHand)
             this.grid = this.gameGrid.getRenderState()
             this.hand = this.gameHand.getRenderState()
@@ -177,17 +199,16 @@ export class ViewGame extends LitElement {
         .isHighlighted=${hand?.isHighlighted}
         .isGameCard=${true}
         .suit=${hand?.suit}
+        .stackSize=${hand?.stackSize}
         @click=${() => {
           if(isNil(this.gameDeck) || isNil(this.gameGrid) || isNil(this.gameHand)) {
             return
           }
 
-          if (!isNil(this.gameHand.peekHand())) {
-            selectHand(this.gameDeck, this.gameGrid, this.gameHand)
-            this.grid = this.gameGrid.getRenderState()
-            this.hand = this.gameHand.getRenderState()
-            this.event = GameEvents.SELECT_HAND
-          }
+          selectHand(this.gameDeck, this.gameGrid, this.gameHand)
+          this.grid = this.gameGrid.getRenderState()
+          this.hand = this.gameHand.getRenderState()
+          this.event = GameEvents.SELECT_HAND
         }}
       >
       </game-card>
@@ -247,35 +268,62 @@ export class ViewGame extends LitElement {
     `
   }
 
-  renderBanner() {
+  private renderScoreBanner() {
     return html`
-      <div class='game-banner'>
+      <div class='score-banner'>
         Score: ${this.score}
       </div>
     `
   }
 
-  renderWinBanner() {
+  private renderGameOverBanner(isWin: boolean) {
+    const destroyedRoyals = this.listDestroyedRoyals()
+
     return html`
-      <div>You win<div>
+      <div class='game-over-banner-container'>
+        <div class='game-over-banner'>
+          <div class='title'>You ${isWin ? 'won!' : 'lost'}</div>
+          <div class='score'>Score: ${this.score}</div>
+          <div class='destroyed'>
+            Royals destroyed: ${destroyedRoyals.join(', ')}
+          </div>
+
+          <div
+            class='share'
+            @click=${() => {
+              const text = `Grid cannon\nScore: ${this.score}\nDestroyed: ${destroyedRoyals.join(', ')}`
+              navigator.clipboard.writeText(text)
+            }}
+          >
+            Share result
+          </div>
+        <div>
+      <div>
     `
   }
 
   render() {
-    if (this.gameGrid?.IsAllRoyalsDead) {
-      return this.renderWinBanner()
-    }
+    const isWin = this.gameGrid?.IsAllRoyalsDead ?? false
+    const isLost = this.gameHand?.handSize() === 3
+      && this.gameHand?.acesSize() === 0
+      && this.gameHand?.jokersSize() === 0
+      && !isNil(this.gameHand?.peekHand())
+      && !this.gameGrid?.hasPlayablePosition(this.gameHand?.peekHand())
+
+    console.log('isWin', isWin)
+    console.log('isLost', isLost)
 
     return html`
-      <section class='grid-cannon hidden'>
+      <section class='grid-cannon'>
         <div class='grid-container'>
-          ${this.renderBanner()}
+          ${this.renderScoreBanner()}
           <div class='game-grid'>
             ${this.renderGrid()}
             ${this.renderHand()}
           </div>
         </div>
       </section>
+      ${isWin || isLost ? this.renderGameOverBanner(isWin): null}
     `
   }
 }

@@ -120,6 +120,12 @@ export function drawHand(deck: Deck, grid: Grid, hand: Hand): void {
     deck.flipToNextRoyal()
   }
 
+  // if the hand stack has less than 3 cards, you can draw again
+  // or the top card in the hand stack is a royal - royal card must be played
+  if (hand.handSize() === 3 || hand.peekHand()?.IsFace) {
+    return
+  }
+
   const card = deck.pop()
   if (isNil(card)) {
     return
@@ -136,6 +142,11 @@ export function drawHand(deck: Deck, grid: Grid, hand: Hand): void {
 
 export function selectHand(deck: Deck, grid: Grid, hand: Hand): void {
   console.log('#selectHand')
+
+  grid.hidePlayablePositions()
+  hand.peekHand()?.update({ isHighlighted: false })
+  hand.peekJokers()?.update({ isHighlighted: false })
+  hand.peekAces()?.update({ isHighlighted: false })
 
   const card = hand.peekHand()
   if (isNil(card)) {
@@ -211,19 +222,18 @@ export function selectGridPosition(gridX: number, gridY: number, deck: Deck, gri
   }
 
   let score = 0
-  if (selectedCard.IsJoker) {
+  if (selectedCard.IsJoker && !isNil(gridCard)) {
     const { aces, numbered } = grid.clear(gridX, gridY)
     deck.push(...numbered)
-    hand.pushAces(...aces)
-
+    hand.pushDiscards(...aces)
     hand.pushDiscards(selectedCard)
-  } else if (
-    selectedCard.IsAce
-    || isNil(gridCard)
-    || selectedCard.Rank >= gridCard.Rank
-  ) {
+  } else if ( selectedCard.IsAce || (isNil(gridCard) && !selectedCard.IsJoker) || (!isNil(gridCard) && selectedCard.Rank >= gridCard.Rank)) {
     grid.push(gridX, gridY, selectedCard)
     score = grid.attack(gridX, gridY)
+  } else if ((selectedCard.isNumber && !isNil(gridCard) && selectedCard.Rank < gridCard.Rank)) {
+    hand.pushHand(selectedCard)
+  } else if (selectedCard.IsJoker && isNil(gridCard)) {
+    hand.pushJokers(selectedCard)
   }
 
   selectedCard.update({ isHighlighted: false })

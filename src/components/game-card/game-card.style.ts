@@ -66,28 +66,41 @@ export const Card = css`
     }
   }
 `
+
+export const CardArmor = css`
+  .card-armor {
+    height: 10%;
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-end;
+    align-items: center;
+  }
+`
+
 export const CardText = css`
-  .card-text{
-    height: 80%;
+  .card-text {
+    height: 70%;
     display: flex;
     flex-direction: row;
     justify-content: center;
     align-items: center;
     flex: 1;
+    font-size: 1.5rem;
   }
 
   @media screen and (max-width: ${device.PHONE_WIDTH_CSS}) {
-    .card-stat{
-      font-size: .85rem;
+    .card-text {
+      font-size: 1.25rem;
     }
   }
 `
 
 export const CardStat = css`
   .card-stat {
-    height: 20%;
+    height: 15%;
     color: black;
-    font-size: 1.5rem;
+    font-size: 1rem;
     font-family: arial;
   }
 

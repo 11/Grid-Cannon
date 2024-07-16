@@ -59,6 +59,35 @@ export default class Grid {
     return true
   }
 
+  public hasPlayablePosition(card: Card | null): boolean {
+    if (isNil(card)) {
+      return true
+    }
+
+    const PLAYABLE_BOUNDS_MIN = 1
+    const PLAYABLE_BOUNDS_MAX = 3
+    for (let x = PLAYABLE_BOUNDS_MIN; x <= PLAYABLE_BOUNDS_MAX; x++) {
+      for (let y = PLAYABLE_BOUNDS_MIN; y <= PLAYABLE_BOUNDS_MAX; y++) {
+        const stride = (5 * x) + y
+        const stack = this.grid[stride]
+        if (isNil(stack)) {
+          continue
+        }
+
+        const gridCard = stack.peek()
+        if (isNil(gridCard)) {
+          continue
+        }
+
+        if (gridCard.Rank <= card.Rank) {
+          return true
+        }
+      }
+    }
+
+    return false
+  }
+
   public setup(deck: Deck) {
   }
 
