@@ -30,7 +30,7 @@ export class ViewHome extends LitElement {
             <web-link .usePrimary=${false} .secondary=${true} href='https://www.youtube.com/watch?v=gqmUpQjFHrA&ab_channel=TomFrancis'>How to play</web-link>
           </div>
           <div class='credits'>
-            <div>Website by <a target="_blank" href="https://doug.art">Doug Rudolph</a> and game concept by <a target="_blank" href="https://www.pentadact.com/">Tom Francis</a></div>
+            <div><a target="_blank" href='https://github.com/11/grid-cannon'>Website</a> by <a target="_blank" href="https://doug.art">Doug Rudolph</a> and game concept by <a target="_blank" href="https://www.pentadact.com/">Tom Francis</a></div>
           </div>
         </div>
       </section>
