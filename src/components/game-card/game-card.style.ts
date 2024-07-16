@@ -9,7 +9,7 @@ export const Card = css`
     align-items: center;
 
     transition: border .1s;
-    border: 3px solid black;
+    border: 4px solid black;
     border-radius: 1rem;
 
     cursor: pointer;
@@ -44,7 +44,7 @@ export const Card = css`
     padding: .25rem;
     color: white;
     /* this border is to keep the cards the same width and height with crads that have a border*/
-    border: 3px solid #005900;
+    border: 4px solid #005900;
     background-color: #005900;
   }
 
@@ -52,7 +52,7 @@ export const Card = css`
   .card[data-is-hand-card="false"][data-is-hidden="false"][data-is-empty="true"][data-is-highlighted="true"] {
     padding: .25rem;
     color: white;
-    border: 3px solid orange;
+    border: 4px solid orange;
     background-color: #005900;
   }
 
