@@ -68,5 +68,5 @@ After attacking and killing a royal, the royal is set face-down.
 1. There are Royals still alive
 2. You have no more Aces
 3. You have no more Jokers
-4. You can't play any cards from your hand
+4. You can't play the top card in your hand
  
