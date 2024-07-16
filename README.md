@@ -36,13 +36,13 @@ To find and destroy all royals in the deck before running out of cards.
 2. Place card in grid
     - <b>If the drawn card is a royal</b>, place the card on the outside of the grid near its most similar card. You are not allowde to place royal cards on-top of dead royals.
     - <b>If the drawn card is a Joker or Ace</b>, place the card in its own respective Ace or Joker pile.
-    - <b>If the drawn card is a `2 - 10`</b>, deal on-top of any card in the 3x3 grid with a value less-than or equal to the card you're placing. You may also deal your card into the empty middle position.
+    - <b>If the drawn card is a `2 - 10`</b>, deal on-top of any card in the 3x3 grid with a value less-than or equal to the card you're placing. You may also place cards into any empty grid position
 3. Your hand is a stack of up to 3 cards and you must always play the top card on your hand.
 4. If you have no more royals to attack on the board, deal out cards until you find a royal. Place the royal next to its most similar card on the perimeter of the grid, and place the cards you dealt out on the bottom of the deck.
 
 ### Aces and jokers
 Aces and Jokers are special cards that you can use at any point throughout the game
-1. An Ace is allowed to be placed on any card. Aces have a rank of 1 and help you get out of a situation with where you can't play a numbered card
+1. An Ace is allowed to be placed on any card. Aces have a rank of 1 and help you get out of a sticy situation when you can't play a numbered card
 2. Using a Joker allows you to pick up an entire stack of cards and place them at them at the bottom of the deck. The joker along with any aces in the stack go in the discard pile. 
 
 ### How to attack royal cards
