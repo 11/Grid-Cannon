@@ -56,9 +56,18 @@ export const GameGrid = css`
 
 export const ScoreBanner = css`
   .score-banner {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    gap: 2.5rem;
+
+    width: 100%;
+
     color: white;
     font-size: 1.5rem;
-    padding-top: .5rem;
+    padding: .5rem 0;
+    border-bottom: 1px solid white;
   }
 `
 

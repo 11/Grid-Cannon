@@ -21,6 +21,7 @@ export class GameCard extends LitElement {
     cardText: { type: String },
     stackSize: { type: Number },
     isGameCard: { type: Boolean },
+    isHandCard: { type: Boolean },
     isFaceShowing: { type: Boolean },
     isHidden: { type: Boolean},
     isEmpty: { type: Boolean },
@@ -36,6 +37,7 @@ export class GameCard extends LitElement {
   cardText: string | null
   stackSize: number
   isGameCard: boolean
+  isHandCard: boolean
   isFaceShowing: boolean
   isHidden: boolean
   isEmpty: boolean
@@ -53,6 +55,7 @@ export class GameCard extends LitElement {
     this.cardText = null
     this.stackSize = 0
     this.isGameCard = false
+    this.isHandCard = false
     this.isFaceShowing = true
     this.isHidden = false
     this.isEmpty = true
@@ -127,6 +130,7 @@ export class GameCard extends LitElement {
         data-suit=${this.suit}
         data-rank=${this.rank}
         data-is-game-card=${this.isGameCard}
+        data-is-hand-card=${this.isHandCard}
         data-is-face-showing=${this.isFaceShowing}
         data-is-empty=${this.isEmpty}
         data-is-highlighted=${this.isHighlighted}

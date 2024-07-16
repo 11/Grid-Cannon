@@ -31,12 +31,14 @@ export class ViewGame extends LitElement {
     hand: { type: Object },
     event: { type: String },
     score: { type: Number },
+    turn: { type: Number },
   }
 
   grid: Array<CardAttributes | null>
   hand: HandRenderState | null
   event: GameEvents
   score: number
+  turn: number
 
   gameDeck: Deck | null
   gameGrid: Grid | null
@@ -49,8 +51,7 @@ export class ViewGame extends LitElement {
     this.hand = null
     this.event = GameEvents.SELECT_DECK
     this.score = 0
-
-
+    this.turn = 0
 
     this.gameGrid = null
     this.gameHand = null
@@ -134,7 +135,6 @@ export class ViewGame extends LitElement {
             .isFaceCard=${cardAttr?.isFace}
             .stackSize=${cardAttr?.stackSize}
             @click=${() => {
-
               if(!isGameCard || isNil(this.gameDeck) || isNil(this.gameGrid) || isNil(this.gameHand)) {
                 return
               }
@@ -145,10 +145,18 @@ export class ViewGame extends LitElement {
                 || this.event === GameEvents.SELECT_JOKER
               ) {
                 const score = selectGridPosition(gridX, gridY, this.gameDeck, this.gameGrid, this.gameHand)
-                this.score += score
                 this.grid = this.gameGrid.getRenderState()
                 this.hand = this.gameHand.getRenderState()
+                if (score === -1) {
+                  // we check for -1 because that's how we know that the selectGridPosition threw an error
+                  // we set the event back to SELECT_DECK because we want the game to think we aren't selecting any card
+                  this.event = GameEvents.SELECT_DECK
+                  return
+                }
+
+                this.score += score
                 this.event = GameEvents.SELECT_GRID_POSITION
+                this.turn++
               }
             }}
           >
@@ -197,9 +205,10 @@ export class ViewGame extends LitElement {
         .isEmpty=${isNil(hand)}
         .cardText=${hand?.cardText}
         .isHighlighted=${hand?.isHighlighted}
-        .isGameCard=${true}
         .suit=${hand?.suit}
         .stackSize=${hand?.stackSize}
+        .isGameCard=${true}
+        .isHandCard=${true}
         @click=${() => {
           if(isNil(this.gameDeck) || isNil(this.gameGrid) || isNil(this.gameHand)) {
             return
@@ -219,6 +228,7 @@ export class ViewGame extends LitElement {
         .cardText=${!isNil(ace) ? ace.cardText : 'Aces'}
         .isHighlighted=${ace?.isHighlighted}
         .isGameCard=${true}
+        .isHandCard=${true}
         .suit=${ace?.suit}
         .rank=${ace?.rank}
         .stackSize=${this.gameHand?.acesSize()}
@@ -239,6 +249,7 @@ export class ViewGame extends LitElement {
         id='jokers'
         .isEmpty=${isNil(joker)}
         .cardText=${!isNil(joker) ? joker?.cardText : 'Jokers' }
+        .isHandCard=${true}
         .suit=${joker?.suit}
         .rank=${joker?.rank}
         .isHighlighted=${joker?.isHighlighted}
@@ -260,6 +271,7 @@ export class ViewGame extends LitElement {
         id='discard'
         .isEmpty=${isNil(discard)}
         .isFaceShowing=${isNil(discard)}
+        .isHandCard=${true}
         .isGameCard=${true}
         .cardText=${isNil(discard) ? 'Discard' : '&nbsp;'}
         .stackSize=${this.gameHand?.discardsSize()}
@@ -271,7 +283,9 @@ export class ViewGame extends LitElement {
   private renderScoreBanner() {
     return html`
       <div class='score-banner'>
-        Score: ${this.score}
+        <div> Turns: ${this.turn} </div>
+        <div> – </div>
+        <div> Score: ${this.score} </div>
       </div>
     `
   }

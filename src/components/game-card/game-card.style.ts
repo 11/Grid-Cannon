@@ -39,9 +39,18 @@ export const Card = css`
     color: yellow;
   }
 
-  .card[data-is-empty="true"] {
+  .card[data-is-hand-card="false"][data-is-hidden="false"][data-is-empty="true"] {
     padding: .25rem;
-    border: 3px dotted white;
+    color: white;
+    border: none;
+    background-color: #005900;
+  }
+
+  .card[data-is-hand-card="true"][data-is-empty="true"] {
+    border: 2px dotted white;
+    background-color: #005900;
+    color: white;
+    padding: .25rem;
   }
 
   .card[data-is-highlighted="true"] {

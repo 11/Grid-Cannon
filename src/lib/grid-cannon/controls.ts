@@ -198,6 +198,8 @@ export function selectJoker(deck: Deck, grid: Grid, hand: Hand): void {
   grid.showPlayablePositions(card)
 }
 
+
+// return -1 when there is an error
 export function selectGridPosition(gridX: number, gridY: number, deck: Deck, grid: Grid, hand: Hand): number {
   console.log('#selectGridPosition')
   const gridCard = grid.peek(gridX, gridY)
@@ -232,6 +234,7 @@ export function selectGridPosition(gridX: number, gridY: number, deck: Deck, gri
     score = grid.attack(gridX, gridY)
   } else if ((selectedCard.isNumber && !isNil(gridCard) && selectedCard.Rank < gridCard.Rank)) {
     hand.pushHand(selectedCard)
+    score = -1
   } else if (selectedCard.IsJoker && isNil(gridCard)) {
     hand.pushJokers(selectedCard)
   }
