@@ -42,8 +42,8 @@ To find and destroy all royals in the deck before running out of cards.
 
 ### Aces and jokers
 Aces and Jokers are special cards that you can use at any point throughout the game
-1. An Ace is allowed to be placed on any card. Aces have a rank of 1 and help you get out of a sticy situation when you can't play a numbered card
-2. Using a Joker allows you to pick up an entire stack of cards and place them at them at the bottom of the deck. The joker along with any aces in the stack go in the discard pile. 
+1. An Ace is allowed to be placed on any card. Aces have a rank of 1 and help you when you're strugglig to play nunberd cards
+2. A Joker allows you to pick up an entire stack of cards and place them at them at the bottom of the deck. The joker and any aces in the picked-up stack go to the discard pile. 
 
 ### How to attack royal cards
 Attacking a royal requires placing a `2 - 10` card in a grid-position that is opposite of a royal - such that there are 2 cards between the card you're playing and the royal you're attacking.
