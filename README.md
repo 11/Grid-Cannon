@@ -37,6 +37,8 @@ To find and destroy all royals in the deck before running out of cards.
     - <b>If the drawn card is a royal</b>, place the card on the outside of the grid near its most similar card. You are not allowde to place royal cards on-top of dead royals.
     - <b>If the drawn card is a Joker or Ace</b>, place the card in its own respective Ace or Joker pile.
     - <b>If the drawn card is a `2 - 10`</b>, deal on-top of any card in the 3x3 grid with a value less-than or equal to the card you're placing. You may also deal your card into the empty middle position.
+3. Your hand is a stack of up to 3 cards and you must always play the top card on your hand.
+4. If you have no more royals to attack on the board, deal out cards until you find a royal. Place the royal next to its most similar card on the perimeter of the grid, and place the cards you dealt out on the bottom of the deck.
 
 ### Aces and jokers
 Aces and Jokers are special cards that you can use at any point throughout the game
@@ -52,11 +54,6 @@ Each royal has different kill conditions:
 3. <b>If you're attacking a King</b>, the 2 cards between yours and the King must be the same suit and add up to 13+.
 
 After attacking and killing a royal, the royal is set face-down.
-
-### Dealing cards
-1. Your hand is a stack of up to 3 cards and you must always play the top card on your hand.
-2. If you deal a royal card, place it next to its most similar card on the perimeter of the grid.
-3. If you have no more royals to attack on the board, deal out cards until you find a royal. Place the royal next to its most similar card on the perimeter of the grid, and place the cards you dealth out on the bottom of the deck.
 
 ### Scoring:
 1. Dead Jacks are 1 point
