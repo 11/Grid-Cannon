@@ -32,6 +32,8 @@ export class ViewGame extends LitElement {
     event: { type: String },
     score: { type: Number },
     turn: { type: Number },
+    isWin: { type: Boolean },
+    isLose: { type: Boolean },
   }
 
   grid: Array<CardAttributes | null>
@@ -39,6 +41,9 @@ export class ViewGame extends LitElement {
   event: GameEvents
   score: number
   turn: number
+  isWin: boolean
+  isLose: boolean
+
 
   gameDeck: Deck | null
   gameGrid: Grid | null
@@ -52,6 +57,8 @@ export class ViewGame extends LitElement {
     this.event = GameEvents.SELECT_DECK
     this.score = 0
     this.turn = 0
+    this.isWin = false
+    this.isLose = false
 
     this.gameGrid = null
     this.gameHand = null
@@ -93,6 +100,23 @@ export class ViewGame extends LitElement {
     })
 
     return result
+  }
+
+  private checkIsWin(): boolean {
+    return this.gameGrid?.IsAllRoyalsDead ?? false
+  }
+
+  private checkIsLose(): boolean {
+    const noPowerCards =  this.gameHand?.acesSize() === 0 && this.gameHand?.jokersSize() === 0
+    const cannotPlayHand = (
+      this.gameDeck?.Size === 0
+      || this.gameHand?.handSize() === 3
+    ) && (
+      isNil(this.gameHand?.peekHand())
+      || (!this.gameGrid?.hasPlayablePosition(this.gameHand?.peekHand() ?? null))
+    )
+
+    return noPowerCards && cannotPlayHand
   }
 
   private renderGrid() {
@@ -290,13 +314,13 @@ export class ViewGame extends LitElement {
     `
   }
 
-  private renderGameOverBanner(isWin: boolean) {
+  private renderGameOverBanner() {
     const destroyedRoyals = this.listDestroyedRoyals()
 
     return html`
       <div class='game-over-banner-container'>
         <div class='game-over-banner'>
-          <div class='title'>You ${isWin ? 'won!' : 'lost'}</div>
+          <div class='title'>You ${this.isWin ? 'won!' : 'lost'}</div>
           <div class='score'>Score: ${this.score}</div>
           <div class='destroyed'>
             Royals destroyed (${destroyedRoyals.length}/12):<br>
@@ -322,17 +346,8 @@ export class ViewGame extends LitElement {
   }
 
   render() {
-    const isWin = this.gameGrid?.IsAllRoyalsDead ?? false
-
-    const noPowerCards =  this.gameHand?.acesSize() === 0 && this.gameHand?.jokersSize() === 0
-    const cannotPlayHand = (
-      this.gameDeck?.Size === 0
-      || this.gameHand?.handSize() === 3
-    ) && (
-      isNil(this.gameHand?.peekHand())
-      || (!this.gameGrid?.hasPlayablePosition(this.gameHand?.peekHand() ?? null))
-    )
-    const isLost = noPowerCards && cannotPlayHand
+    this.isLose = this.checkIsLose()
+    this.isWin = this.checkIsWin()
 
     return html`
       <section class='grid-cannon'>
@@ -344,7 +359,7 @@ export class ViewGame extends LitElement {
           </div>
         </div>
       </section>
-      ${isWin || isLost ? this.renderGameOverBanner(isWin): null}
+      ${this.isWin || this.isLose ? this.renderGameOverBanner(): null}
     `
   }
 }
