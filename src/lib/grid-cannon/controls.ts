@@ -11,6 +11,19 @@ export interface GameData {
   hand: Hand
 }
 
+function checkIsLose(deck: Deck, grid: Grid, hand: Hand): boolean {
+  const canDrawCard = hand.handSize() < 3 && deck.Size > 0
+  const canPlayHand = grid.hasPlayablePosition(hand.peekHand())
+  const hasJokers = hand.jokersSize() > 0
+  const hasAces = hand.acesSize() > 0
+
+  return !canDrawCard && !canPlayHand && !hasJokers && !hasAces
+}
+
+function checkIsWin(grid: Grid): boolean {
+  return grid.IsAllRoyalsDead
+}
+
 export function dealGame(): GameData {
   console.log('#dealGame')
 
@@ -106,7 +119,7 @@ export function dealGame(): GameData {
   }
 }
 
-export function drawHand(deck: Deck, grid: Grid, hand: Hand): void {
+export function drawHand(deck: Deck, grid: Grid, hand: Hand): GameEvents {
   console.log('#drawHand')
 
   // clear highlights
@@ -124,12 +137,12 @@ export function drawHand(deck: Deck, grid: Grid, hand: Hand): void {
   // if the hand stack has less than 3 cards, you can draw again
   // or the top card in the hand stack is a royal - royal card must be played
   if (hand.handSize() === 3 || hand.peekHand()?.IsFace) {
-    return
+    return GameEvents.SELECT_DECK
   }
 
   const card = deck.pop()
   if (isNil(card)) {
-    return
+    return GameEvents.SELECT_DECK
   }
 
   if (card.IsJoker) {
@@ -139,6 +152,16 @@ export function drawHand(deck: Deck, grid: Grid, hand: Hand): void {
   } else {
     hand.pushHand(card)
   }
+
+  const isLose = checkIsLose(deck, grid, hand)
+  const isWin = checkIsWin(grid)
+  if (isWin) {
+    return GameEvents.WIN
+  } else if (isLose) {
+    return GameEvents.LOSE
+  }
+
+  return GameEvents.SELECT_DECK
 }
 
 export function selectHand(deck: Deck, grid: Grid, hand: Hand): GameEvents {
@@ -169,15 +192,23 @@ export function selectHand(deck: Deck, grid: Grid, hand: Hand): GameEvents {
     grid.showPlayablePositions(card)
   }
 
+  const isLose = checkIsLose(deck, grid, hand)
+  const isWin = checkIsWin(grid)
+  if (isWin) {
+    return GameEvents.WIN
+  } else if (isLose) {
+    return GameEvents.LOSE
+  }
+
   return GameEvents.SELECT_HAND
 }
 
-export function selectAce(deck: Deck, grid: Grid, hand: Hand): void {
+export function selectAce(deck: Deck, grid: Grid, hand: Hand): GameEvents {
   console.log('#selectAce')
 
   const card = hand.peekAces()
   if (isNil(card)) {
-    return
+    return GameEvents.SELECT_DECK
   }
 
   hand.peekHand()?.update({ isHighlighted: false })
@@ -185,9 +216,19 @@ export function selectAce(deck: Deck, grid: Grid, hand: Hand): void {
 
   card.update({ isHighlighted: true })
   grid.showPlayablePositions(card)
+
+  const isLose = checkIsLose(deck, grid, hand)
+  const isWin = checkIsWin(grid)
+  if (isWin) {
+    return GameEvents.WIN
+  } else if (isLose) {
+    return GameEvents.LOSE
+  }
+
+  return GameEvents.SELECT_JOKER
 }
 
-export function selectJoker(deck: Deck, grid: Grid, hand: Hand): void {
+export function selectJoker(deck: Deck, grid: Grid, hand: Hand): GameEvents {
   console.log('#selecJoker')
 
   hand.peekHand()?.update({ isHighlighted: false })
@@ -195,16 +236,25 @@ export function selectJoker(deck: Deck, grid: Grid, hand: Hand): void {
 
   const card = hand.peekJokers()
   if (isNil(card)) {
-    return
+    return GameEvents.SELECT_DECK
   }
 
   card.update({ isHighlighted: true })
   grid.showPlayablePositions(card)
+
+  const isLose = checkIsLose(deck, grid, hand)
+  const isWin = checkIsWin(grid)
+  if (isWin) {
+    return GameEvents.WIN
+  } else if (isLose) {
+    return GameEvents.LOSE
+  }
+
+  return GameEvents.SELECT_JOKER
 }
 
-
 // return -1 when there is an error
-export function selectGridPosition(gridX: number, gridY: number, deck: Deck, grid: Grid, hand: Hand): number {
+export function selectGridPosition(gridX: number, gridY: number, deck: Deck, grid: Grid, hand: Hand): { event: GameEvents, score: number } {
   console.log('#selectGridPosition')
   const gridCard = grid.peek(gridX, gridY)
 
@@ -228,6 +278,7 @@ export function selectGridPosition(gridX: number, gridY: number, deck: Deck, gri
   }
 
   let score = 0
+  let event = GameEvents.SELECT_GRID_POSITION
   if (selectedCard.IsJoker && !isNil(gridCard)) {
     const { aces, numbered } = grid.clear(gridX, gridY)
     deck.push(...numbered)
@@ -238,7 +289,7 @@ export function selectGridPosition(gridX: number, gridY: number, deck: Deck, gri
     score = grid.attack(gridX, gridY)
   } else if ((selectedCard.isNumber && !isNil(gridCard) && selectedCard.Rank < gridCard.Rank)) {
     hand.pushHand(selectedCard)
-    score = -1
+    event = GameEvents.SELECT_DECK
   } else if (selectedCard.IsJoker && isNil(gridCard)) {
     hand.pushJokers(selectedCard)
   }
@@ -246,5 +297,22 @@ export function selectGridPosition(gridX: number, gridY: number, deck: Deck, gri
   selectedCard.update({ isHighlighted: false })
   grid.hidePlayablePositions()
 
-  return score
+  const isLose = checkIsLose(deck, grid, hand)
+  const isWin = checkIsWin(grid)
+  if (isWin) {
+    return {
+      event: GameEvents.WIN,
+      score,
+    }
+  } else if (isLose) {
+    return {
+      event: GameEvents.LOSE,
+      score,
+    }
+  }
+
+  return {
+    event,
+    score
+  }
 }

@@ -15,6 +15,8 @@ export enum GameEvents {
   SELECT_JOKER,
   SELECT_ACE,
   SELECT_GRID_POSITION,
+  LOSE,
+  WIN,
 }
 
 export class ViewGame extends LitElement {
@@ -102,23 +104,6 @@ export class ViewGame extends LitElement {
     return result
   }
 
-  private checkIsWin(): boolean {
-    return this.gameGrid?.IsAllRoyalsDead ?? false
-  }
-
-  private checkIsLose(): boolean {
-    const noPowerCards =  this.gameHand?.acesSize() === 0 && this.gameHand?.jokersSize() === 0
-    const cannotPlayHand = (
-      this.gameDeck?.Size === 0
-      || this.gameHand?.handSize() === 3
-    ) && (
-      isNil(this.gameHand?.peekHand())
-      || (!this.gameGrid?.hasPlayablePosition(this.gameHand?.peekHand() ?? null))
-    )
-
-    return noPowerCards && cannotPlayHand
-  }
-
   private renderGrid() {
     return html`
       ${this.grid.map((cardAttr: CardAttributes | null, index: number) => {
@@ -168,18 +153,18 @@ export class ViewGame extends LitElement {
                 || this.event === GameEvents.SELECT_ACE
                 || this.event === GameEvents.SELECT_JOKER
               ) {
-                const score = selectGridPosition(gridX, gridY, this.gameDeck, this.gameGrid, this.gameHand)
+                const { event, score } = selectGridPosition(gridX, gridY, this.gameDeck, this.gameGrid, this.gameHand)
+                this.score += score
                 this.grid = this.gameGrid.getRenderState()
                 this.hand = this.gameHand.getRenderState()
-                if (score === -1) {
+                if (event === GameEvents.SELECT_DECK) {
                   // we check for -1 because that's how we know that the selectGridPosition threw an error
                   // we set the event back to SELECT_DECK because we want the game to think we aren't selecting any card
                   this.event = GameEvents.SELECT_DECK
                   return
                 }
 
-                this.score += score
-                this.event = GameEvents.SELECT_GRID_POSITION
+                this.event = event
                 this.turn++
               }
             }}
@@ -215,10 +200,10 @@ export class ViewGame extends LitElement {
           }
 
           if (this.gameDeck.Size > 0) {
-            drawHand(this.gameDeck, this.gameGrid, this.gameHand)
+            const event = drawHand(this.gameDeck, this.gameGrid, this.gameHand)
             this.grid = this.gameGrid.getRenderState()
             this.hand = this.gameHand.getRenderState()
-            this.event = GameEvents.SELECT_DECK
+            this.event = event
           }
         }}
       >
@@ -261,10 +246,10 @@ export class ViewGame extends LitElement {
             return
           }
 
-          selectAce(this.gameDeck, this.gameGrid, this.gameHand)
+          const event = selectAce(this.gameDeck, this.gameGrid, this.gameHand)
           this.grid = this.gameGrid.getRenderState()
           this.hand = this.gameHand.getRenderState()
-          this.event = GameEvents.SELECT_ACE
+          this.event = event
         }}
       >
       </game-card>
@@ -283,10 +268,10 @@ export class ViewGame extends LitElement {
             return
           }
 
-          selectJoker(this.gameDeck, this.gameGrid, this.gameHand)
+          const event = selectJoker(this.gameDeck, this.gameGrid, this.gameHand)
           this.grid = this.gameGrid.getRenderState()
           this.hand = this.gameHand.getRenderState()
-          this.event = GameEvents.SELECT_JOKER
+          this.event = event
         }}
       >
       </game-card>
@@ -346,9 +331,6 @@ export class ViewGame extends LitElement {
   }
 
   render() {
-    this.isLose = this.checkIsLose()
-    this.isWin = this.checkIsWin()
-
     return html`
       <section class='grid-cannon'>
         <div class='grid-container'>
@@ -359,7 +341,7 @@ export class ViewGame extends LitElement {
           </div>
         </div>
       </section>
-      ${this.isWin || this.isLose ? this.renderGameOverBanner(): null}
+      ${this.event === GameEvents.WIN || this.event === GameEvents.LOSE ? this.renderGameOverBanner(): null}
     `
   }
 }

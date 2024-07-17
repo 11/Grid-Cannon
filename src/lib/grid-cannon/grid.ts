@@ -76,7 +76,7 @@ export default class Grid {
 
         const gridCard = stack.peek()
         if (isNil(gridCard)) {
-          continue
+          return true
         }
 
         if (gridCard.Rank <= card.Rank) {
