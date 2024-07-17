@@ -70,3 +70,7 @@ After attacking and killing a royal, the royal is set face-down.
 3. You have no more Jokers
 4. You can't play the top card in your hand
  
+### Contrubuting and forking
+I am open to anyone helping contribute to this project. If you'd like to help update the design, improve code quality, add a game mode, or just generally help improve the project, you're welcome to submit a PR. 
+
+If you want to fork and create a new project off of this, all I ask is you give some kind of credit to me, as well as the original creator Tom Francis
