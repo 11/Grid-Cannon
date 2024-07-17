@@ -34,8 +34,6 @@ export class ViewGame extends LitElement {
     event: { type: String },
     score: { type: Number },
     turn: { type: Number },
-    isWin: { type: Boolean },
-    isLose: { type: Boolean },
   }
 
   grid: Array<CardAttributes | null>
@@ -43,9 +41,6 @@ export class ViewGame extends LitElement {
   event: GameEvents
   score: number
   turn: number
-  isWin: boolean
-  isLose: boolean
-
 
   gameDeck: Deck | null
   gameGrid: Grid | null
@@ -59,8 +54,6 @@ export class ViewGame extends LitElement {
     this.event = GameEvents.SELECT_DECK
     this.score = 0
     this.turn = 0
-    this.isWin = false
-    this.isLose = false
 
     this.gameGrid = null
     this.gameHand = null
@@ -305,7 +298,7 @@ export class ViewGame extends LitElement {
     return html`
       <div class='game-over-banner-container'>
         <div class='game-over-banner'>
-          <div class='title'>You ${this.isWin ? 'won!' : 'lost'}</div>
+          <div class='title'>You ${this.event === GameEvents.WIN ? 'won!' : 'lost'}</div>
           <div class='score'>Score: ${this.score}</div>
           <div class='destroyed'>
             Royals destroyed (${destroyedRoyals.length}/12):<br>
