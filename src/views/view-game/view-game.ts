@@ -79,7 +79,7 @@ export class ViewGame extends LitElement {
     this.hand = this.gameHand.getRenderState()
   }
 
-  protected shouldUpdate(changedProperties: Map<string | number | symbol, unknown>): boolean {
+  public shouldUpdate(changedProperties: Map<string | number | symbol, unknown>): boolean {
     super.update(changedProperties);
     const eventNew = changedProperties.get('event')
     return this.event !== eventNew
@@ -247,9 +247,9 @@ export class ViewGame extends LitElement {
           }
 
           const event = selectAce(this.gameDeck, this.gameGrid, this.gameHand)
+          this.event = event
           this.grid = this.gameGrid.getRenderState()
           this.hand = this.gameHand.getRenderState()
-          this.event = event
         }}
       >
       </game-card>
@@ -330,7 +330,7 @@ export class ViewGame extends LitElement {
     `
   }
 
-  render() {
+  public render() {
     return html`
       <section class='grid-cannon'>
         <div class='grid-container'>

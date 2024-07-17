@@ -13,7 +13,7 @@ export interface GameData {
 
 function checkIsLose(deck: Deck, grid: Grid, hand: Hand): boolean {
   const canDrawCard = hand.handSize() < 3 && deck.Size > 0
-  const canPlayHand = grid.hasPlayablePosition(hand.peekHand())
+  const canPlayHand = hand.handSize() > 0 && grid.hasPlayablePosition(hand.peekHand())
   const hasJokers = hand.jokersSize() > 0
   const hasAces = hand.acesSize() > 0
 
