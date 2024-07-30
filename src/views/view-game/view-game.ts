@@ -322,7 +322,7 @@ export class ViewGame extends LitElement {
               Share result
             </div>
 
-            <a class='button secondary' href='/'> New game</a>
+            <a class='button secondary' href='/'> Main menu </a>
           </div>
         <div>
       <div>
