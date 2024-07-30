@@ -189,7 +189,7 @@ export default class Grid {
     let cardScore = 0
     let attackersCount = 0
     for (const { trigger, attackers, face } of attackInfo) {
-      if (isNil(trigger) || isNil(attackers) || isNil(face)) {
+      if (isNil(trigger) || isNil(attackers) || isNil(face) || face.IsDead) {
         continue
       }
 
