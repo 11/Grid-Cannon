@@ -104,7 +104,7 @@ export const CardText = css`
     justify-content: center;
     align-items: center;
     flex: 1;
-    font-size: 1.5rem;
+    font-size: 1.25rem;
   }
 
   @media screen and (max-width: ${device.PHONE_WIDTH_CSS}) {

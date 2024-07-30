@@ -73,17 +73,11 @@ export class GameCard extends LitElement {
     // display abbreviated card text on mobile
     if (window.innerWidth <= device.PHONE_WIDTH) {
       switch (cardText) {
-        case 'Aces':
-          // cardText = 'A A'
-          break
-        case 'Jokers':
-          // cardText = '$ $'
-          break
         case 'JOKER':
-          cardText = 'J $'
+          cardText = 'Joker'
           break
         case 'Discard':
-          cardText = 'Used'
+          cardText = 'Toss'
           break
       }
     }
