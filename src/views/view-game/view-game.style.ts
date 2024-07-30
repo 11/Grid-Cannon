@@ -175,3 +175,14 @@ export const GameOverBanner = css`
     }
   }
 `
+
+export const RseetButton = css`
+  .reset-button {
+    font-size: 1rem;
+    border: 1px solid black;
+    border-radius: 8px;
+    padding: 0.5rem 0.5rem;
+    background-color: black;
+    color: white;
+  }
+`

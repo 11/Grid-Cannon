@@ -26,6 +26,7 @@ export class ViewGame extends LitElement {
     S.GameGrid,
     S.ScoreBanner,
     S.GameOverBanner,
+    S.RseetButton,
   ]
 
   static properties = {
@@ -286,7 +287,12 @@ export class ViewGame extends LitElement {
     return html`
       <div class='score-banner'>
         <div> Turns: ${this.turn} </div>
-        <div> – </div>
+        <button class='reset-button' @click=${() => {
+            window.location.reload()
+          }}
+        >
+          Reset
+        </button>
         <div> Score: ${this.score} </div>
       </div>
     `
