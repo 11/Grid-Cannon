@@ -79,21 +79,20 @@ export class ViewGame extends LitElement {
     return this.event !== eventNew
   }
 
-  private listDestroyedRoyals(): string[] {
-    const result: string[] = []
-    Array.from(Grid.ROYAL_POSITIONS).forEach(pos => {
-      const gridX = parseInt(pos[0])
-      const gridY = parseInt(pos[1])
+  private listDestroyedRoyals(): CardAttributes[] {
+    const result: CardAttributes[] = []
+    for (const [gridX, gridY] of Array.from(Grid.ROYAL_POSITIONS)) {
+        const x = parseInt(gridX)
+        const y = parseInt(gridY)
+        const royal = this.gameGrid?.peek(x, y)
+        if (isNil(royal)) {
+          continue
+        }
 
-      const royal = this.gameGrid?.peek(gridX, gridY)
-      if (isNil(royal)) {
-        return null
-      }
-
-      if (royal.IsDead) {
-        result.push(royal.CardText)
-      }
-    })
+        if (royal.IsDead) {
+          result.push(royal.toJSON())
+        }
+    }
 
     return result
   }
@@ -308,15 +307,23 @@ export class ViewGame extends LitElement {
           <div class='score'>Score: ${this.score}</div>
           <div class='destroyed'>
             Royals destroyed (${destroyedRoyals.length}/12):<br>
-            <div style='text-align: center; padding-top: .5rem;'>${destroyedRoyals.join(', ')}</div>
+            <div style='text-align: center; padding-top: .5rem;'>
+              ${destroyedRoyals.map(royal => {
+                const color = royal.color.toLocaleLowerCase()
+                const text = royal.cardText
+                return html`<span style='color: ${color}; padding-right: 0.65rem'>${text}</span>`
+              })}
+            </div>
           </div>
 
           <div class='menu'>
             <div
               class='button primary'
               @click=${() => {
-                const text = `Grid cannon\nScore: ${this.score}\nDestroyed (${destroyedRoyals.length}/12): ${destroyedRoyals.join(', ')}`
-                navigator.clipboard.writeText(text)
+                const textTitle = 'Grid cannon'
+                const textScore = `Score: ${this.score}`
+                const textDestroyed = `Destroyed (${destroyedRoyals.length}/12): ${destroyedRoyals.map(royal => royal.cardText).join(', ')}`
+                navigator.clipboard.writeText([textTitle, textScore, textDestroyed].join('\n'))
               }}
             >
               Share result
