@@ -94,7 +94,7 @@ export class ViewGame extends LitElement {
         }
     }
 
-    return result
+    return result.sort((royal1, royal2) => royal2.value - royal1.value)
   }
 
   private renderGrid() {
