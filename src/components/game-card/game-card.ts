@@ -1,6 +1,7 @@
 import { LitElement, html } from 'lit'
 import { unsafeHTML } from 'lit/directives/unsafe-html.js'
-import * as S from './game-card.style'
+// import * as S from './game-card.style'
+import * as S from './style'
 import { isNil } from 'lodash'
 import * as device from '@/lib/device'
 import Grid from '@/lib/grid-cannon/grid'
@@ -8,9 +9,10 @@ import Grid from '@/lib/grid-cannon/grid'
 export class GameCard extends LitElement {
   static styles = [
     S.Card,
-    S.CardArmor,
     S.CardText,
-    S.CardStat,
+    S.CardGrid
+    // S.CardArmor,
+    // S.CardStat,
   ]
 
   static properties = {
@@ -98,8 +100,8 @@ export class GameCard extends LitElement {
     `
   }
 
-  renderCardStat() {
-    if (this.isHidden || this.isEmpty || this.isDead  || Grid.ROYAL_POSITIONS.has(`${this.gridX}${this.gridY}`)) {
+  private renderCardStat() {
+    if (this.isHidden || this.isEmpty || this.isDead || Grid.ROYAL_POSITIONS.has(`${this.gridX}${this.gridY}`)) {
       return html`
         <div class='card-stat'>&nbsp;</div>
     `
@@ -112,6 +114,27 @@ export class GameCard extends LitElement {
       >
         x${this.stackSize}
       </div>
+    `
+  }
+
+  private renderCardFace() {
+    return html`
+      <div class='card-text'>A ${this.suit}</div>
+      <div class='card-grid'>
+        <div class='card-symbol-0'>${this.suit}</div>
+        <div class='card-symbol-1'>${this.suit}</div>
+        <div class='card-symbol-2'>${this.suit}</div>
+        <div class='card-symbol-3'>${this.suit}</div>
+        <div class='card-symbol-4'>${this.suit}</div>
+        <div class='card-symbol-5'>${this.suit}</div>
+        <div class='card-symbol-6'>${this.suit}</div>
+        <div class='card-symbol-7'>${this.suit}</div>
+        <div class='card-symbol-8'>${this.suit}</div>
+        <div class='card-symbol-9'>${this.suit}</div>
+        <div class='card-symbol-10'>${this.suit}</div>
+        <div class='card-symbol-11'>${this.suit}</div>
+      </div>
+      <div class='card-text' data-bottom='true'>A ${this.suit}</div>
     `
   }
 
@@ -132,9 +155,10 @@ export class GameCard extends LitElement {
         data-is-hidden=${this.isHidden}
         data-is-face=${this.isFace}
       >
-        ${this.renderCardArmor()}
+        <!-- ${this.renderCardArmor()}
         ${this.renderCardText()}
-        ${this.renderCardStat()}
+        ${this.renderCardStat()} -->
+        ${this.renderCardFace()}
       </div>
     `
   }
