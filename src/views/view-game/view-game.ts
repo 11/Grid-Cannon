@@ -128,6 +128,7 @@ export class ViewGame extends LitElement {
             .gridY=${gridY}
             .rank=${cardAttr?.rank}
             .suit=${cardAttr?.suit}
+            .symbol=${cardAttr?.symbol}
             .cardText=${cardAttr?.cardText}
             .isGameCard=${isGameCard}
             .isHidden=${false}
@@ -208,6 +209,7 @@ export class ViewGame extends LitElement {
         .cardText=${hand?.cardText}
         .isHighlighted=${hand?.isHighlighted}
         .suit=${hand?.suit}
+        .symbol=${hand?.symbol}
         .stackSize=${hand?.stackSize}
         .isGameCard=${true}
         .isHandCard=${true}
@@ -233,6 +235,7 @@ export class ViewGame extends LitElement {
         .isHandCard=${true}
         .suit=${ace?.suit}
         .rank=${ace?.rank}
+        .symbol=${ace?.symbol}
         .stackSize=${this.gameHand?.acesSize()}
         @click=${() => {
           if(isNil(this.gameDeck) || isNil(this.gameGrid) || isNil(this.gameHand)) {
