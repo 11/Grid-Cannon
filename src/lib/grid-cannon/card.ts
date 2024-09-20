@@ -33,6 +33,13 @@ export const CardSuitToSymbolMap = {
   [CardSuits.DIAMOND]: '\u2666',
 }
 
+export const CardFaceToSymbolMap = {
+  [CardFaces.JOKER]: '\u1F70B',
+  [CardFaces.JACK]: '\u1FA05',
+  [CardFaces.QUEEN]: '\u1FA01',
+  [CardFaces.KING]: '\u1FA00',
+}
+
 export const CardFaceToRankMap = {
   [CardFaces.JOKER]: 0,
   [CardFaces.ACE]: 1,
@@ -133,8 +140,9 @@ export default class Card {
   private suit: CardSuits
 
   /**
-   * Unicode symbols for card suits:
-   * ♠ ♥ ♦ ♣
+   * Spot cards: ♠ ♥ ♦ ♣
+   * Royal cards: ♔ ♕ ♙
+   * Joker cards: 🜋
    */
   private symbol: string
 
@@ -174,11 +182,7 @@ export default class Card {
 
   private isHighlighted: boolean
 
-
-
-  /**
-   * Grid position
-   */
+  // Grid position
   private gridX: number | null
   private gridY: number | null
 
@@ -189,8 +193,10 @@ export default class Card {
     this.gridY = null
     this.abbreviation = CardFaceToAbbreviationMap[this.name]
     this.color = CardColorMap[this.suit]
-    this.symbol = CardSuitToSymbolMap[this.suit]
     this.rank = CardFaceToRankMap[this.name]
+    this.symbol = (this.rank <= 10)
+      ? CardSuitToSymbolMap[suit]
+      : CardFaceToSymbolMap[name]
     this.score = (this.rank <= 10) ? 0 : Math.abs(this.rank - 10)
     this.stackSize = 0
     this.value = this.rank

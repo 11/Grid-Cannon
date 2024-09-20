@@ -7,6 +7,7 @@ export const Card = css`
     flex-direction: column;
     justify-content: center;
     align-items: center;
+    gap: .5rem;
 
     transition: border .1s;
     border: 4px solid black;
@@ -111,19 +112,201 @@ export const CardGrid = css`
     grid-template-rows: repeat(4, 1fr);
     justify-items: center;
     align-items: center;
-    font-size: 1.6rem;
+    font-size: 2.5rem;
   }
 
-  .card-symbol-0 { opacity: 0; }
-  .card-symbol-1 { font-size: 7rem; }
-  .card-symbol-2 { opacity: 0; }
-  .card-symbol-3 { opacity: 0; }
-  .card-symbol-4 { opacity: 0;}
-  .card-symbol-5 { opacity: 0; }
-  .card-symbol-6 { opacity: 0; }
-  .card-symbol-7 { opacity: 0; }
-  .card-symbol-8 { opacity: 0; }
-  .card-symbol-9 { opacity: 0; }
-  .card-symbol-10 { opacity: 0; }
-  .card-symbol-11 { opacity: 0; }
+  /* JOKER */
+  /*
+  .card-grid[data-rank='0'], .card-symbol-0 { opacity: 0; }
+  .card-grid[data-rank='0'], .card-symbol-1 { font-size: 7rem; }
+  .card-grid[data-rank='0'], .card-symbol-2 { opacity: 0; }
+  .card-grid[data-rank='0'], .card-symbol-3 { opacity: 0; }
+  .card-grid[data-rank='0'], .card-symbol-4 { opacity: 0;}
+  .card-grid[data-rank='0'], .card-symbol-5 { opacity: 0; }
+  .card-grid[data-rank='0'], .card-symbol-6 { opacity: 0; }
+  .card-grid[data-rank='0'], .card-symbol-7 { opacity: 0; }
+  .card-grid[data-rank='0'], .card-symbol-8 { opacity: 0; }
+  .card-grid[data-rank='0'], .card-symbol-9 { opacity: 0; }
+  .card-grid[data-rank='0'], .card-symbol-10 { opacity: 0; }
+  .card-grid[data-rank='0'], .card-symbol-11 { opacity: 0; }
+  */
+
+
+  /* Ace */
+  .card-grid[data-rank='1'] .card-symbol-0 { opacity: 0; }
+  .card-grid[data-rank='1'] .card-symbol-1 { opacity: 0; }
+  .card-grid[data-rank='1'] .card-symbol-2 { opacity: 0; }
+  .card-grid[data-rank='1'] .card-symbol-3 { opacity: 0; }
+  .card-grid[data-rank='1'] .card-symbol-4 { }
+  .card-grid[data-rank='1'] .card-symbol-5 { opacity: 0; }
+  .card-grid[data-rank='1'] .card-symbol-6 { opacity: 0; }
+  .card-grid[data-rank='1'] .card-symbol-7 { opacity: 0; }
+  .card-grid[data-rank='1'] .card-symbol-8 { opacity: 0; }
+  .card-grid[data-rank='1'] .card-symbol-9 { opacity: 0; }
+  .card-grid[data-rank='1'] .card-symbol-10 { opacity: 0; }
+  .card-grid[data-rank='1'] .card-symbol-11 { opacity: 0; }
+
+  /* NUMBERED */
+  .card-grid[data-rank='2'] .card-symbol-0 { opacity: 0; }
+  .card-grid[data-rank='2'] .card-symbol-1 { }
+  .card-grid[data-rank='2'] .card-symbol-2 { opacity: 0; }
+  .card-grid[data-rank='2'] .card-symbol-3 { opacity: 0; }
+  .card-grid[data-rank='2'] .card-symbol-4 { opacity: 0;}
+  .card-grid[data-rank='2'] .card-symbol-5 { opacity: 0; }
+  .card-grid[data-rank='2'] .card-symbol-6 { opacity: 0; }
+  .card-grid[data-rank='2'] .card-symbol-7 { opacity: 0; }
+  .card-grid[data-rank='2'] .card-symbol-8 { opacity: 0; }
+  .card-grid[data-rank='2'] .card-symbol-9 { opacity: 0; }
+  .card-grid[data-rank='2'] .card-symbol-10 { transform: rotate(180deg); }
+  .card-grid[data-rank='2'] .card-symbol-11 { opacity: 0; }
+
+  .card-grid[data-rank='3'] .card-symbol-0 { opacity: 0; }
+  .card-grid[data-rank='3'] .card-symbol-1 { }
+  .card-grid[data-rank='3'] .card-symbol-2 { opacity:0; }
+  .card-grid[data-rank='3'] .card-symbol-3 { opacity: 0; }
+  .card-grid[data-rank='3'] .card-symbol-4 { transform: translateY(1rem); }
+  .card-grid[data-rank='3'] .card-symbol-5 { opacity: 0; }
+  .card-grid[data-rank='3'] .card-symbol-6 { opacity: 0; }
+  .card-grid[data-rank='3'] .card-symbol-7 { opacity: 0; }
+  .card-grid[data-rank='3'] .card-symbol-8 { opacity: 0; }
+  .card-grid[data-rank='3'] .card-symbol-9 { opacity: 0; }
+  .card-grid[data-rank='3'] .card-symbol-10 { transform: rotate(180deg); }
+  .card-grid[data-rank='3'] .card-symbol-11 { opacity: 0; }
+
+  .card-grid[data-rank='4'] .card-symbol-0 { }
+  .card-grid[data-rank='4'] .card-symbol-1 { opacity: 0; }
+  .card-grid[data-rank='4'] .card-symbol-2 { }
+  .card-grid[data-rank='4'] .card-symbol-3 { opacity: 0; }
+  .card-grid[data-rank='4'] .card-symbol-4 { opacity: 0; }
+  .card-grid[data-rank='4'] .card-symbol-5 { opacity: 0; }
+  .card-grid[data-rank='4'] .card-symbol-6 { opacity: 0; }
+  .card-grid[data-rank='4'] .card-symbol-7 { opacity: 0; }
+  .card-grid[data-rank='4'] .card-symbol-8 { opacity: 0; }
+  .card-grid[data-rank='4'] .card-symbol-9 { transform: rotate(180deg) }
+  .card-grid[data-rank='4'] .card-symbol-10 { opacity: 0; }
+  .card-grid[data-rank='4'] .card-symbol-11 { transform: rotate(180deg) }
+
+  .card-grid[data-rank='5'] .card-symbol-0 { }
+  .card-grid[data-rank='5'] .card-symbol-1 { opacity: 0; }
+  .card-grid[data-rank='5'] .card-symbol-2 { }
+  .card-grid[data-rank='5'] .card-symbol-3 { opacity: 0; }
+  .card-grid[data-rank='5'] .card-symbol-4 { transform: translateY(1rem); }
+  .card-grid[data-rank='5'] .card-symbol-5 { opacity: 0; }
+  .card-grid[data-rank='5'] .card-symbol-6 { opacity: 0; }
+  .card-grid[data-rank='5'] .card-symbol-7 { opacity: 0; }
+  .card-grid[data-rank='5'] .card-symbol-8 { opacity: 0; }
+  .card-grid[data-rank='5'] .card-symbol-9 { transform: rotate(180deg) }
+  .card-grid[data-rank='5'] .card-symbol-10 { opacity: 0; }
+  .card-grid[data-rank='5'] .card-symbol-11 { transform: rotate(180deg) }
+
+  .card-grid[data-rank='6'] .card-symbol-0 { }
+  .card-grid[data-rank='6'] .card-symbol-1 { opacity: 0; }
+  .card-grid[data-rank='6'] .card-symbol-2 { }
+  .card-grid[data-rank='6'] .card-symbol-3 { transform: translateY(1rem); }
+  .card-grid[data-rank='6'] .card-symbol-4 { opacity: 0; }
+  .card-grid[data-rank='6'] .card-symbol-5 { transform: translateY(1rem); }
+  .card-grid[data-rank='6'] .card-symbol-6 { opacity: 0; }
+  .card-grid[data-rank='6'] .card-symbol-7 { opacity: 0; }
+  .card-grid[data-rank='6'] .card-symbol-8 { opacity: 0; }
+  .card-grid[data-rank='6'] .card-symbol-9 { transform: rotate(180deg); }
+  .card-grid[data-rank='6'] .card-symbol-10 { opacity: 0; }
+  .card-grid[data-rank='6'] .card-symbol-11 { transform: rotate(180deg); }
+
+  .card-grid[data-rank='7'] .card-symbol-0 { }
+  .card-grid[data-rank='7'] .card-symbol-1 { opacity: 0; }
+  .card-grid[data-rank='7'] .card-symbol-2 { }
+  .card-grid[data-rank='7'] .card-symbol-3 { transform: translateY(1rem); }
+  .card-grid[data-rank='7'] .card-symbol-4 { transform: translateY(-1rem); }
+  .card-grid[data-rank='7'] .card-symbol-5 { transform: translateY(1rem); }
+  .card-grid[data-rank='7'] .card-symbol-6 { opacity: 0; }
+  .card-grid[data-rank='7'] .card-symbol-7 { opacity: 0; }
+  .card-grid[data-rank='7'] .card-symbol-8 { opacity: 0; }
+  .card-grid[data-rank='7'] .card-symbol-9 { transform: rotate(180deg); }
+  .card-grid[data-rank='7'] .card-symbol-10 { opacity: 0; }
+  .card-grid[data-rank='7'] .card-symbol-11 { transform: rotate(180deg); }
+
+  .card-grid[data-rank='8'] .card-symbol-0 { }
+  .card-grid[data-rank='8'] .card-symbol-1 { opacity: 0; }
+  .card-grid[data-rank='8'] .card-symbol-2 { }
+  .card-grid[data-rank='8'] .card-symbol-3 { transform: translateY(1rem); }
+  .card-grid[data-rank='8'] .card-symbol-4 { transform: translateY(-1rem); }
+  .card-grid[data-rank='8'] .card-symbol-5 { transform: translateY(1rem); }
+  .card-grid[data-rank='8'] .card-symbol-6 { opacity: 0; }
+  .card-grid[data-rank='8'] .card-symbol-7 { }
+  .card-grid[data-rank='8'] .card-symbol-8 { opacity: 0; }
+  .card-grid[data-rank='8'] .card-symbol-9 { transform: rotate(180deg); }
+  .card-grid[data-rank='8'] .card-symbol-10 { opacity: 0; }
+  .card-grid[data-rank='8'] .card-symbol-11 { transform: rotate(180deg); }
+
+  .card-grid[data-rank='9'] .card-symbol-0 { }
+  .card-grid[data-rank='9'] .card-symbol-1 { opacity: 0; }
+  .card-grid[data-rank='9'] .card-symbol-2 { }
+  .card-grid[data-rank='9'] .card-symbol-3 { }
+  .card-grid[data-rank='9'] .card-symbol-4 { transform: translateY(1.5rem); }
+  .card-grid[data-rank='9'] .card-symbol-5 { }
+  .card-grid[data-rank='9'] .card-symbol-6 { transform: rotate(180deg); }
+  .card-grid[data-rank='9'] .card-symbol-7 { opacity: 0; }
+  .card-grid[data-rank='9'] .card-symbol-8 { transform: rotate(180deg); }
+  .card-grid[data-rank='9'] .card-symbol-9 { transform: rotate(180deg); }
+  .card-grid[data-rank='9'] .card-symbol-10 { opacity: 0; }
+  .card-grid[data-rank='9'] .card-symbol-11 { transform: rotate(180deg); }
+
+  .card-grid[data-rank='10'] .card-symbol-0 { }
+  .card-grid[data-rank='10'] .card-symbol-1 { opacity: 0; }
+  .card-grid[data-rank='10'] .card-symbol-2 { }
+  .card-grid[data-rank='10'] .card-symbol-3 { }
+  .card-grid[data-rank='10'] .card-symbol-4 { transform: translateY(-1rem); }
+  .card-grid[data-rank='10'] .card-symbol-5 { }
+  .card-grid[data-rank='10'] .card-symbol-6 { transform: rotate(180deg); }
+  .card-grid[data-rank='10'] .card-symbol-7 { transform: rotate(180deg) translateY(-1rem); }
+  .card-grid[data-rank='10'] .card-symbol-8 { transform: rotate(180deg); }
+  .card-grid[data-rank='10'] .card-symbol-9 { transform: rotate(180deg); }
+  .card-grid[data-rank='10'] .card-symbol-10 { opacity: 0; }
+  .card-grid[data-rank='10'] .card-symbol-11 { transform: rotate(180deg); }
+
+  /* JACK */
+  /*
+  .card-grid[data-rank='11'], .card-symbol-0 { opacity: 0; }
+  .card-grid[data-rank='11'], .card-symbol-1 { font-size: 7rem; }
+  .card-grid[data-rank='11'], .card-symbol-2 { opacity: 0; }
+  .card-grid[data-rank='11'], .card-symbol-3 { opacity: 0; }
+  .card-grid[data-rank='11'], .card-symbol-4 { opacity: 0;}
+  .card-grid[data-rank='11'], .card-symbol-5 { opacity: 0; }
+  .card-grid[data-rank='11'], .card-symbol-6 { opacity: 0; }
+  .card-grid[data-rank='11'], .card-symbol-7 { opacity: 0; }
+  .card-grid[data-rank='11'], .card-symbol-8 { opacity: 0; }
+  .card-grid[data-rank='11'], .card-symbol-9 { opacity: 0; }
+  .card-grid[data-rank='11'], .card-symbol-10 { opacity: 0; }
+  .card-grid[data-rank='11'], .card-symbol-11 { opacity: 0; }
+  */
+
+  /* QUEEN */
+  /*
+  .card-grid[data-rank='12'], .card-symbol-0 { opacity: 0; }
+  .card-grid[data-rank='12'], .card-symbol-1 { font-size: 7rem; }
+  .card-grid[data-rank='12'], .card-symbol-2 { opacity: 0; }
+  .card-grid[data-rank='12'], .card-symbol-3 { opacity: 0; }
+  .card-grid[data-rank='12'], .card-symbol-4 { opacity: 0;}
+  .card-grid[data-rank='12'], .card-symbol-5 { opacity: 0; }
+  .card-grid[data-rank='12'], .card-symbol-6 { opacity: 0; }
+  .card-grid[data-rank='12'], .card-symbol-7 { opacity: 0; }
+  .card-grid[data-rank='12'], .card-symbol-8 { opacity: 0; }
+  .card-grid[data-rank='12'], .card-symbol-9 { opacity: 0; }
+  .card-grid[data-rank='12'], .card-symbol-10 { opacity: 0; }
+  .card-grid[data-rank='12'], .card-symbol-11 { opacity: 0; }
+  */
+
+  /* KING */
+  .card-grid[data-rank='13'] .card-symbol-0 { opacity: 0; }
+  .card-grid[data-rank='13'] .card-symbol-1 { opacity: 0; }
+  .card-grid[data-rank='13'] .card-symbol-2 { opacity: 0; }
+  .card-grid[data-rank='13'] .card-symbol-3 { opacity: 0; }
+  .card-grid[data-rank='13'] .card-symbol-4 { }
+  .card-grid[data-rank='13'] .card-symbol-5 { opacity: 0; }
+  .card-grid[data-rank='13'] .card-symbol-6 { opacity: 0; }
+  .card-grid[data-rank='13'] .card-symbol-7 { opacity: 0; }
+  .card-grid[data-rank='13'] .card-symbol-8 { opacity: 0; }
+  .card-grid[data-rank='13'] .card-symbol-9 { opacity: 0; }
+  .card-grid[data-rank='13'] .card-symbol-10 { opacity: 0; }
+  .card-grid[data-rank='13'] .card-symbol-11 { opacity: 0; }
 `

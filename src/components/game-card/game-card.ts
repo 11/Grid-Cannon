@@ -19,6 +19,7 @@ export class GameCard extends LitElement {
     gridX: { type: Number },
     gridY: { type: Number },
     suit: { type: String },
+    symbol: { type: String },
     rank: { type: Number },
     cardText: { type: String },
     stackSize: { type: Number },
@@ -35,6 +36,7 @@ export class GameCard extends LitElement {
   gridX: number
   gridY: number
   suit: string
+  symbol: string
   rank: number
   cardText: string | null
   stackSize: number
@@ -53,6 +55,7 @@ export class GameCard extends LitElement {
     this.gridX = 0
     this.gridY = 0
     this.suit = ''
+    this.symbol = ''
     this.rank = -1
     this.cardText = null
     this.stackSize = 0
@@ -119,22 +122,22 @@ export class GameCard extends LitElement {
 
   private renderCardFace() {
     return html`
-      <div class='card-text'>A ${this.suit}</div>
-      <div class='card-grid'>
-        <div class='card-symbol-0'>${this.suit}</div>
-        <div class='card-symbol-1'>${this.suit}</div>
-        <div class='card-symbol-2'>${this.suit}</div>
-        <div class='card-symbol-3'>${this.suit}</div>
-        <div class='card-symbol-4'>${this.suit}</div>
-        <div class='card-symbol-5'>${this.suit}</div>
-        <div class='card-symbol-6'>${this.suit}</div>
-        <div class='card-symbol-7'>${this.suit}</div>
-        <div class='card-symbol-8'>${this.suit}</div>
-        <div class='card-symbol-9'>${this.suit}</div>
-        <div class='card-symbol-10'>${this.suit}</div>
-        <div class='card-symbol-11'>${this.suit}</div>
+      <div class='card-text'>${this.cardText}</div>
+      <div class='card-grid' data-rank=${this.rank}>
+        <div class='card-symbol-0'>${this.symbol}</div>
+        <div class='card-symbol-1'>${this.symbol}</div>
+        <div class='card-symbol-2'>${this.symbol}</div>
+        <div class='card-symbol-3'>${this.symbol}</div>
+        <div class='card-symbol-4'>${this.symbol}</div>
+        <div class='card-symbol-5'>${this.symbol}</div>
+        <div class='card-symbol-6'>${this.symbol}</div>
+        <div class='card-symbol-7'>${this.symbol}</div>
+        <div class='card-symbol-8'>${this.symbol}</div>
+        <div class='card-symbol-9'>${this.symbol}</div>
+        <div class='card-symbol-10'>${this.symbol}</div>
+        <div class='card-symbol-11'>${this.symbol}</div>
       </div>
-      <div class='card-text' data-bottom='true'>A ${this.suit}</div>
+      <div class='card-text' data-bottom='true'>${this.cardText}</div>
     `
   }
 
